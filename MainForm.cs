@@ -244,9 +244,7 @@ namespace BringUp_Control
 
 
             Application.ExitThread();
-        }
-        
-        
+        }     
 
         
         // Validation of correct HEX value
@@ -273,8 +271,8 @@ namespace BringUp_Control
             
             if (initflag && driverflag && usbflag)
             {
-                //byte valbyte = AD4368_driver.ReadRegister((ushort)selectedHex);
-                //textAD4368_Value.Text = $"0x{valbyte:X2}";
+                byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
+                textAD4368_Value.Text = $"0x{valbyte:X2}";
             }
 
             textAD4368_Value.Focus();
