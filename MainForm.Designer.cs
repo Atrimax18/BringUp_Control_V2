@@ -100,6 +100,8 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.Cmd_ReadDAC9175 = new System.Windows.Forms.Button();
+            this.Cmd_WriteDAC9175 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -361,6 +363,8 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
+            this.tabAD9175.Controls.Add(this.Cmd_ReadDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_WriteReg9175);
             this.tabAD9175.Controls.Add(this.textDAC9175_Value);
             this.tabAD9175.Controls.Add(this.comboRegisters9175);
@@ -559,9 +563,9 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(563, 269);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(103, 16);
+            this.label16.Size = new System.Drawing.Size(88, 16);
             this.label16.TabIndex = 11;
-            this.label16.Text = "U41 HMC1119";
+            this.label16.Text = "3. HMC1119";
             // 
             // comboBox5
             // 
@@ -579,9 +583,9 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(418, 28);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(103, 16);
+            this.label15.Size = new System.Drawing.Size(88, 16);
             this.label15.TabIndex = 9;
-            this.label15.Text = "U38 HMC8414";
+            this.label15.Text = "2. HMC8414";
             // 
             // comboBox4
             // 
@@ -606,18 +610,18 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(327, 268);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(103, 16);
+            this.label14.Size = new System.Drawing.Size(88, 16);
             this.label14.TabIndex = 7;
-            this.label14.Text = "U35 HMC1119";
+            this.label14.Text = "2. HMC1119";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(115, 28);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(103, 16);
+            this.label12.Size = new System.Drawing.Size(88, 16);
             this.label12.TabIndex = 6;
-            this.label12.Text = "U39 HMC8414";
+            this.label12.Text = "1. HMC8414";
             // 
             // comboBox3
             // 
@@ -635,9 +639,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(10, 268);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(103, 16);
+            this.label11.Size = new System.Drawing.Size(88, 16);
             this.label11.TabIndex = 4;
-            this.label11.Text = "U34 HMC1119";
+            this.label11.Text = "1. HMC1119";
             // 
             // comboBox2
             // 
@@ -885,6 +889,24 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
+            // Cmd_ReadDAC9175
+            // 
+            this.Cmd_ReadDAC9175.Location = new System.Drawing.Point(725, 272);
+            this.Cmd_ReadDAC9175.Name = "Cmd_ReadDAC9175";
+            this.Cmd_ReadDAC9175.Size = new System.Drawing.Size(114, 58);
+            this.Cmd_ReadDAC9175.TabIndex = 11;
+            this.Cmd_ReadDAC9175.Text = "Read From Device";
+            this.Cmd_ReadDAC9175.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_WriteDAC9175
+            // 
+            this.Cmd_WriteDAC9175.Location = new System.Drawing.Point(725, 336);
+            this.Cmd_WriteDAC9175.Name = "Cmd_WriteDAC9175";
+            this.Cmd_WriteDAC9175.Size = new System.Drawing.Size(114, 58);
+            this.Cmd_WriteDAC9175.TabIndex = 12;
+            this.Cmd_WriteDAC9175.Text = "Write To Device";
+            this.Cmd_WriteDAC9175.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1003,6 +1025,8 @@
         private System.Windows.Forms.Button Cmd_RF_Temp_Read;
         private System.Windows.Forms.TextBox textLog;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Button Cmd_WriteDAC9175;
+        private System.Windows.Forms.Button Cmd_ReadDAC9175;
     }
 }
 
