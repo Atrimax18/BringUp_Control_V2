@@ -146,7 +146,7 @@ namespace BringUp_Control
 
                     ad4368?.Dispose();
                     ad9175?.Dispose();
-                                     
+                    ftDev?.Dispose();
 
                     SetControlsEnabled(false);
                     return;
@@ -156,6 +156,8 @@ namespace BringUp_Control
                     // FTDI reconnected — reinitialize
                     uint locnumber = FTDriver.GetDeviceLocId(0); //0 - is Device A interface
                     //uint locnumber = Ft4222Native.FindSpiInterfaceLocId();
+                    ftDev?.Dispose();
+
                     ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
                    
                     ad4368 = new AD4368_PLL(ftDev, 0);   //1     // CS1 → PLL
@@ -236,8 +238,10 @@ namespace BringUp_Control
 
         private void Cmd_Exit_Click(object sender, EventArgs e)
         {
-            
-            
+            ftDev?.Dispose();
+            ad4368?.Dispose();
+            ad9175?.Dispose();
+
 
             Application.ExitThread();
         }
