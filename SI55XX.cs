@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BringUp_Control
 {
-    internal class SI555XX
+    internal class SI55XX
     {
     }
 }

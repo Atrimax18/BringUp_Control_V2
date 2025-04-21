@@ -47,8 +47,8 @@ namespace BringUp_Control
         List<string> deviceInfo = new List<string>();
 
         TabPage selectedTab = new TabPage();
-        bool initflag = false;      // device init
-        bool driverflag = false;    // SPI Driver FLAG spiDriver init
+        
+        bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
 
         string datavalue = string.Empty;
@@ -121,12 +121,11 @@ namespace BringUp_Control
                     return;
 
                 // FTDI label status update
-                if (isConnected )//&& /*deviceList.Count > 0*/)
+                if (isConnected )
                 {
-                    string driver_version = FTDriver.GetFtdiDriverVersion();
-                    
-                    dllstring = "FTDI STATUS: " + $"Detected 2 FT4222H device(s): and {driver_version}";
+                    dllstring = "FTDI STATUS: " + $"Detected 2 FT4222H device(s): and {FTDriver.GetFtdiDriverVersion()}";
                     label1.ForeColor = Color.Green;
+                    
                 }
                 else
                 {
@@ -134,11 +133,11 @@ namespace BringUp_Control
                     label1.ForeColor = Color.Red;
                 }
 
-                    label1.Invoke((MethodInvoker)(() =>
-                    {
-                        label1.Text = dllstring;
-                        LogStatus(dllstring);
-                    }));
+                label1.Invoke((MethodInvoker)(() =>
+                {
+                    label1.Text = dllstring;
+                    LogStatus(dllstring);
+                }));
 
                 if (!isConnected)
                 {
@@ -149,6 +148,8 @@ namespace BringUp_Control
                     ftDev?.Dispose();
 
                     SetControlsEnabled(false);
+                    usbflag = isConnected;
+                    driverflag = isConnected;
                     return;
                 }
                 else
@@ -160,9 +161,8 @@ namespace BringUp_Control
 
                     ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
                    
-                    ad4368 = new AD4368_PLL(ftDev, 0);   //1     // CS1 → PLL
-                                                         //ad9175 = new AD9175_DAC(ftDev, 0);       // CS0 → DAC
-                                        
+                    ad4368 = new AD4368_PLL(ftDev, 0);   // second paramemter is 0 not neeed  will be removed
+                                                 
                     
                     DT4368 = ad4368.InitDataTable();
                     dataGridViewAD4368.DataSource = DT4368;
@@ -170,6 +170,8 @@ namespace BringUp_Control
                     LogStatus("AD4368 reinitialized on SPI CS1");                    
 
                     SetControlsEnabled(isConnected);
+                    usbflag = isConnected;
+                    driverflag = isConnected;
                 }
 
                     
@@ -269,7 +271,7 @@ namespace BringUp_Control
             }
             
             
-            if (initflag && driverflag && usbflag)
+            if (driverflag && usbflag)
             {
                 byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
                 textAD4368_Value.Text = $"0x{valbyte:X2}";
@@ -344,7 +346,6 @@ namespace BringUp_Control
             else
                 MessageBox.Show("MUXOUT Not Updated!", "Information");
         }
-
               
 
         private void CheckPowerRegister(byte address)
