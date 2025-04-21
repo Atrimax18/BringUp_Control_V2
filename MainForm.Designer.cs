@@ -101,6 +101,7 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -507,6 +508,7 @@
             // 
             // tabRFLine
             // 
+            this.tabRFLine.Controls.Add(this.Cmd_UpdateTX_Values);
             this.tabRFLine.Controls.Add(this.label19);
             this.tabRFLine.Controls.Add(this.label18);
             this.tabRFLine.Controls.Add(this.label17);
@@ -857,6 +859,7 @@
             this.Cmd_Init_All.TabIndex = 16;
             this.Cmd_Init_All.Text = "Init ALL Devices";
             this.Cmd_Init_All.UseVisualStyleBackColor = true;
+            this.Cmd_Init_All.Click += new System.EventHandler(this.Cmd_Init_All_Click);
             // 
             // Cmd_FT_Temp_Read
             // 
@@ -896,6 +899,15 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
+            // 
+            // Cmd_UpdateTX_Values
+            // 
+            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 357);
+            this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
+            this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_UpdateTX_Values.TabIndex = 16;
+            this.Cmd_UpdateTX_Values.Text = "UPDATE VALUES";
+            this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1016,6 +1028,7 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Button Cmd_WriteDAC9175;
         private System.Windows.Forms.Button Cmd_ReadDAC9175;
+        private System.Windows.Forms.Button Cmd_UpdateTX_Values;
     }
 }
 

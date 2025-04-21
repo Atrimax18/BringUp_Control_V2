@@ -551,7 +551,10 @@ namespace BringUp_Control
             }
         }
 
-        
+        private void Cmd_Init_All_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
