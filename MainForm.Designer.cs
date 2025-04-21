@@ -66,6 +66,7 @@
             this.tabAD9213 = new System.Windows.Forms.TabPage();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.tabRFLine = new System.Windows.Forms.TabPage();
+            this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -101,7 +102,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -531,6 +531,15 @@
             this.tabRFLine.Text = "TX RF LINEUP";
             this.tabRFLine.UseVisualStyleBackColor = true;
             // 
+            // Cmd_UpdateTX_Values
+            // 
+            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 357);
+            this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
+            this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_UpdateTX_Values.TabIndex = 16;
+            this.Cmd_UpdateTX_Values.Text = "UPDATE VALUES";
+            this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
+            // 
             // label19
             // 
             this.label19.AutoSize = true;
@@ -796,9 +805,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(16, 19);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 16);
+            this.label2.Size = new System.Drawing.Size(89, 16);
             this.label2.TabIndex = 9;
-            this.label2.Text = "FT Temp:";
+            this.label2.Text = "FTDI Temp:";
             // 
             // label3
             // 
@@ -899,15 +908,6 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
-            // 
-            // Cmd_UpdateTX_Values
-            // 
-            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 357);
-            this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
-            this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
-            this.Cmd_UpdateTX_Values.TabIndex = 16;
-            this.Cmd_UpdateTX_Values.Text = "UPDATE VALUES";
-            this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
