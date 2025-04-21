@@ -503,7 +503,7 @@
             this.tabSi5518.Name = "tabSi5518";
             this.tabSi5518.Size = new System.Drawing.Size(844, 655);
             this.tabSi5518.TabIndex = 4;
-            this.tabSi5518.Text = "Si5518";
+            this.tabSi5518.Text = "Si55XX";
             this.tabSi5518.UseVisualStyleBackColor = true;
             // 
             // tabRFLine

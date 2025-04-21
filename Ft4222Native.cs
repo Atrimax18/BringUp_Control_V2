@@ -11,13 +11,13 @@ namespace BringUp_Control
 {
     public class Ft4222Native
     {
-       
+
 #if WIN64
-        const String DLL="LibFT4222-64.dll";
+        const string DLL="LibFT4222-64.dll";
 #else
-        const String DLL = "LibFT4222.dll";
+        const string DLL = "LibFT4222.dll";
 #endif
-        
+
         // === SPI ===
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SPIMaster_Init(IntPtr ftHandle, FT4222_SPI_Mode ioMode, FT4222_CLK clockDiv, FT4222_SPICPOL sclkPolarity, FT4222_SPICPHA sclkPhase, Byte CS);
