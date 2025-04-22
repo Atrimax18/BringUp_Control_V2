@@ -148,8 +148,8 @@ namespace BringUp_Control
                     ftDev?.Dispose();
 
                     SetControlsEnabled(false);
-                    usbflag = isConnected;
-                    driverflag = isConnected;
+                    //usbflag = isConnected;
+                    //driverflag = isConnected;
                     return;
                 }
                 else
@@ -161,17 +161,11 @@ namespace BringUp_Control
 
                     ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
                    
-                    ad4368 = new AD4368_PLL(ftDev, 0);   // second paramemter is 0 not neeed  will be removed
-                                                 
-                    
-                    DT4368 = ad4368.InitDataTable();
-                    dataGridViewAD4368.DataSource = DT4368;
-                    comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                    LogStatus("AD4368 reinitialized on SPI CS1");                    
+                                       
 
                     SetControlsEnabled(isConnected);
-                    usbflag = isConnected;
-                    driverflag = isConnected;
+                    //usbflag = isConnected;
+                    //driverflag = isConnected;
                 }
 
                     
@@ -296,9 +290,20 @@ namespace BringUp_Control
             }
         }        
 
-        private void Cmd_ADF4368_INIT_Click(object sender, EventArgs e)
-        {
 
+        private void Cmd_AD4368_INIT_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabAD4368)
+            {
+                ad4368 = new AD4368_PLL(ftDev, 0);   // second paramemter is 0 not neeed  will be removed
+
+
+                DT4368 = ad4368.InitDataTable();
+                dataGridViewAD4368.DataSource = DT4368;
+                comboRegAddress.DataSource = ad4368.LoadComboRegisters();
+                LogStatus("AD4368 reinitialized on SPI CS1");
+            }
+            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -556,6 +561,8 @@ namespace BringUp_Control
         {
 
         }
+
+        
     }
 }
 

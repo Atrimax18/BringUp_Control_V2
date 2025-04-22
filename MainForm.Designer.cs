@@ -70,16 +70,13 @@
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.comboBox6 = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabMux = new System.Windows.Forms.TabPage();
@@ -102,6 +99,10 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.Cmd_Read_ADC = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -198,7 +199,7 @@
             this.Cmd_AD4368_INIT.TabIndex = 15;
             this.Cmd_AD4368_INIT.Text = "PLL INIT";
             this.Cmd_AD4368_INIT.UseVisualStyleBackColor = true;
-            this.Cmd_AD4368_INIT.Click += new System.EventHandler(this.Cmd_ADF4368_INIT_Click);
+            this.Cmd_AD4368_INIT.Click += new System.EventHandler(this.Cmd_AD4368_INIT_Click);
             // 
             // Cmd_PowerONOFF
             // 
@@ -508,20 +509,21 @@
             // 
             // tabRFLine
             // 
+            this.tabRFLine.Controls.Add(this.Cmd_Read_ADC);
+            this.tabRFLine.Controls.Add(this.textBox3);
+            this.tabRFLine.Controls.Add(this.textBox2);
+            this.tabRFLine.Controls.Add(this.textBox1);
             this.tabRFLine.Controls.Add(this.Cmd_UpdateTX_Values);
             this.tabRFLine.Controls.Add(this.label19);
             this.tabRFLine.Controls.Add(this.label18);
             this.tabRFLine.Controls.Add(this.label17);
-            this.tabRFLine.Controls.Add(this.comboBox6);
             this.tabRFLine.Controls.Add(this.label16);
             this.tabRFLine.Controls.Add(this.comboBox5);
             this.tabRFLine.Controls.Add(this.label15);
-            this.tabRFLine.Controls.Add(this.comboBox4);
             this.tabRFLine.Controls.Add(this.label14);
             this.tabRFLine.Controls.Add(this.label12);
             this.tabRFLine.Controls.Add(this.comboBox3);
             this.tabRFLine.Controls.Add(this.label11);
-            this.tabRFLine.Controls.Add(this.comboBox2);
             this.tabRFLine.Controls.Add(this.label10);
             this.tabRFLine.Controls.Add(this.pictureBox1);
             this.tabRFLine.Location = new System.Drawing.Point(4, 25);
@@ -537,13 +539,13 @@
             this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
             this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
             this.Cmd_UpdateTX_Values.TabIndex = 16;
-            this.Cmd_UpdateTX_Values.Text = "UPDATE VALUES";
+            this.Cmd_UpdateTX_Values.Text = "UPDATE RF VALUES";
             this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(687, 199);
+            this.label19.Location = new System.Drawing.Point(675, 199);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(26, 16);
             this.label19.TabIndex = 15;
@@ -552,7 +554,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(528, 200);
+            this.label18.Location = new System.Drawing.Point(513, 199);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(26, 16);
             this.label18.TabIndex = 14;
@@ -561,29 +563,11 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(307, 199);
+            this.label17.Location = new System.Drawing.Point(292, 199);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(26, 16);
             this.label17.TabIndex = 13;
             this.label17.Text = "dB";
-            // 
-            // comboBox6
-            // 
-            this.comboBox6.FormattingEnabled = true;
-            this.comboBox6.Items.AddRange(new object[] {
-            "0",
-            "0.25",
-            "0.5",
-            "1.0",
-            "2.0",
-            "4.0",
-            "8.0",
-            "16.0",
-            "31.75"});
-            this.comboBox6.Location = new System.Drawing.Point(613, 196);
-            this.comboBox6.Name = "comboBox6";
-            this.comboBox6.Size = new System.Drawing.Size(63, 24);
-            this.comboBox6.TabIndex = 12;
             // 
             // label16
             // 
@@ -613,24 +597,6 @@
             this.label15.Size = new System.Drawing.Size(88, 16);
             this.label15.TabIndex = 9;
             this.label15.Text = "2. HMC8414";
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "0",
-            "0.25",
-            "0.5",
-            "1.0",
-            "2.0",
-            "4.0",
-            "8.0",
-            "16.0",
-            "31.75"});
-            this.comboBox4.Location = new System.Drawing.Point(454, 197);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(63, 24);
-            this.comboBox4.TabIndex = 8;
             // 
             // label14
             // 
@@ -669,24 +635,6 @@
             this.label11.Size = new System.Drawing.Size(88, 16);
             this.label11.TabIndex = 4;
             this.label11.Text = "1. HMC1119";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "0",
-            "0.25",
-            "0.5",
-            "1.0",
-            "2.0",
-            "4.0",
-            "8.0",
-            "16.0",
-            "31.75"});
-            this.comboBox2.Location = new System.Drawing.Point(233, 196);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(63, 24);
-            this.comboBox2.TabIndex = 3;
             // 
             // label10
             // 
@@ -909,6 +857,36 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(233, 196);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(56, 22);
+            this.textBox1.TabIndex = 17;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(454, 197);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(56, 22);
+            this.textBox2.TabIndex = 18;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(613, 197);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(56, 22);
+            this.textBox3.TabIndex = 19;
+            // 
+            // Cmd_Read_ADC
+            // 
+            this.Cmd_Read_ADC.Location = new System.Drawing.Point(440, 357);
+            this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
+            this.Cmd_Read_ADC.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_Read_ADC.TabIndex = 20;
+            this.Cmd_Read_ADC.Text = "READ ADC VALUE";
+            this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1004,16 +982,13 @@
         private System.Windows.Forms.RadioButton radioFPGA;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox comboBox6;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.Label label15;
@@ -1029,6 +1004,10 @@
         private System.Windows.Forms.Button Cmd_WriteDAC9175;
         private System.Windows.Forms.Button Cmd_ReadDAC9175;
         private System.Windows.Forms.Button Cmd_UpdateTX_Values;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button Cmd_Read_ADC;
     }
 }
 

@@ -17,7 +17,7 @@ namespace BringUp_Control
     {
 
         private readonly Ft4222Device _ft;
-        private readonly byte _cs;   // CS pin on FT4222H (0‑3)
+        //private readonly byte _cs;   // CS pin on FT4222H (0‑3)
 
         List<string> regaddresslist = new List<string>();
         DataTable dtAD4368 = new DataTable();
@@ -25,7 +25,7 @@ namespace BringUp_Control
         public AD4368_PLL(Ft4222Device ft, byte chipSelect)
         {
             _ft = ft;
-            _cs = chipSelect;
+            //_cs = chipSelect;
             //_ft.SpiSelect(_cs);
 
             // put device in 4‑wire SPI and MSB mode
