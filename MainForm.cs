@@ -148,8 +148,7 @@ namespace BringUp_Control
                     ftDev?.Dispose();
 
                     SetControlsEnabled(false);
-                    //usbflag = isConnected;
-                    //driverflag = isConnected;
+                    
                     return;
                 }
                 else
@@ -160,12 +159,10 @@ namespace BringUp_Control
                     ftDev?.Dispose();
 
                     ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
-                   
-                                       
+                                                         
 
                     SetControlsEnabled(isConnected);
-                    //usbflag = isConnected;
-                    //driverflag = isConnected;
+                    
                 }
 
                     
