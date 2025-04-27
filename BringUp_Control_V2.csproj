@@ -134,6 +134,7 @@
     <Compile Include="AD9213_ADC.cs" />
     <Compile Include="Ft4222Device.cs" />
     <Compile Include="Ft4222Native.cs" />
+    <Compile Include="GpioDriver.cs" />
     <Compile Include="HMC1119.cs" />
     <Compile Include="HMC7044.cs" />
     <Compile Include="HMC8414.cs" />

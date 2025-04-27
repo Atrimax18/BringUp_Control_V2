@@ -28,6 +28,9 @@ namespace BringUp_Control
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
 
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(IntPtr ftHandle, byte[] readbuffer, byte[] writebuffer, ushort sizeToTransfer, ref ushort sizetransferred, bool isEndTransaction);
+
         //[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         //public static extern FT4222_STATUS FT4222_SPIMaster_SlaveSelect(IntPtr ftHandle, byte csPin);
 
@@ -46,6 +49,12 @@ namespace BringUp_Control
         public static extern FT4222_STATUS FT4222_GPIO_Init(IntPtr ftHandle, byte[] dir);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_SetSuspendOut(IntPtr ftHandle, bool enable);
+
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_SetWakeUpInterrupt(IntPtr ftHandle, bool enable);
+
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
         public static extern FT4222_STATUS FT4222_GPIO_SetDir(IntPtr ftHandle, byte gpioPort, GPIO_Dir direction);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -97,7 +106,7 @@ namespace BringUp_Control
             SPI_IO_NONE = 0,
             SPI_IO_SINGLE = 1,
             SPI_IO_DUAL = 2,
-            SPI_IO_QUAD = 4,
+            SPI_IO_QUAD = 3,
         }
 
         public enum FT_STATUS : uint
@@ -139,6 +148,14 @@ namespace BringUp_Control
         {
             GPIO_OUTPUT = 0,
             GPIO_INPUT = 1
+        }
+
+        public enum GPIO
+        {
+            GPIO0 =0,
+            GPIO1 = 1,
+            GPIO2 = 2,
+            GPIO3 = 3,
         }
 
         public enum FT4222_SPICPHA

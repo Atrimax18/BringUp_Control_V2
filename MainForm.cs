@@ -57,6 +57,7 @@ namespace BringUp_Control
         Ft4222Device ftDev;
         AD4368_PLL ad4368;
         AD9175_DAC ad9175;
+        GpioDriver gpio_control;
         public MainForm()
         {
             InitializeComponent();            
@@ -121,7 +122,7 @@ namespace BringUp_Control
                     return;
 
                 // FTDI label status update
-                if (isConnected )
+                if (isConnected)
                 {
                     dllstring = "FTDI STATUS: " + $"Detected 2 FT4222H device(s): and {FTDriver.GetFtdiDriverVersion()}";
                     label1.ForeColor = Color.Green;
@@ -142,11 +143,14 @@ namespace BringUp_Control
                 if (!isConnected)
                 {
                     // Dispose resources if FTDI is disconnected                   
-
+                    
                     ad4368?.Dispose();
                     ad9175?.Dispose();
                     ftDev?.Dispose();
+                    gpio_control?.Dispose();
 
+                    usbflag = false;
+                    driverflag = false;
                     SetControlsEnabled(false);
                     
                     return;
@@ -155,13 +159,33 @@ namespace BringUp_Control
                 {
                     // FTDI reconnected — reinitialize
                     uint locnumber = FTDriver.GetDeviceLocId(0); //0 - is Device A interface
+                    uint locsecond = FTDriver.GetDeviceLocId(1); //1 - is Device B interface for GPIO and I2C
+
                     //uint locnumber = Ft4222Native.FindSpiInterfaceLocId();
                     ftDev?.Dispose();
+                    ad4368?.Dispose();
+
+                    
+                    gpio_control?.Dispose();                       // dispose any previous handle
+                    gpio_control = new GpioDriver();
+                    gpio_control.Write(GPIO3, true);
 
                     ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
-                                                         
+                    
 
-                    SetControlsEnabled(isConnected);
+
+                    
+                    ad4368 = new AD4368_PLL(ftDev, 0);
+                    DT4368 = ad4368.InitDataTable();
+
+                    dataGridViewAD4368.DataSource = DT4368;
+                    comboRegAddress.DataSource = ad4368.LoadComboRegisters();
+                    LogStatus("AD4368 reinitialized on SPI CS1");
+
+                    usbflag = true;
+                    driverflag = true;
+
+                    SetControlsEnabled(true);
                     
                 }
 
@@ -231,9 +255,11 @@ namespace BringUp_Control
 
         private void Cmd_Exit_Click(object sender, EventArgs e)
         {
+            gpio_control.Write(GPIO3, false);
             ftDev?.Dispose();
             ad4368?.Dispose();
             ad9175?.Dispose();
+            gpio_control?.Dispose();
 
 
             Application.ExitThread();
@@ -265,6 +291,7 @@ namespace BringUp_Control
             if (driverflag && usbflag)
             {
                 byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
+                //byte valbyte = ad4368.ReadWrite((ushort)selectedHex);
                 textAD4368_Value.Text = $"0x{valbyte:X2}";
             }
 
@@ -292,8 +319,7 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD4368)
             {
-                ad4368 = new AD4368_PLL(ftDev, 0);   // second paramemter is 0 not neeed  will be removed
-
+                ad4368 = new AD4368_PLL(ftDev, 0);   // set second parameter to 0.
 
                 DT4368 = ad4368.InitDataTable();
                 dataGridViewAD4368.DataSource = DT4368;
@@ -483,6 +509,7 @@ namespace BringUp_Control
                 Cmd_Init_All.Enabled = false;
                 Cmd_FT_Temp_Read.Enabled = false;
                 Cmd_RF_Temp_Read.Enabled=false;
+                Cmd_AD4368_INIT.Enabled = false;
             }
             else
             {
@@ -490,6 +517,7 @@ namespace BringUp_Control
                 Cmd_Init_All.Enabled = true;
                 Cmd_FT_Temp_Read.Enabled = true;
                 Cmd_RF_Temp_Read.Enabled = true;
+                Cmd_AD4368_INIT.Enabled=true;
             }
         }
 

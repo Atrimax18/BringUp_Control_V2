@@ -37,13 +37,33 @@ namespace BringUp_Control
             if (_ft == null) return;
 
             //_ft.SpiSelect(_cs);
-            _ft.SpiWriteReg16(reg, data);
+            //_ft.SpiWriteReg16(reg, data);
+            _ft.SpiWrite((byte)reg, true);
+            
         }
 
         public byte ReadRegister(ushort reg)
         {
             //_ft.SpiSelect(_cs);
             return _ft.SpiReadReg16(reg);
+        }
+
+        public byte ReadWrite(ushort registerAddress)
+        {
+            // Format the read command: MSB of 24-bit address is 1 (read operation)
+            ushort readCommand = (ushort)(registerAddress | 0x8000);
+
+            byte[] writeBuffer = new byte[]
+            {
+                (byte)(readCommand >> 8),  // High byte of register address
+                (byte)(readCommand & 0xFF), // Low byte of register address
+                0x00  // Dummy byte for reading data
+            };
+
+            byte[] readBuffer = new byte[3]; // 3 bytes: Register Address + Dummy + Read Data
+            _ft.SpiReadWrite(writeBuffer, readBuffer, true);
+
+            return readBuffer[2];
         }
 
         public void Dispose() { /*nothing*/ }

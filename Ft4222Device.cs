@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,6 +15,8 @@ namespace BringUp_Control
     public class Ft4222Device : IDisposable
     {
         private IntPtr _handle = IntPtr.Zero;
+        private IntPtr _gpioHandle = IntPtr.Zero;
+
         private readonly Ft4222Native.FT4222_SPI_Mode _spiMode;
         private readonly Ft4222Native.FT4222_CLK _clkDiv;
         private readonly Ft4222Native.FT4222_SPICPOL _cpol;
@@ -20,6 +24,7 @@ namespace BringUp_Control
         
 
         public bool IsOpen => _handle != IntPtr.Zero;
+        public bool IsGpioOpen => _gpioHandle != IntPtr.Zero;
 
         #region ‑‑ ctor / open / close ‑‑       
         public Ft4222Device(uint locId,
@@ -52,17 +57,24 @@ namespace BringUp_Control
                 Ft4222Native.FT_Close(_handle);
                 _handle = IntPtr.Zero;
             }
+
+            
         }
         #endregion
 
         #region ‑‑ SPI helpers ‑‑
         //public void SpiSelect(byte csPin) => Check(Ft4222Native.FT4222_SPIMaster_SlaveSelect(_handle, csPin));
 
-        public void SpiWrite(ReadOnlySpan<byte> tx, bool endTxn = true)
+        public void SpiWrite(ushort word, bool endTxn = true)
         {
+            Span<byte> buf = stackalloc byte[2];
+            buf[0] = (byte)(word >> 8);   // MSB
+            buf[1] = (byte)word;         // LSB
+
             ushort txed = 0;
+            
             Check(Ft4222Native.FT4222_SPIMaster_SingleWrite(
-                _handle, tx.ToArray(), (ushort)tx.Length, ref txed, endTxn));
+                _handle, buf.ToArray(), (ushort)buf.Length, ref txed, endTxn));
         }
 
         public void SpiRead(Span<byte> rx, bool endTxn = true)
@@ -71,6 +83,20 @@ namespace BringUp_Control
             Check(Ft4222Native.FT4222_SPIMaster_SingleRead(
                 _handle, rx.ToArray(), (ushort)rx.Length, ref rxed, endTxn));
         }
+
+        public void SpiReadWrite(ReadOnlySpan<byte> writebuf, Span<byte> readbuff, bool transmit)
+        {
+            if (writebuf.Length != readbuff.Length)
+                throw new ArgumentException("write buffer and readbuffer must be the same lenght");
+
+
+            ushort readbytes = 0;
+
+
+            Check(Ft4222Native.FT4222_SPIMaster_SingleReadWrite(_handle, readbuff.ToArray(), writebuf.ToArray(), (ushort)writebuf.Length, ref readbytes, transmit));
+        }
+
+        
 
         public byte SpiReadReg16(ushort addr)
         {
@@ -110,21 +136,10 @@ namespace BringUp_Control
                 _handle, devAddr, data.ToArray(), (ushort)data.Length, ref read));
         }
         #endregion
+        
 
-        #region ‑‑ GPIO helpers (GPIOL0‑3) ‑‑
-        public void GpioSetDir(byte port, Ft4222Native.GPIO_Dir dir) =>
-            Check(Ft4222Native.FT4222_GPIO_SetDir(_handle, port, dir));
 
-        public void GpioWrite(byte port, bool high) =>
-            Check(Ft4222Native.FT4222_GPIO_Write(_handle, port, (byte)(high ? 1 : 0)));
-
-        public bool GpioRead(byte port)
-        {
-            byte v;
-            Check(Ft4222Native.FT4222_GPIO_Read(_handle, port, out v));
-            return v != 0;
-        }
-        #endregion
+        
 
         private static void Check(Ft4222Native.FT4222_STATUS st)
         {
