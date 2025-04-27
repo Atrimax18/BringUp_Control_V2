@@ -63,9 +63,9 @@ namespace BringUp_Control
         public static extern FT4222_STATUS FT4222_UnInitialize(IntPtr ftHandle);
 
         //***********************************************************************************************************************************
-        //
-        // FUNCTION IMPORTS FROM FTD2XX DLL
-        //
+        //                                                                                                                                  *
+        // FUNCTION IMPORTS FROM FTD2XX DLL                                                                                                 *
+        //                                                                                                                                  *
         //***********************************************************************************************************************************
 
         [DllImport("ftd2xx.dll")]
