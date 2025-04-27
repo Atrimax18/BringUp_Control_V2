@@ -288,8 +288,7 @@ namespace BringUp_Control
             _ = FT_CreateDeviceInfoList(out numofDevices); // Changed 'ref' to 'out' to fix CS1620  
 
             return numofDevices;
-        }
-   
+        }  
         
 
         public bool DeviceFlag(uint devices)
