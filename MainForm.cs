@@ -280,7 +280,7 @@ namespace BringUp_Control
 
             Application.ExitThread();
         }
-
+        // Validation of Hex register value
         private static bool TryParseHexU16(string input, out ushort value)
         {
             value = 0;
@@ -421,9 +421,9 @@ namespace BringUp_Control
 
         private void CheckPowerRegister(byte address)
         {
-            ushort paddrress = Convert.ToUInt16(address.ToString("X4"), 16);
+            //ushort paddrress = Convert.ToUInt16(address.ToString("X4"), 16);
 
-            byte powerreturn = ad4368.ReadRegister(paddrress);
+            byte powerreturn = ad4368.ReadRegister((ushort)address);
 
             if (powerreturn == 0x00)
             {
@@ -458,6 +458,66 @@ namespace BringUp_Control
 
         private void Cmd_ReadAll_AD4368_Click(object sender, EventArgs e)
         {
+            int index = 1;
+
+            if (ftDev == null)
+            {
+                MessageBox.Show("SPI interface not initialized. Please reconnect the FTDI device.", "No SPI", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!(usbflag && driverflag)) return; // USB or driver not ready – silently exit
+
+
+            if (dataGridViewAD4368.Rows.Count > 0)
+            {
+                dataGridViewAD4368.DataSource = null;
+                DT4368.Clear();
+                dataGridViewAD4368.DataSource = DT4368;
+            }
+            else
+            {
+                foreach (var item in comboRegAddress.Items)
+                {
+                    string raw = item?.ToString()?.Trim() ?? string.Empty;
+
+                    if (!TryParseHexU16(raw, out ushort regValue))
+                    {
+                        MessageBox.Show($"Register '{raw}' is not in 0xXXXX format (e.g. 0x002B). " +
+                                        "Item skipped.", "Invalid address",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        continue;
+                    }
+
+                    byte dataByte;
+                    try
+                    {
+                        dataByte = ad4368.ReadRegister(regValue);
+
+                        // Add to DataTable
+                        DataRow row = DT4368.NewRow();
+                        row["Index"] = index++;
+                        row["Register"] = raw;                   // already validated
+                        row["Value"] = $"0x{dataByte:X2}";
+                        row["Value byte"] = dataByte;
+                        DT4368.Rows.Add(row);
+
+                        // Extra handling for power register (low byte 0x2B)
+                        if ((byte)regValue == 0x2B)
+                            CheckPowerRegister(0x2B);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"ReadRegister(0x{regValue:X4}) failed:\n{ex.Message}",
+                                        "Read error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        continue;
+                    }
+                }
+            }
+
+
+            /*
             int index = 1; byte paddress = 0;
 
             if (ftDev == null)
@@ -490,7 +550,7 @@ namespace BringUp_Control
                     row["Value byte"] = valbyte;
                     DT4368.Rows.Add(row);
 
-                    if (paddress == 0x002B)
+                    if (paddress == 0x2B)
                     {
                         CheckPowerRegister(paddress);
                     }
@@ -501,7 +561,7 @@ namespace BringUp_Control
                     Cmd_WriteAll_AD4368.Enabled = true;
                 }
             }
-            
+            */
         }
 
         private int RFLockSampling(byte address, int monitoredBitIndex)
@@ -570,6 +630,7 @@ namespace BringUp_Control
         {
             selectedTab  = tabControl1.SelectedTab;
         }
+        
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)
         {

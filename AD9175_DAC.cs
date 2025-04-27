@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace BringUp_Control
 {
-    internal class AD9175_DAC : IDisposable
+    internal sealed class AD9175_DAC : IDisposable
     {
-        
+        private readonly SpiDriver _ft;
 
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
@@ -198,21 +198,22 @@ namespace BringUp_Control
         }
 
         public void WriteRegister(ushort address, byte data)
-        {/*
-            if (_spi1 == null) return;
+        {
+            if (_ft == null) return;
             byte[] buffer = new byte[]
             {
                 (byte)(address >> 8),
                 (byte)(address & 0xFF),
                 data
             };
-            _spi1.Write(buffer);
-            Console.WriteLine($"SPI Write: Register 0x{address:X4} <- 0x{data:X2}");*/
+            _ft.Write(buffer);
+            
         }
-        /*
+        
         public byte ReadRegister(ushort address)
-        {/*
-            if (_spi1 == null) return 0;
+        {
+            if (_ft == null) return 0;
+            
             ushort cmd = (ushort)(address | 0x8000);
             byte[] tx = new byte[]
             {
@@ -221,9 +222,9 @@ namespace BringUp_Control
                 0x00
             };
             byte[] rx = new byte[3];
-            _spi1.TransferFullDuplex(tx, rx);
+            _ft.TransferFullDuplex(tx, rx);
             return rx[2];
-        }*/
+        }
         /*
         public byte ReadRegister(ushort registerAddress)
         {

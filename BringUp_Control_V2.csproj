@@ -137,6 +137,7 @@
     <Compile Include="HMC1119.cs" />
     <Compile Include="HMC7044.cs" />
     <Compile Include="HMC8414.cs" />
+    <Compile Include="i2cDriver.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -21,9 +21,9 @@ namespace BringUp_Control
         {
             // ── open interface-B by Location-ID ───────────────────────────────
             var native = new Ft4222Native();
-            uint locId = native.GetDeviceLocId(interfaceIndex);               // :contentReference[oaicite:0]{index=0}&#8203;:contentReference[oaicite:1]{index=1}
+            uint locId = native.GetDeviceLocId(interfaceIndex);               
 
-            var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _gpiohandle);               // :contentReference[oaicite:2]{index=2}&#8203;:contentReference[oaicite:3]{index=3}
+            var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _gpiohandle);               
             if (ftStatus != FTDI.FT_STATUS.FT_OK) // Updated to compare with FTDI.FT_STATUS.FT_OK
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
 
@@ -63,11 +63,7 @@ namespace BringUp_Control
             return v != 0;
         }
 
-        private void Gpio3Write(bool high)
-        {
-            if (_gpiohandle != IntPtr.Zero) return;
-            Ft4222Native.FT4222_GPIO_Write(_gpiohandle, (byte)Ft4222Native.GPIO.GPIO3, (byte)(high ? 1 : 0));
-        }
+        
 
         // ─────────────── cleanup ────────────────────────────────────────────
         public void Dispose()
