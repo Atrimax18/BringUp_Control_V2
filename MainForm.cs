@@ -34,7 +34,7 @@ namespace BringUp_Control
         public const int GPIO3 = 3;
 
         string filepath = string.Empty;  // csv file path
-        int usbcounter = 0;
+        //int usbcounter = 0;
 
         private bool _usbInitInProgress = false;
         public System.Timers.Timer _usbDebounceTimer;
@@ -54,7 +54,8 @@ namespace BringUp_Control
         string datavalue = string.Empty;
 
         // FTDI FT4222H devices
-        Ft4222Device ftDev;
+        //Ft4222Device ftDev;
+        SpiDriver ftDev;
         AD4368_PLL ad4368;
         AD9175_DAC ad9175;
         GpioDriver gpio_control;
@@ -113,7 +114,7 @@ namespace BringUp_Control
                 bool isConnected = FTDriver.DeviceFlag(FTDriver.NumDevices());
 
                 uint num = 0;
-                Ft4222Native.FT_CreateDeviceInfoList(ref num);
+                Ft4222Native.FT_CreateDeviceInfoList(out num);
 
                 FTDriver.GetInfo(num, ref deviceInfo);
 
@@ -158,7 +159,7 @@ namespace BringUp_Control
                 else
                 {
                     // FTDI reconnected — reinitialize
-                    uint locnumber = FTDriver.GetDeviceLocId(0); //0 - is Device A interface
+                    uint locfirst = FTDriver.GetDeviceLocId(0); //0 - is Device A interface
                     uint locsecond = FTDriver.GetDeviceLocId(1); //1 - is Device B interface for GPIO and I2C
 
                     //uint locnumber = Ft4222Native.FindSpiInterfaceLocId();
@@ -170,11 +171,11 @@ namespace BringUp_Control
                     gpio_control = new GpioDriver();
                     gpio_control.Write(GPIO3, true);
 
-                    ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
+                    //ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
                     
+                    ftDev = new SpiDriver(locfirst, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
 
-                    
                     ad4368 = new AD4368_PLL(ftDev, 0);
                     DT4368 = ad4368.InitDataTable();
 

@@ -15,7 +15,8 @@ namespace BringUp_Control
     public class Ft4222Device : IDisposable
     {
         private IntPtr _handle = IntPtr.Zero;
-        private IntPtr _gpioHandle = IntPtr.Zero;
+        //private IntPtr _gpioHandle = IntPtr.Zero;
+        private SafeHandle _ftHandle;
 
         private readonly Ft4222Native.FT4222_SPI_Mode _spiMode;
         private readonly Ft4222Native.FT4222_CLK _clkDiv;
@@ -24,7 +25,7 @@ namespace BringUp_Control
         
 
         public bool IsOpen => _handle != IntPtr.Zero;
-        public bool IsGpioOpen => _gpioHandle != IntPtr.Zero;
+        //public bool IsGpioOpen => _gpioHandle != IntPtr.Zero;
 
         #region ‑‑ ctor / open / close ‑‑       
         public Ft4222Device(uint locId,
@@ -40,13 +41,13 @@ namespace BringUp_Control
             _clkDiv = clkDiv;
 
             // open by USB‑location ID
-            var ftStatus = Ft4222Native.FT_OpenEx(locId, 4 /*FT_OPEN_BY_LOCATION*/, ref _handle);
-            if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
+            var ftStatus = Ft4222Native.FT_OpenEx(locId, 4 /*FT_OPEN_BY_LOCATION*/, out _handle);
+            //if (ftStatus != FTDI.FT_STATUS.FT_OK)
+            //    throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
 
-            byte csPol = 0x01;// (byte)(csActiveHigh ? 1 : 0);
+            //byte csPol = 0x01;// (byte)(csActiveHigh ? 1 : 0);
             
-            Check(Ft4222Native.FT4222_SPIMaster_Init(_handle, _spiMode, _clkDiv,_cpol, _cpha, csPol));
+           // Check(Ft4222Native.FT4222_SPIMaster_Init(_handle, _spiMode, _clkDiv,_cpol, _cpha, csPol));
         }
 
         public void Dispose()
@@ -65,16 +66,13 @@ namespace BringUp_Control
         #region ‑‑ SPI helpers ‑‑
         //public void SpiSelect(byte csPin) => Check(Ft4222Native.FT4222_SPIMaster_SlaveSelect(_handle, csPin));
 
-        public void SpiWrite(ushort word, bool endTxn = true)
+        public void SpiWrite(ReadOnlySpan<byte> buffer, bool endTxn = true)
         {
-            Span<byte> buf = stackalloc byte[2];
-            buf[0] = (byte)(word >> 8);   // MSB
-            buf[1] = (byte)word;         // LSB
-
+            
             ushort txed = 0;
             
             Check(Ft4222Native.FT4222_SPIMaster_SingleWrite(
-                _handle, buf.ToArray(), (ushort)buf.Length, ref txed, endTxn));
+                _handle, buffer.ToArray(), (ushort)buffer.Length, ref txed, endTxn));
         }
 
         public void SpiRead(Span<byte> rx, bool endTxn = true)

@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using FTD2XX_NET;
+using static BringUp_Control.Ft4222Native;
+using static FTD2XX_NET.FTDI;
 
 namespace BringUp_Control
 {
@@ -17,22 +22,22 @@ namespace BringUp_Control
 #else
         const string DLL = "LibFT4222.dll";
 #endif
-
+        
         // === SPI ===
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_SPIMaster_Init(IntPtr ftHandle, FT4222_SPI_Mode ioMode, FT4222_CLK clockDiv, FT4222_SPICPOL sclkPolarity, FT4222_SPICPHA sclkPhase, Byte CS);
+        public static extern FT4222_STATUS FT4222_SPIMaster_Init(IntPtr ftHandle, FT4222_SPI_Mode ioMode, FT4222_CLK clockDiv, FT4222_SPICPOL sclkPolarity, FT4222_SPICPHA sclkPhase, byte ssoMap);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(IntPtr ftHandle, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
+        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(SafeHandle ftHandlee, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
+        public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeOfRead, bool isEndTransaction);
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(SafeHandle ftHandle, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
+        public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
-
-        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(IntPtr ftHandle, byte[] readbuffer, byte[] writebuffer, ushort sizeToTransfer, ref ushort sizetransferred, bool isEndTransaction);
-
-        //[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern FT4222_STATUS FT4222_SPIMaster_SlaveSelect(IntPtr ftHandle, byte csPin);
+        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(SafeHandle ftHandle, byte[] readbuffer, byte[] writebuffer, ushort sizeToTransfer, ref ushort sizetransferred, bool isEndTransaction);
+        public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(IntPtr ftHandle, in byte readBuffer, in byte writeBuffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
+        
 
         // === I2C ===
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -46,7 +51,7 @@ namespace BringUp_Control
 
         // === GPIO ===
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_GPIO_Init(IntPtr ftHandle, byte[] dir);
+        public static extern FT4222_STATUS FT4222_GPIO_Init(IntPtr ftHandlee, byte[] dir);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SetSuspendOut(IntPtr ftHandle, bool enable);
@@ -54,7 +59,7 @@ namespace BringUp_Control
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SetWakeUpInterrupt(IntPtr ftHandle, bool enable);
 
-        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_GPIO_SetDir(IntPtr ftHandle, byte gpioPort, GPIO_Dir direction);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
@@ -74,19 +79,122 @@ namespace BringUp_Control
         //**************************************************************************
 
         [DllImport("ftd2xx.dll")]
-        public static extern FTDI.FT_STATUS FT_CreateDeviceInfoList(ref UInt32 numdevs);
+        public static extern FTDI.FT_STATUS FT_CreateDeviceInfoList(out UInt32 numdevs);
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_GetDeviceInfoDetail(UInt32 index, ref UInt32 flags, ref FTDI.FT_DEVICE chiptype, ref UInt32 id, ref UInt32 locid, byte[] serialnumber, byte[] description, ref IntPtr ftHandle);
+        //public static extern FTDI.FT_STATUS FT_GetDeviceInfoDetail(UInt32 index, out UInt32 flags, out FTDI.FT_DEVICE chiptype, out UInt32 id, out UInt32 locid, in byte serialnumber, in byte description, out IntPtr ftHandle);
 
-        //[DllImportAttribute("ftd2xx.dll", CallingConvention = CallingConvention.Cdecl)]
         [DllImport("ftd2xx.dll")]
-        public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, int dwFlags, ref IntPtr ftHandle);
+        public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, FtOpenType dwFlags, out IntPtr ftHandle);
+        //public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, FtOpenType dwFlags, ref IntPtr ftHandle);
 
-        //[DllImportAttribute("ftd2xx.dll", CallingConvention = CallingConvention.Cdecl)]
-        [DllImport("ftd2xx.dll")]
+        [DllImport("ftd2xx.dll")]        
         public static extern FTDI.FT_STATUS FT_Close(IntPtr ftHandle);
 
+        public enum FtDeviceType
+        {
+            //
+            // Summary:
+            //     FT232B or FT245B device
+            Ft232BOrFt245B,
+            //
+            // Summary:
+            //     FT8U232AM or FT8U245AM device
+            Ft8U232AmOrFTtU245Am,
+            //
+            // Summary:
+            //     FT8U100AX device
+            Ft8U100Ax,
+            //
+            // Summary:
+            //     Unknown device
+            UnknownDevice,
+            //
+            // Summary:
+            //     FT2232 device
+            Ft2232,
+            //
+            // Summary:
+            //     FT232R or FT245R device
+            Ft232ROrFt245R,
+            //
+            // Summary:
+            //     FT2232H device
+            Ft2232H,
+            //
+            // Summary:
+            //     FT4232H device
+            Ft4232H,
+            //
+            // Summary:
+            //     FT232H device
+            Ft232H,
+            //
+            // Summary:
+            //     FT X-Series device
+            FtXSeries,
+            //
+            // Summary:
+            //     FT4222 hi-speed device Mode 0 - 2 interfaces
+            Ft4222HMode0or2With2Interfaces,
+            //
+            // Summary:
+            //     FT4222 hi-speed device Mode 1 or 2 - 4 interfaces
+            Ft4222HMode1or2With4Interfaces,
+            //
+            // Summary:
+            //     FT4222 hi-speed device Mode 3 - 1 interface
+            Ft4222HMode3With1Interface,
+            //
+            // Summary:
+            //     OTP programmer board for the FT4222.
+            Ft4222OtpProgrammerBoard,
+            //
+            // Summary:
+            //     FT900 Device
+            Ft900,
+            //
+            // Summary:
+            //     FT930 Device
+            Ft930,
+            //
+            // Summary:
+            //     FTUMFTPD3A Device
+            FtUmftpd3A,
+            //
+            // Summary:
+            //     FT2233HP Device
+            Ft2233HP,
+            //
+            // Summary:
+            //     FT4233HP Device
+            Ft4233HP,
+            //
+            // Summary:
+            //     FT2232HP Device
+            Ft2232HP,
+            //
+            // Summary:
+            //     FT4232HP Device
+            Ft4232HP,
+            //
+            // Summary:
+            //     FT233HP Device
+            Ft233HP,
+            //
+            // Summary:
+            //     FT232HP Device
+            Ft232HP,
+            //
+            // Summary:
+            //     FT2232HA Device
+            Ft2232HA,
+            //
+            // Summary:
+            //     FT4232HA Device
+            Ft4232HA
+        }
         public enum FT4222_STATUS : uint
         {
             FT4222_OK = 0,
@@ -150,9 +258,16 @@ namespace BringUp_Control
             GPIO_INPUT = 1
         }
 
+        public enum FtOpenType
+        {
+            OpenBySerialNumber = 1,
+            OpenByDescription = 2,
+            OpenByLocation = 4
+        }
+
         public enum GPIO
         {
-            GPIO0 =0,
+            GPIO0 = 0,
             GPIO1 = 1,
             GPIO2 = 2,
             GPIO3 = 3,
@@ -180,10 +295,12 @@ namespace BringUp_Control
         public uint NumDevices()
         {
             UInt32 numofDevices = 0;
-            _ = FT_CreateDeviceInfoList(ref numofDevices);
+            _ = FT_CreateDeviceInfoList(out numofDevices); // Changed 'ref' to 'out' to fix CS1620  
 
             return numofDevices;
         }
+   
+        
 
         public bool DeviceFlag(uint devices)
         {
@@ -195,7 +312,7 @@ namespace BringUp_Control
 
         public void GetInfo(uint numdevices, ref List<string> datdevice)
         {
-            deviceA = new FTDI.FT_DEVICE_INFO_NODE();                       
+            deviceA = new FTDI.FT_DEVICE_INFO_NODE();
 
             for (uint i = 0; i < numdevices; i++)
             {
@@ -204,7 +321,7 @@ namespace BringUp_Control
                 byte[] desc = new byte[64];
 
                 FT_GetDeviceInfoDetail(i, ref devInfo.Flags, ref devInfo.Type, ref devInfo.ID, ref devInfo.LocId, sernum, desc, ref devInfo.ftHandle);
-
+                //FT_GetDeviceInfoDetail(i, out devInfo.Flags, out devInfo.Type, out devInfo.ID, out devInfo.LocId, sernum, desc, out devInfo.ftHandle);
                 datdevice.Add(i.ToString());
                 datdevice.Add(devInfo.Flags.ToString());
                 datdevice.Add(devInfo.Type.ToString());
@@ -220,7 +337,7 @@ namespace BringUp_Control
         public static uint FindSpiInterfaceLocId()
         {
             uint devCount = 0;
-            FT_CreateDeviceInfoList(ref devCount);
+            FT_CreateDeviceInfoList(out devCount);
             if (devCount == 0)
                 throw new InvalidOperationException("No FT4222 devices found.");
 
@@ -244,7 +361,7 @@ namespace BringUp_Control
         public uint GetDeviceLocId(uint dev_id)
         {
             uint devCount = 0;
-            Ft4222Native.FT_CreateDeviceInfoList(ref devCount);
+            Ft4222Native.FT_CreateDeviceInfoList(out devCount);
             if (devCount == 0)
                 throw new InvalidOperationException("No FT4222 devices detected.");
 
@@ -284,7 +401,10 @@ namespace BringUp_Control
             return "Failed to retrieve driver version";
         }
 
-        
 
     }
+
+    
+
+    
 }

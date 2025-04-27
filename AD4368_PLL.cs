@@ -16,13 +16,13 @@ namespace BringUp_Control
     internal sealed class AD4368_PLL : IDisposable
     {
 
-        private readonly Ft4222Device _ft;
+        private readonly SpiDriver _ft;
         //private readonly byte _cs;   // CS pin on FT4222H (0‑3)
 
         List<string> regaddresslist = new List<string>();
         DataTable dtAD4368 = new DataTable();
 
-        public AD4368_PLL(Ft4222Device ft, byte chipSelect)
+        public AD4368_PLL(SpiDriver ft, byte chipSelect)
         {
             _ft = ft;
             //_cs = chipSelect;
@@ -36,35 +36,35 @@ namespace BringUp_Control
         {
             if (_ft == null) return;
 
-            //_ft.SpiSelect(_cs);
-            //_ft.SpiWriteReg16(reg, data);
-            _ft.SpiWrite((byte)reg, true);
+            byte[] buffer = new byte[3]
+            {
+            (byte)(reg >> 8),
+            (byte)(reg & 0xFF),
+            data
+            };
+
+            _ft.Write(buffer);
             
         }
 
         public byte ReadRegister(ushort reg)
         {
             //_ft.SpiSelect(_cs);
-            return _ft.SpiReadReg16(reg);
-        }
-
-        public byte ReadWrite(ushort registerAddress)
-        {
-            // Format the read command: MSB of 24-bit address is 1 (read operation)
-            ushort readCommand = (ushort)(registerAddress | 0x8000);
-
-            byte[] writeBuffer = new byte[]
+            ushort readCmd = (ushort)(reg | 0x8000);
+            byte[] tx = new byte[3]
             {
-                (byte)(readCommand >> 8),  // High byte of register address
-                (byte)(readCommand & 0xFF), // Low byte of register address
-                0x00  // Dummy byte for reading data
+            (byte)(readCmd >> 8),
+            (byte)(readCmd & 0xFF),
+            0x00
             };
 
-            byte[] readBuffer = new byte[3]; // 3 bytes: Register Address + Dummy + Read Data
-            _ft.SpiReadWrite(writeBuffer, readBuffer, true);
+            byte[] rx = new byte[3];
 
-            return readBuffer[2];
+            _ft.TransferFullDuplex(tx, rx);
+            return rx[2];
         }
+
+        
 
         public void Dispose() { /*nothing*/ }
 

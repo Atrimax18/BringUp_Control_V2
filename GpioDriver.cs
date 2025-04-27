@@ -12,8 +12,8 @@ namespace BringUp_Control
     public sealed class GpioDriver : IDisposable
     {
 
-        private IntPtr _gpiohandle = IntPtr.Zero;
-        public bool IsOpen => _gpiohandle != IntPtr.Zero;
+        private IntPtr _gpiohandle;
+        
 
         public GpioDriver(uint interfaceIndex = 1,
                                 byte outputMask = 0b_1000,   // GPIO3 out, the rest in
@@ -23,9 +23,8 @@ namespace BringUp_Control
             var native = new Ft4222Native();
             uint locId = native.GetDeviceLocId(interfaceIndex);               // :contentReference[oaicite:0]{index=0}&#8203;:contentReference[oaicite:1]{index=1}
 
-            var ftStatus = Ft4222Native.FT_OpenEx(locId, 4 /*FT_OPEN_BY_LOCATION*/,
-                                                  ref _gpiohandle);               // :contentReference[oaicite:2]{index=2}&#8203;:contentReference[oaicite:3]{index=3}
-            if (ftStatus != FTDI.FT_STATUS.FT_OK)
+            var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _gpiohandle);               // :contentReference[oaicite:2]{index=2}&#8203;:contentReference[oaicite:3]{index=3}
+            if (ftStatus != FTDI.FT_STATUS.FT_OK) // Updated to compare with FTDI.FT_STATUS.FT_OK
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
 
             Check(Ft4222Native.FT4222_SetSuspendOut(_gpiohandle, false), "TEST");
@@ -66,18 +65,18 @@ namespace BringUp_Control
 
         private void Gpio3Write(bool high)
         {
-            if (_gpiohandle == IntPtr.Zero) return;
+            if (_gpiohandle != IntPtr.Zero) return;
             Ft4222Native.FT4222_GPIO_Write(_gpiohandle, (byte)Ft4222Native.GPIO.GPIO3, (byte)(high ? 1 : 0));
         }
 
         // ─────────────── cleanup ────────────────────────────────────────────
         public void Dispose()
         {
-            if (_gpiohandle != IntPtr.Zero)
+            if (_gpiohandle != IntPtr.Zero) // Replace IsInvalid check with IntPtr.Zero comparison  
             {
-                Ft4222Native.FT4222_UnInitialize(_gpiohandle);                     // :contentReference[oaicite:14]{index=14}&#8203;:contentReference[oaicite:15]{index=15}
-                Ft4222Native.FT_Close(_gpiohandle);                                // :contentReference[oaicite:16]{index=16}&#8203;:contentReference[oaicite:17]{index=17}
-                _gpiohandle = IntPtr.Zero;
+                Ft4222Native.FT4222_UnInitialize(_gpiohandle);
+                Ft4222Native.FT_Close(_gpiohandle);
+                _gpiohandle = IntPtr.Zero; // Reset the handle to IntPtr.Zero after closing  
             }
         }
 
