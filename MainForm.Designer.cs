@@ -42,7 +42,7 @@
             this.Cmd_ReadAll_AD4368 = new System.Windows.Forms.Button();
             this.Cmd_Export_AD4368_File = new System.Windows.Forms.Button();
             this.Cmd_Import_AD4368_File = new System.Windows.Forms.Button();
-            this.Cmd_WriteReg_ADF4368 = new System.Windows.Forms.Button();
+            this.Cmd_WriteReg_AD4368 = new System.Windows.Forms.Button();
             this.textAD4368_Value = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dataGridViewAD4368 = new System.Windows.Forms.DataGridView();
@@ -66,6 +66,10 @@
             this.tabAD9213 = new System.Windows.Forms.TabPage();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.tabRFLine = new System.Windows.Forms.TabPage();
+            this.Cmd_Read_ADC = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -99,10 +103,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.Cmd_Read_ADC = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -162,7 +162,7 @@
             this.tabAD4368.Controls.Add(this.Cmd_ReadAll_AD4368);
             this.tabAD4368.Controls.Add(this.Cmd_Export_AD4368_File);
             this.tabAD4368.Controls.Add(this.Cmd_Import_AD4368_File);
-            this.tabAD4368.Controls.Add(this.Cmd_WriteReg_ADF4368);
+            this.tabAD4368.Controls.Add(this.Cmd_WriteReg_AD4368);
             this.tabAD4368.Controls.Add(this.textAD4368_Value);
             this.tabAD4368.Controls.Add(this.groupBox1);
             this.tabAD4368.Controls.Add(this.comboMUXOUT);
@@ -268,15 +268,15 @@
             this.Cmd_Import_AD4368_File.UseVisualStyleBackColor = true;
             this.Cmd_Import_AD4368_File.Click += new System.EventHandler(this.Cmd_Import_AD4368_File_Click);
             // 
-            // Cmd_WriteReg_ADF4368
+            // Cmd_WriteReg_AD4368
             // 
-            this.Cmd_WriteReg_ADF4368.Location = new System.Drawing.Point(462, 52);
-            this.Cmd_WriteReg_ADF4368.Name = "Cmd_WriteReg_ADF4368";
-            this.Cmd_WriteReg_ADF4368.Size = new System.Drawing.Size(101, 63);
-            this.Cmd_WriteReg_ADF4368.TabIndex = 7;
-            this.Cmd_WriteReg_ADF4368.Text = "Write Register";
-            this.Cmd_WriteReg_ADF4368.UseVisualStyleBackColor = true;
-            this.Cmd_WriteReg_ADF4368.Click += new System.EventHandler(this.Cmd_WriteReg_ADF4368_Click);
+            this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(462, 52);
+            this.Cmd_WriteReg_AD4368.Name = "Cmd_WriteReg_AD4368";
+            this.Cmd_WriteReg_AD4368.Size = new System.Drawing.Size(101, 63);
+            this.Cmd_WriteReg_AD4368.TabIndex = 7;
+            this.Cmd_WriteReg_AD4368.Text = "Write Register";
+            this.Cmd_WriteReg_AD4368.UseVisualStyleBackColor = true;
+            this.Cmd_WriteReg_AD4368.Click += new System.EventHandler(this.Cmd_WriteReg_AD4368_Click);
             // 
             // textAD4368_Value
             // 
@@ -532,6 +532,39 @@
             this.tabRFLine.TabIndex = 5;
             this.tabRFLine.Text = "TX RF LINEUP";
             this.tabRFLine.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_Read_ADC
+            // 
+            this.Cmd_Read_ADC.Location = new System.Drawing.Point(440, 357);
+            this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
+            this.Cmd_Read_ADC.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_Read_ADC.TabIndex = 20;
+            this.Cmd_Read_ADC.Text = "READ ADC VALUE";
+            this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(613, 197);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(56, 22);
+            this.textBox3.TabIndex = 19;
+            this.textBox3.Text = "0";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(454, 197);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(56, 22);
+            this.textBox2.TabIndex = 18;
+            this.textBox2.Text = "0";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(233, 196);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(56, 22);
+            this.textBox1.TabIndex = 17;
+            this.textBox1.Text = "0";
             // 
             // Cmd_UpdateTX_Values
             // 
@@ -857,39 +890,6 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(233, 196);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(56, 22);
-            this.textBox1.TabIndex = 17;
-            this.textBox1.Text = "0";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(454, 197);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(56, 22);
-            this.textBox2.TabIndex = 18;
-            this.textBox2.Text = "0";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(613, 197);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(56, 22);
-            this.textBox3.TabIndex = 19;
-            this.textBox3.Text = "0";
-            // 
-            // Cmd_Read_ADC
-            // 
-            this.Cmd_Read_ADC.Location = new System.Drawing.Point(440, 357);
-            this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
-            this.Cmd_Read_ADC.Size = new System.Drawing.Size(114, 51);
-            this.Cmd_Read_ADC.TabIndex = 20;
-            this.Cmd_Read_ADC.Text = "READ ADC VALUE";
-            this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -951,7 +951,7 @@
         private System.Windows.Forms.Label labelFilePathAD4368;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dataGridViewAD4368;
-        private System.Windows.Forms.Button Cmd_WriteReg_ADF4368;
+        private System.Windows.Forms.Button Cmd_WriteReg_AD4368;
         private System.Windows.Forms.TextBox textAD4368_Value;
         private System.Windows.Forms.Button Cmd_WriteAll_AD4368;
         private System.Windows.Forms.Button Cmd_ReadAll_AD4368;

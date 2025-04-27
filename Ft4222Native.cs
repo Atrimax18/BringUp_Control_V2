@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using FTD2XX_NET;
-using static BringUp_Control.Ft4222Native;
-using static FTD2XX_NET.FTDI;
+
 
 namespace BringUp_Control
 {
@@ -23,23 +15,21 @@ namespace BringUp_Control
         const string DLL = "LibFT4222.dll";
 #endif
         
-        // === SPI ===
+        // ============================== SPI ===================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SPIMaster_Init(IntPtr ftHandle, FT4222_SPI_Mode ioMode, FT4222_CLK clockDiv, FT4222_SPICPOL sclkPolarity, FT4222_SPICPHA sclkPhase, byte ssoMap);
 
-        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(SafeHandle ftHandlee, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeOfRead, bool isEndTransaction);
-        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(SafeHandle ftHandle, byte[] buffer, ushort sizeToTransfer, ref ushort sizeTransferred, bool isEndTransaction);
+        
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(SafeHandle ftHandle, byte[] readbuffer, byte[] writebuffer, ushort sizeToTransfer, ref ushort sizetransferred, bool isEndTransaction);
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(IntPtr ftHandle, in byte readBuffer, in byte writeBuffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
         
 
-        // === I2C ===
+        // ============================= I2C ===================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_Init(IntPtr ftHandle, uint kbps);
 
@@ -49,7 +39,7 @@ namespace BringUp_Control
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_Write(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToWrite, ref ushort bytesWritten);
 
-        // === GPIO ===
+        // ============================ GPIO ===================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_GPIO_Init(IntPtr ftHandlee, byte[] dir);
 
@@ -68,26 +58,26 @@ namespace BringUp_Control
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_GPIO_Write(IntPtr ftHandle, byte gpioPort, byte value);
 
-        // === Misc ===
+        // ======================== Misc ===========================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_UnInitialize(IntPtr ftHandle);
 
-        //**************************************************************************
+        //***********************************************************************************************************************************
         //
         // FUNCTION IMPORTS FROM FTD2XX DLL
         //
-        //**************************************************************************
+        //***********************************************************************************************************************************
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_CreateDeviceInfoList(out UInt32 numdevs);
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_GetDeviceInfoDetail(UInt32 index, ref UInt32 flags, ref FTDI.FT_DEVICE chiptype, ref UInt32 id, ref UInt32 locid, byte[] serialnumber, byte[] description, ref IntPtr ftHandle);
-        //public static extern FTDI.FT_STATUS FT_GetDeviceInfoDetail(UInt32 index, out UInt32 flags, out FTDI.FT_DEVICE chiptype, out UInt32 id, out UInt32 locid, in byte serialnumber, in byte description, out IntPtr ftHandle);
+        ;
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, FtOpenType dwFlags, out IntPtr ftHandle);
-        //public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, FtOpenType dwFlags, ref IntPtr ftHandle);
+        
 
         [DllImport("ftd2xx.dll")]        
         public static extern FTDI.FT_STATUS FT_Close(IntPtr ftHandle);
@@ -321,7 +311,7 @@ namespace BringUp_Control
                 byte[] desc = new byte[64];
 
                 FT_GetDeviceInfoDetail(i, ref devInfo.Flags, ref devInfo.Type, ref devInfo.ID, ref devInfo.LocId, sernum, desc, ref devInfo.ftHandle);
-                //FT_GetDeviceInfoDetail(i, out devInfo.Flags, out devInfo.Type, out devInfo.ID, out devInfo.LocId, sernum, desc, out devInfo.ftHandle);
+                
                 datdevice.Add(i.ToString());
                 datdevice.Add(devInfo.Flags.ToString());
                 datdevice.Add(devInfo.Type.ToString());
@@ -401,10 +391,5 @@ namespace BringUp_Control
             return "Failed to retrieve driver version";
         }
 
-
-    }
-
-    
-
-    
+    }    
 }

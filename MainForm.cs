@@ -14,8 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.Configuration;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using System.Text.RegularExpressions;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -23,6 +22,9 @@ namespace BringUp_Control
 {
     public partial class MainForm : Form
     {
+
+        
+
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
@@ -51,10 +53,11 @@ namespace BringUp_Control
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
 
-        string datavalue = string.Empty;
+        
 
-        // FTDI FT4222H devices
-        //Ft4222Device ftDev;
+        private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
+        private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
+        
         SpiDriver ftDev;
         AD4368_PLL ad4368;
         AD9175_DAC ad9175;
@@ -104,7 +107,19 @@ namespace BringUp_Control
             }  
         }
 
-        
+        private static bool TryParseHexByte(string input, out byte value)
+        {
+            value = 0;
+
+            // Replace the range operator with a substring method for compatibility with C# 7.3
+            if (!HexBytePattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            // Use Substring instead of the range operator
+            string hexPart = input.Substring(2);
+            return byte.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
+        }
+
 
         private void CheckFTDIConnection()
         {
@@ -264,9 +279,20 @@ namespace BringUp_Control
 
 
             Application.ExitThread();
-        }     
+        }
 
-        
+        private static bool TryParseHexU16(string input, out ushort value)
+        {
+            value = 0;
+
+            if (!HexU16Pattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            // Use Substring instead of the range operator
+            string hexPart = input.Substring(4);
+            return ushort.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
+            
+        }
         // Validation of correct HEX value
         private bool IsHexString(string input)
         {
@@ -284,7 +310,7 @@ namespace BringUp_Control
             // Disable the button for values 0x0002 to 0x000D
             if (driverflag)
             {
-                Cmd_WriteReg_ADF4368.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                Cmd_WriteReg_AD4368.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
                 textAD4368_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
             }
             
@@ -299,20 +325,36 @@ namespace BringUp_Control
             textAD4368_Value.Focus();
         }
 
-        private void Cmd_WriteReg_ADF4368_Click(object sender, EventArgs e)
+        private void Cmd_WriteReg_AD4368_Click(object sender, EventArgs e)
         {
-            string regaddress = comboRegAddress.SelectedItem?.ToString(); // Get selected value as string
-                                                                    // 
-            byte poweraddress = Convert.ToByte(regaddress.Replace("0x", ""), 16);
-            ushort regValue = Convert.ToUInt16(regaddress.Replace("0x", ""), 16);
-            byte databyte = Convert.ToByte(datavalue.Replace("0x", ""), 16);
+            string regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
 
-            ad4368.WriteRegister(regValue, databyte);
+            string dataRaw = textAD4368_Value.Text.Trim();
 
-            if (poweraddress == 0x002B)
+            if (!TryParseHexU16(regaddress, out ushort regValue))
             {
-                CheckPowerRegister(poweraddress);
+                MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
+                                "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboRegAddress.Focus();
+                return;
             }
+
+            if (!TryParseHexByte(dataRaw, out byte dataByte))
+            {
+                MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
+                                "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textAD4368_Value.Focus();
+                textAD4368_Value.Clear();
+                return;
+            }
+
+            ad4368.WriteRegister(regValue, dataByte);
+
+            byte powerAddress = (byte)regValue;
+            // Check if the register address is the power register
+            if (powerAddress == 0x002B)
+                CheckPowerRegister(powerAddress);
+            
         }        
 
 
@@ -379,7 +421,9 @@ namespace BringUp_Control
 
         private void CheckPowerRegister(byte address)
         {
-            byte powerreturn = ad4368.ReadRegister(address);
+            ushort paddrress = Convert.ToUInt16(address.ToString("X4"), 16);
+
+            byte powerreturn = ad4368.ReadRegister(paddrress);
 
             if (powerreturn == 0x00)
             {
@@ -533,14 +577,12 @@ namespace BringUp_Control
             {
                 // Validate Hex value entered in this field
                 if (IsHexString(textAD4368_Value.Text))
-                {
-                    datavalue = textAD4368_Value.Text.ToUpper();
-                    Cmd_WriteReg_ADF4368.Focus();
+                {                  
+                    Cmd_WriteReg_AD4368.Focus();
                 }
                 else
                 {
-                    textAD4368_Value.Clear();
-                    datavalue = string.Empty;
+                    textAD4368_Value.Clear();                    
                     textAD4368_Value.Focus();
                 }
             }
@@ -562,9 +604,9 @@ namespace BringUp_Control
             var filteredRows = DT4368.AsEnumerable().Where(row =>
             {
                 string hexStr = row["Register"].ToString();      // e.g. "0x0053"
-                int reg = Convert.ToInt32(hexStr.Substring(2), 16); // Convert to int
+                ushort reg = Convert.ToUInt16(hexStr.Substring(2), 16); // Convert to int
                 return reg >= 0x10 && reg <= 0x53;
-            }).OrderByDescending(row => Convert.ToInt32(row["Register"].ToString().Substring(2), 16) // Sort descending
+            }).OrderByDescending(row => Convert.ToUInt16(row["Register"].ToString().Substring(2), 16) // Sort descending
             );
 
             foreach (var row in filteredRows)
@@ -576,7 +618,7 @@ namespace BringUp_Control
 
                 ad4368.WriteRegister(regValue, databyte);
 
-                if (paddress == 0x002B)
+                if (paddress == 0x2B)
                 {
                     CheckPowerRegister(paddress);
                 }
