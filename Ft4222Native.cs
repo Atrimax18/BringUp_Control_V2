@@ -73,7 +73,7 @@ namespace BringUp_Control
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_GetDeviceInfoDetail(UInt32 index, ref UInt32 flags, ref FTDI.FT_DEVICE chiptype, ref UInt32 id, ref UInt32 locid, byte[] serialnumber, byte[] description, ref IntPtr ftHandle);
-        ;
+        
 
         [DllImport("ftd2xx.dll")]
         public static extern FTDI.FT_STATUS FT_OpenEx(uint pvArg1, FtOpenType dwFlags, out IntPtr ftHandle);

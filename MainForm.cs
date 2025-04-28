@@ -58,11 +58,15 @@ namespace BringUp_Control
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
-        
+
+        private uint _spiLocId = UInt32.MaxValue;   // interface-A  (SPI)
+        private uint _gpioLocId = UInt32.MaxValue;   // interface-B  (GPIO / future I²C)
+
         SpiDriver ftDev;
         AD4368_PLL ad4368;
         AD9175_DAC ad9175;
         GpioDriver gpio_control;
+        i2cDriver i2cBus;
         public MainForm()
         {
             InitializeComponent();            
@@ -175,23 +179,37 @@ namespace BringUp_Control
                 else
                 {
                     // FTDI reconnected — reinitialize
-                    uint locfirst = FTDriver.GetDeviceLocId(0); //0 - is Device A interface
+                    uint locfirst = FTDriver.GetDeviceLocId(0);  //0 - is Device A interface
                     uint locsecond = FTDriver.GetDeviceLocId(1); //1 - is Device B interface for GPIO and I2C
 
-                    //uint locnumber = Ft4222Native.FindSpiInterfaceLocId();
+                    // ── Guard: if nothing changed we’re already initialised ────────────────────
+                    bool locationsUnchanged = (ftDev != null) &&
+                                              (gpio_control != null) &&
+                                              (_spiLocId == locfirst) &&
+                                              (_gpioLocId == locsecond) &&
+                                              usbflag && driverflag;
+
+                    if (locationsUnchanged)
+                        return;   // avoid handle churn
+
+                    // ── Either first time or the device list really changed ───────────────────
+                    _spiLocId = locfirst;
+                    _gpioLocId = locsecond;
+
+
                     ftDev?.Dispose();
                     ad4368?.Dispose();
 
                     
                     gpio_control?.Dispose();                       // dispose any previous handle
-                    gpio_control = new GpioDriver();
+                    gpio_control = new GpioDriver(_gpioLocId);
                     gpio_control.Write(GPIO3, true);
 
-                    //ftDev = new Ft4222Device(locnumber, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open first bridge
                     
-                    ftDev = new SpiDriver(locfirst, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
+                    
+                    ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-
+                    //i2cBus = new i2cDriver(gpio_control);
                     ad4368 = new AD4368_PLL(ftDev, 0);
                     DT4368 = ad4368.InitDataTable();
 

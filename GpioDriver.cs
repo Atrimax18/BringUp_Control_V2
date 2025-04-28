@@ -15,7 +15,7 @@ namespace BringUp_Control
         private IntPtr _gpiohandle;
         
 
-        public GpioDriver(uint interfaceIndex = 1,
+        public GpioDriver(uint interfaceIndex,
                                 byte outputMask = 0b_1000,   // GPIO3 out, the rest in
                                 bool driveHigh = false)
         {

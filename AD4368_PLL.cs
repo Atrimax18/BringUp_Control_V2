@@ -24,8 +24,7 @@ namespace BringUp_Control
 
         public AD4368_PLL(SpiDriver ft, byte chipSelect)
         {
-            _ft = ft;
-            
+            _ft = ft;            
 
             // put device in 4‑wire SPI and MSB mode
             WriteRegister(0x0000, 0x18);
