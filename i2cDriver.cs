@@ -49,13 +49,13 @@ namespace BringUp_Control
         public void Read(byte devAddr, Span<byte> buffer)
         {
             ushort read = 0;
-            Check(Ft4222Native.FT4222_I2CMaster_Read(_i2cHandle, devAddr, buffer.ToArray(),(ushort)buffer.Length, ref read));
+            Check(Ft4222Native.FT4222_I2CMaster_Read(_i2cHandle, devAddr, buffer.ToArray(), (ushort)buffer.Length, ref read));
         }
 
         public void Write(byte devAddr, ReadOnlySpan<byte> data)
         {
             ushort written = 0;
-            Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, data.ToArray(),(ushort)data.Length, ref written));
+            Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, data.ToArray(), (ushort)data.Length, ref written));
         }
 
 
@@ -66,7 +66,7 @@ namespace BringUp_Control
             var native = new Ft4222Native();
             uint locId = native.GetDeviceLocId(interfaceIndex);
             var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _i2cHandle);
-            if (ftStatus != FTDI.FT_STATUS.FT_OK) 
+            if (ftStatus != FTDI.FT_STATUS.FT_OK)
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
         }
         public void Dispose()
@@ -77,5 +77,5 @@ namespace BringUp_Control
                 Ft4222Native.FT_Close(_i2cHandle);
             }
         }
-        
+    }
 }
