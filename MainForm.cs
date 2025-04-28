@@ -211,6 +211,7 @@ namespace BringUp_Control
 
                     i2cBus = new i2cDriver(gpio_control.Handle);
                     ad4368 = new AD4368_PLL(ftDev, 0);
+                    ad4368.Init();
                     DT4368 = ad4368.InitDataTable();
 
                     dataGridViewAD4368.DataSource = DT4368;

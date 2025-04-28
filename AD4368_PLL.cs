@@ -27,7 +27,13 @@ namespace BringUp_Control
             _ft = ft;            
 
             // put device in 4‑wire SPI and MSB mode
-            WriteRegister(0x0000, 0x18);
+            //WriteRegister(0x0000, 0x18);
+        }
+
+        public void Init()
+        {
+            //_spi = ftspi;
+            WriteRegister(0x0000, 0x18); // 4-wire SPI mode
         }
 
         public void WriteRegister(ushort reg, byte data)
