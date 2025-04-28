@@ -53,8 +53,8 @@ namespace BringUp_Control
         
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
+        private bool _disposed;
 
-        
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -179,8 +179,8 @@ namespace BringUp_Control
                 else
                 {
                     // FTDI reconnected — reinitialize
-                    uint locfirst = FTDriver.GetDeviceLocId(0);  //0 - is Device A interface
-                    uint locsecond = FTDriver.GetDeviceLocId(1); //1 - is Device B interface for GPIO and I2C
+                    uint locfirst = FTDriver.GetDeviceLocId(1);  //0 - is Device A interface
+                    uint locsecond = FTDriver.GetDeviceLocId(0); //1 - is Device B interface for GPIO and I2C
 
                     // ── Guard: if nothing changed we’re already initialised ────────────────────
                     bool locationsUnchanged = (ftDev != null) &&
@@ -209,13 +209,13 @@ namespace BringUp_Control
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-                    //i2cBus = new i2cDriver(gpio_control);
+                    i2cBus = new i2cDriver(gpio_control.Handle);
                     ad4368 = new AD4368_PLL(ftDev, 0);
                     DT4368 = ad4368.InitDataTable();
 
                     dataGridViewAD4368.DataSource = DT4368;
                     comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                    LogStatus("AD4368 reinitialized on SPI CS1");
+                    LogStatus("AD4368 reinitialized on SPI");
 
                     usbflag = true;
                     driverflag = true;
@@ -242,7 +242,33 @@ namespace BringUp_Control
             string timestamp = DateTime.Now.ToString("HH:mm:ss");
             textLog.AppendText($"[{timestamp}] {message}{Environment.NewLine}");
         }
-               
+
+        private void SafeShutdown()
+        {
+            if (_disposed) return;                 // already done once
+            _disposed = true;
+
+            // 1) stop timers / background work
+            _usbDebounceTimer?.Stop();
+            _usbDebounceTimer?.Dispose();
+
+            // 2) ensure critical outputs are safe BEFORE we drop the handle
+            try { gpio_control?.Write(GPIO3, false); }
+            catch { /* ignore if USB just vanished */ }
+
+            // 3) dispose high-level chip helpers (they only reference spi/i2c)
+            ad4368?.Dispose();
+            ad9175?.Dispose();
+
+            // 4) dispose the transports
+            ftDev?.Dispose();          // SPI (interface-A)
+            i2cBus?.Dispose();         // shares handle-B (does NOT own it)
+            gpio_control?.Dispose();   // owns/opens interface-B
+
+            // 5) close the app – use Exit() so Application.Run() unwinds cleanly
+            Application.Exit();
+        }
+
 
         protected override void WndProc(ref Message m)
         {
@@ -288,16 +314,13 @@ namespace BringUp_Control
             }
         }
 
-        private void Cmd_Exit_Click(object sender, EventArgs e)
+        private void Cmd_Exit_Click(object sender, EventArgs e) => SafeShutdown();
+        
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            gpio_control.Write(GPIO3, false);
-            ftDev?.Dispose();
-            ad4368?.Dispose();
-            ad9175?.Dispose();
-            gpio_control?.Dispose();
-
-
-            Application.ExitThread();
+            SafeShutdown();
+            base.OnFormClosing(e);
         }
         // Validation of Hex register value
         private static bool TryParseHexU16(string input, out ushort value)
