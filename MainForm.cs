@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -327,33 +328,43 @@ namespace BringUp_Control
 
         private void Cmd_WriteReg_AD4368_Click(object sender, EventArgs e)
         {
-            string regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
-
-            string dataRaw = textAD4368_Value.Text.Trim();
-
-            if (!TryParseHexU16(regaddress, out ushort regValue))
+            if (!string.IsNullOrWhiteSpace(textAD4368_Value.Text))
             {
-                MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
-                                "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                comboRegAddress.Focus();
-                return;
+                string regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
+
+                string dataRaw = textAD4368_Value.Text.Trim();
+
+                if (!TryParseHexU16(regaddress, out ushort regValue))
+                {
+                    MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
+                                    "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    comboRegAddress.Focus();
+                    return;
+                }
+
+                if (!TryParseHexByte(dataRaw, out byte dataByte))
+                {
+                    MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
+                                    "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textAD4368_Value.Focus();
+                    textAD4368_Value.Clear();
+                    return;
+                }
+
+                ad4368.WriteRegister(regValue, dataByte);
+
+                byte powerAddress = (byte)regValue;
+                // Check if the register address is the power register
+                if (powerAddress == 0x2B)
+                    CheckPowerRegister(powerAddress);
             }
-
-            if (!TryParseHexByte(dataRaw, out byte dataByte))
+            else
             {
-                MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
-                                "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                textAD4368_Value.Focus();
+                MessageBox.Show("The textbox value is empty or wrong!","Warning", MessageBoxButtons.OK,MessageBoxIcon.Error);
+                textAD4368_Value.Focus(); 
                 textAD4368_Value.Clear();
-                return;
             }
-
-            ad4368.WriteRegister(regValue, dataByte);
-
-            byte powerAddress = (byte)regValue;
-            // Check if the register address is the power register
-            if (powerAddress == 0x002B)
-                CheckPowerRegister(powerAddress);
+            
             
         }        
 
@@ -634,7 +645,7 @@ namespace BringUp_Control
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textAD4368_Value.Text))
             {
                 // Validate Hex value entered in this field
                 if (IsHexString(textAD4368_Value.Text))
