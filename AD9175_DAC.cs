@@ -183,7 +183,7 @@ namespace BringUp_Control
 
         public DataTable InitDataTableDAC()
         {
-            //DataTable dtAD4368 = new DataTable();
+            
             dtAD9175.Columns.Add("Index", typeof(int));
             dtAD9175.Columns.Add("Register", typeof(string));
             dtAD9175.Columns.Add("Value", typeof(string));
@@ -225,30 +225,7 @@ namespace BringUp_Control
             _ft.TransferFullDuplex(tx, rx);
             return rx[2];
         }
-        /*
-        public byte ReadRegister(ushort registerAddress)
-        {
-            // Format the read command: MSB of 24-bit address is 1 (read operation)
-            ushort readCommand = (ushort)(registerAddress | 0x8000); // Set MSB (bit 23) to 1
-
-            byte[] writeBuffer = new byte[]
-            {
-                (byte)(readCommand >> 8),  // High byte of register address
-                (byte)(readCommand & 0xFF), // Low byte of register address
-                0x00  // Dummy byte for reading data
-            };
-
-            byte[] readBuffer = new byte[3]; // 3 bytes: Register Address + Dummy + Read Data
-
-            // Perform SPI transaction
-            spi.TransferFullDuplex(writeBuffer, readBuffer);
-
-            byte receivedData = readBuffer[2]; // Extract the received data byte
-
-            Console.WriteLine($"SPI Read: Register 0x{registerAddress:X4} -> 0x{receivedData:X2}");
-            return receivedData;
-        }*/
-
+       
         public void SaveDataTableToCsv(DataTable table)
         {
             using (SaveFileDialog saveDialog = new SaveFileDialog())

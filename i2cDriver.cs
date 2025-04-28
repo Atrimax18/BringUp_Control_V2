@@ -13,7 +13,7 @@ namespace BringUp_Control
         private readonly IntPtr _i2cHandle;
         private readonly bool _ownsHandle;
 
-
+        // Open Handle , the frequency is set to 400KHz - will be dinamic in next update
         public i2cDriver(IntPtr sharedHandle, uint kbps = 400)
         {
             if (sharedHandle == IntPtr.Zero)
@@ -24,7 +24,7 @@ namespace BringUp_Control
             Init(kbps);
         }
 
-        // 2)  Open a fresh interface by Location-ID ────
+        // Open a fresh interface by Location-ID
         public i2cDriver(uint locId, uint kbps = 400)
         {
             var st = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _i2cHandle);
@@ -62,11 +62,11 @@ namespace BringUp_Control
 
         public i2cDriver(uint interfaceIndex)
         {
-            // ── open interface-B by Location-ID ───────────────────────────────
+            // Open interface-B (i2c and GPIO) by Location-ID 
             var native = new Ft4222Native();
             uint locId = native.GetDeviceLocId(interfaceIndex);
             var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _i2cHandle);
-            if (ftStatus != FTDI.FT_STATUS.FT_OK) // Updated to compare with FTDI.FT_STATUS.FT_OK
+            if (ftStatus != FTDI.FT_STATUS.FT_OK) 
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
         }
         public void Dispose()

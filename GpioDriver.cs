@@ -14,13 +14,14 @@ namespace BringUp_Control
 
         private readonly IntPtr _gpioHandle;
 
-        public IntPtr Handle => _gpioHandle; // Expose the handle as a public property for external access
+        // Expose the handle as a public property for external access
+        public IntPtr Handle => _gpioHandle; 
 
         private readonly bool _ownsHandle;
         private bool _disposed;
         private readonly object _sync = new object(); // Replace target-typed object creation with explicit type instantiation
 
-        // 1)  Open interface‑B by Location‑ID and take ownership of the handle
+        // Open interface‑B by Location‑ID and take ownership of the handle
         public GpioDriver(uint locId,
                           byte outputMask = 0b_1000,
                           bool driveHigh = false)
@@ -35,7 +36,7 @@ namespace BringUp_Control
             Init(outputMask, driveHigh);
         }
 
-        // 2)  Re‑use an already‑opened handle (no ownership)
+        // Re‑use an already‑opened handle 
         public GpioDriver(IntPtr sharedHandle,
                           byte outputMask = 0b_0000,
                           bool driveHigh = false)
@@ -177,7 +178,6 @@ namespace BringUp_Control
             if (st != Ft4222Native.FT4222_STATUS.FT4222_OK)
                 throw new InvalidOperationException($"{api} failed → {st}");
         }
-
         */
     }
 }
