@@ -210,8 +210,8 @@ namespace BringUp_Control
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
                     i2cBus = new i2cDriver(gpio_control.Handle);
-                    ad4368 = new AD4368_PLL(ftDev, 0);
-                    ad4368.Init();
+                    ad4368 = new AD4368_PLL();
+                    ad4368.Init(ftDev);
                     DT4368 = ad4368.InitDataTable();
 
                     dataGridViewAD4368.DataSource = DT4368;
@@ -415,12 +415,12 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD4368)
             {
-                ad4368 = new AD4368_PLL(ftDev, 0);   // set second parameter to 0.
+                /*ad4368 = new AD4368_PLL();   // set second parameter to 0.
 
                 DT4368 = ad4368.InitDataTable();
                 dataGridViewAD4368.DataSource = DT4368;
                 comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                LogStatus("AD4368 reinitialized on SPI CS1");
+                LogStatus("AD4368 reinitialized on SPI CS1");*/
             }
             
         }

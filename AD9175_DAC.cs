@@ -272,20 +272,20 @@ namespace BringUp_Control
         public string LoadDataTableToCsv()
         {
             string filepath = string.Empty;
-            using (OpenFileDialog ft = new OpenFileDialog())
+            using (OpenFileDialog ftfile = new OpenFileDialog())
             {
                 try
                 {
-                    ft.InitialDirectory = Directory.GetCurrentDirectory();
-                    ft.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
-                    ft.FilterIndex = 0;
+                    ftfile.InitialDirectory = Directory.GetCurrentDirectory();
+                    ftfile.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+                    ftfile.FilterIndex = 0;
 
-                    if (ft.ShowDialog() == DialogResult.OK)
+                    if (ftfile.ShowDialog() == DialogResult.OK)
                     {
                         if (dtAD9175.Rows.Count != 0)
                             dtAD9175.Clear();
 
-                        filepath = ft.FileName;
+                        filepath = ftfile.FileName;
 
                         ParsingFile(filepath);
                     }

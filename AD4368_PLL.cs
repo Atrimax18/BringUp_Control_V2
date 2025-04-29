@@ -16,23 +16,17 @@ namespace BringUp_Control
     internal sealed class AD4368_PLL : IDisposable
     {
 
-        private readonly SpiDriver _ft;
+        private SpiDriver _ft;
         //private readonly byte _cs;   // CS pin on FT4222H (0‑3)
 
         List<string> regaddresslist = new List<string>();
         DataTable dtAD4368 = new DataTable();
 
-        public AD4368_PLL(SpiDriver ft, byte chipSelect)
-        {
-            _ft = ft;            
+        
 
-            // put device in 4‑wire SPI and MSB mode
-            //WriteRegister(0x0000, 0x18);
-        }
-
-        public void Init()
+        public void Init(SpiDriver ft)
         {
-            //_spi = ftspi;
+            _ft = ft;
             WriteRegister(0x0000, 0x18); // 4-wire SPI mode
         }
 
@@ -53,7 +47,7 @@ namespace BringUp_Control
 
         public byte ReadRegister(ushort reg)
         {
-            //_ft.SpiSelect(_cs);
+            if (_ft == null) return 0;
             ushort readCmd = (ushort)(reg | 0x8000);
             byte[] tx = new byte[3]
             {
@@ -141,20 +135,20 @@ namespace BringUp_Control
         public string LoadDataTableToCsv()
         {
             string filepath = string.Empty;
-            using (OpenFileDialog ft = new OpenFileDialog())
+            using (OpenFileDialog ftfile = new OpenFileDialog())
             {
                 try
                 {
-                    ft.InitialDirectory = Directory.GetCurrentDirectory();
-                    ft.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
-                    ft.FilterIndex = 0;
+                    ftfile.InitialDirectory = Directory.GetCurrentDirectory();
+                    ftfile.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+                    ftfile.FilterIndex = 0;
 
-                    if (ft.ShowDialog() == DialogResult.OK)
+                    if (ftfile.ShowDialog() == DialogResult.OK)
                     {
                         if (dtAD4368.Rows.Count != 0)
                             dtAD4368.Clear();
 
-                        filepath = ft.FileName;
+                        filepath = ftfile.FileName;
                         
                         ParsingFile(filepath);                        
                     }                    

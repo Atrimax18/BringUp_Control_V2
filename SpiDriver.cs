@@ -76,7 +76,7 @@ namespace BringUp_Control
             }
         }
 
-        public void Write(ReadOnlySpan<byte> buffer)
+        public void Write(Span<byte> buffer)
         {
             ushort bytesWritten;
             var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleWrite(_ftHandle, in MemoryMarshal.GetReference(buffer),
