@@ -75,11 +75,9 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -103,6 +101,9 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.Cmd_DAC_Init = new System.Windows.Forms.Button();
+            this.checkAmp1 = new System.Windows.Forms.CheckBox();
+            this.checkAmp2 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -364,6 +365,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
             this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_ReadDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_WriteReg9175);
@@ -425,6 +427,7 @@
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
+            this.comboRegisters9175.SelectedIndexChanged += new System.EventHandler(this.comboRegisters9175_SelectedIndexChanged);
             // 
             // labelDAC9175_Register
             // 
@@ -509,6 +512,8 @@
             // 
             // tabRFLine
             // 
+            this.tabRFLine.Controls.Add(this.checkAmp2);
+            this.tabRFLine.Controls.Add(this.checkAmp1);
             this.tabRFLine.Controls.Add(this.Cmd_Read_ADC);
             this.tabRFLine.Controls.Add(this.textBox3);
             this.tabRFLine.Controls.Add(this.textBox2);
@@ -518,11 +523,9 @@
             this.tabRFLine.Controls.Add(this.label18);
             this.tabRFLine.Controls.Add(this.label17);
             this.tabRFLine.Controls.Add(this.label16);
-            this.tabRFLine.Controls.Add(this.comboBox5);
             this.tabRFLine.Controls.Add(this.label15);
             this.tabRFLine.Controls.Add(this.label14);
             this.tabRFLine.Controls.Add(this.label12);
-            this.tabRFLine.Controls.Add(this.comboBox3);
             this.tabRFLine.Controls.Add(this.label11);
             this.tabRFLine.Controls.Add(this.label10);
             this.tabRFLine.Controls.Add(this.pictureBox1);
@@ -611,17 +614,6 @@
             this.label16.TabIndex = 11;
             this.label16.Text = "3. HMC1119";
             // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "AMP MODE",
-            "BYPASS MODE"});
-            this.comboBox5.Location = new System.Drawing.Point(525, 47);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(151, 24);
-            this.comboBox5.TabIndex = 10;
-            // 
             // label15
             // 
             this.label15.AutoSize = true;
@@ -648,17 +640,6 @@
             this.label12.Size = new System.Drawing.Size(88, 16);
             this.label12.TabIndex = 6;
             this.label12.Text = "1. HMC8414";
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "AMP MODE",
-            "BYPASS MODE"});
-            this.comboBox3.Location = new System.Drawing.Point(287, 47);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(151, 24);
-            this.comboBox3.TabIndex = 5;
             // 
             // label11
             // 
@@ -890,6 +871,36 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
+            // Cmd_DAC_Init
+            // 
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 400);
+            this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
+            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 53);
+            this.Cmd_DAC_Init.TabIndex = 13;
+            this.Cmd_DAC_Init.Text = "DAC INIT";
+            this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
+            this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
+            // 
+            // checkAmp1
+            // 
+            this.checkAmp1.AutoSize = true;
+            this.checkAmp1.Location = new System.Drawing.Point(287, 55);
+            this.checkAmp1.Name = "checkAmp1";
+            this.checkAmp1.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp1.TabIndex = 21;
+            this.checkAmp1.Text = "BYPASS ON";
+            this.checkAmp1.UseVisualStyleBackColor = true;
+            // 
+            // checkAmp2
+            // 
+            this.checkAmp2.AutoSize = true;
+            this.checkAmp2.Location = new System.Drawing.Point(525, 55);
+            this.checkAmp2.Name = "checkAmp2";
+            this.checkAmp2.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp2.TabIndex = 22;
+            this.checkAmp2.Text = "BYPASS ON";
+            this.checkAmp2.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -988,12 +999,10 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button Cmd_Init_All;
@@ -1011,6 +1020,9 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button Cmd_Read_ADC;
+        private System.Windows.Forms.Button Cmd_DAC_Init;
+        private System.Windows.Forms.CheckBox checkAmp2;
+        private System.Windows.Forms.CheckBox checkAmp1;
     }
 }
 

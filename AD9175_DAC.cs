@@ -13,12 +13,24 @@ namespace BringUp_Control
 {
     internal sealed class AD9175_DAC : IDisposable
     {
-        private readonly SpiDriver _ft;
+        private SpiDriver _ft;
 
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
 
-        
+        public void Init(SpiDriver ft)
+        {
+            _ft = ft;
+
+
+            // TABLE 50  startup sequence
+            WriteRegister(0x0000, 0x81); // Soft reset
+            WriteRegister(0x0000, 0x3C); // Release RESET and configure 4-wire SPI protocol
+            WriteRegister(0x0091, 0x00); // Power up clock receiver
+            WriteRegister(0x0206, 0x01); // Take PHY out of reset
+            WriteRegister(0x0705, 0x01); // Enable Bootloader
+            WriteRegister(0x0090, 0x00); // Power on DAC and bias circuity
+        }
 
         public List<string> LoadComboRegister9175()
         {

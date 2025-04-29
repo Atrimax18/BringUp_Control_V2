@@ -211,13 +211,7 @@ namespace BringUp_Control
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
                     i2cBus = new i2cDriver(gpio_control.Handle);
-                    /*ad4368 = new AD4368_PLL();
                     
-                    DT4368 = ad4368.InitDataTable();
-
-                    dataGridViewAD4368.DataSource = DT4368;
-                    comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                    //LogStatus("AD4368 reinitialized on SPI");*/
 
                     usbflag = true;
                     driverflag = true;
@@ -269,6 +263,14 @@ namespace BringUp_Control
 
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
+        }
+
+        private void IniSetting(ConfigurationBuilder tt)
+        {
+            var configdata = tt.Build();
+
+            //right configdata["PLL4368:CLOCKFREQ"];
+            
         }
 
 
@@ -428,6 +430,7 @@ namespace BringUp_Control
                 dataGridViewAD4368.DataSource = DT4368;
                 comboRegAddress.DataSource = ad4368.LoadComboRegisters();
                 LogStatus("AD4368 reinitialized on SPI CS1");
+                Cmd_ReadAll_AD4368.Enabled = true;
             }
             
         }
@@ -710,9 +713,9 @@ namespace BringUp_Control
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-                {
-                    selectedTab = tabControl1.SelectedTab;
-                }
+        {
+            selectedTab = tabControl1.SelectedTab;
+        }
         
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)
@@ -736,6 +739,7 @@ namespace BringUp_Control
         {
             labelFilePathAD4368.Text = $"File Path: {ad4368.LoadDataTableToCsv()}";
             Cmd_WriteAll_AD4368.Enabled = true;
+            Cmd_ReadAll_AD4368.Enabled = true;
         }
 
         private void Cmd_Export_AD4368_File_Click(object sender, EventArgs e)
@@ -774,7 +778,48 @@ namespace BringUp_Control
 
         }
 
-        
+        private void Cmd_DAC_Init_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabAD9175)
+            {
+
+                //PLL_Init_Flag = true;
+                //Control_Init(PLL_Init_Flag);
+
+                ad9175 = new AD9175_DAC();
+                ad9175.Init(ftDev); // Initialize AD4368 with the current FTDI device
+
+
+                DT9175 = ad9175.InitDataTableDAC();
+                dataGridViewAD4368.DataSource = DT9175;
+                comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
+                LogStatus("AD9175 reinitialized on SPI CS1");
+                Cmd_ReadDAC9175.Enabled = true;
+            }
+        }
+
+        private void comboRegisters9175_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedRegisterAddress9175 = comboRegisters9175.SelectedItem.ToString();
+            int selectedHex = Convert.ToInt32(selectedRegisterAddress9175.Substring(2), 16); // Convert hex string to int
+
+            // Disable the button for values 0x0002 to 0x000D
+            if (driverflag)
+            {
+                //Cmd_WriteReg9175.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                //textDAC9175_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+            }
+
+
+            if (driverflag && usbflag)
+            {
+                byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
+                //byte valbyte = ad4368.ReadWrite((ushort)selectedHex);
+                textDAC9175_Value.Text = $"0x{valbyte:X2}";
+            }
+
+            textDAC9175_Value.Focus();
+        }
     }
 }
 
