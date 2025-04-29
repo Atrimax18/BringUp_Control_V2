@@ -264,8 +264,8 @@ namespace BringUp_Control
 
             // 4) dispose the transports
             ftDev?.Dispose();          // SPI (interface-A)
-            i2cBus?.Dispose();         // shares handle-B (does NOT own it)
-            gpio_control?.Dispose();   // owns/opens interface-B
+            i2cBus?.Dispose();         // I2C (interface-B) shared with GPIO control
+            gpio_control?.Dispose();   // GPIO (interface-B)
 
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
