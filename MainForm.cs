@@ -53,6 +53,7 @@ namespace BringUp_Control
         
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
+        bool PLL_Init_Flag = false; // PLL Init Flag
         private bool _disposed;
 
 
@@ -200,23 +201,23 @@ namespace BringUp_Control
                     ftDev?.Dispose();
                     ad4368?.Dispose();
 
-                    
+                    // ************************* ONLY FOR PLL EVALUATION BOARD ******************************************
                     gpio_control?.Dispose();                       // dispose any previous handle
                     gpio_control = new GpioDriver(_gpioLocId);
                     gpio_control.Write(GPIO3, true);
-
+                    // **************************************************************************************************
                     
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
                     i2cBus = new i2cDriver(gpio_control.Handle);
-                    ad4368 = new AD4368_PLL();
-                    ad4368.Init(ftDev);
+                    /*ad4368 = new AD4368_PLL();
+                    
                     DT4368 = ad4368.InitDataTable();
 
                     dataGridViewAD4368.DataSource = DT4368;
                     comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                    LogStatus("AD4368 reinitialized on SPI");
+                    //LogStatus("AD4368 reinitialized on SPI");*/
 
                     usbflag = true;
                     driverflag = true;
@@ -415,12 +416,18 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD4368)
             {
-                /*ad4368 = new AD4368_PLL();   // set second parameter to 0.
+
+                PLL_Init_Flag = true;
+                Control_Init(PLL_Init_Flag);
+
+                ad4368 = new AD4368_PLL();
+                ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+                
 
                 DT4368 = ad4368.InitDataTable();
                 dataGridViewAD4368.DataSource = DT4368;
                 comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                LogStatus("AD4368 reinitialized on SPI CS1");*/
+                LogStatus("AD4368 reinitialized on SPI CS1");
             }
             
         }
@@ -664,10 +671,10 @@ namespace BringUp_Control
             if (!enabled)
             {
                 tabControl1.Enabled = false;
-                Cmd_Init_All.Enabled = false;
-                Cmd_FT_Temp_Read.Enabled = false;
-                Cmd_RF_Temp_Read.Enabled=false;
-                Cmd_AD4368_INIT.Enabled = false;
+                //Cmd_Init_All.Enabled = false;
+                //Cmd_FT_Temp_Read.Enabled = false;
+                //Cmd_RF_Temp_Read.Enabled=false;
+                //Cmd_AD4368_INIT.Enabled = false;
             }
             else
             {
@@ -675,14 +682,37 @@ namespace BringUp_Control
                 Cmd_Init_All.Enabled = true;
                 Cmd_FT_Temp_Read.Enabled = true;
                 Cmd_RF_Temp_Read.Enabled = true;
+                comboMUXOUT.Enabled = false;
+                comboRegAddress.Enabled = false;
+                Cmd_WriteReg_AD4368.Enabled = false;
+                Cmd_Import_AD4368_File.Enabled = false;
+                textAD4368_Value.Enabled = false;
                 Cmd_AD4368_INIT.Enabled=true;
             }
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        public void Control_Init(bool initflag)
         {
-            selectedTab  = tabControl1.SelectedTab;
+            if (!initflag)
+            {
+                textAD4368_Value.Enabled = false;
+                comboRegAddress.Enabled = false;
+                comboMUXOUT.Enabled = false;
+                Cmd_Import_AD4368_File.Enabled = false;
+            }
+            else
+            {
+                textAD4368_Value.Enabled = true;
+                comboRegAddress.Enabled = true;
+                comboMUXOUT.Enabled = true;
+                Cmd_Import_AD4368_File.Enabled = true;
+            }
         }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+                {
+                    selectedTab = tabControl1.SelectedTab;
+                }
         
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)

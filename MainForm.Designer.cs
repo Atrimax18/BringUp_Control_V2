@@ -794,7 +794,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(96, 19);
+            this.label3.Location = new System.Drawing.Point(111, 19);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 16);
             this.label3.TabIndex = 10;
@@ -854,7 +854,7 @@
             // Cmd_FT_Temp_Read
             // 
             this.Cmd_FT_Temp_Read.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cmd_FT_Temp_Read.Location = new System.Drawing.Point(144, 10);
+            this.Cmd_FT_Temp_Read.Location = new System.Drawing.Point(159, 9);
             this.Cmd_FT_Temp_Read.Name = "Cmd_FT_Temp_Read";
             this.Cmd_FT_Temp_Read.Size = new System.Drawing.Size(103, 34);
             this.Cmd_FT_Temp_Read.TabIndex = 17;
