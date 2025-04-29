@@ -194,8 +194,8 @@ namespace BringUp_Control
                         return;   // avoid handle churn
 
                     // ── Either first time or the device list really changed ───────────────────
-                    _spiLocId = locfirst;
-                    _gpioLocId = locsecond;
+                    _spiLocId = locsecond;//lab // locfirst - office;
+                    _gpioLocId = locfirst;//lab // locsecond - office;
 
 
                     ftDev?.Dispose();
@@ -210,7 +210,7 @@ namespace BringUp_Control
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-                    i2cBus = new i2cDriver(gpio_control.Handle);
+                    //i2cBus = new i2cDriver(gpio_control.Handle);
                     
 
                     usbflag = true;

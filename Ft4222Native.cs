@@ -21,9 +21,11 @@ namespace BringUp_Control
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeOfRead, bool isEndTransaction);
-        
+        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleRead(IntPtr ftHandle, byte[] buffer, ushort bufferSize, out ushort sizeOfRead, bool isEndTransaction);
+
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]        
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, in byte buffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
+        //public static extern FT4222_STATUS FT4222_SPIMaster_SingleWrite(IntPtr ftHandle, byte[] buffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_SPIMaster_SingleReadWrite(IntPtr ftHandle, in byte readBuffer, in byte writeBuffer, ushort bufferSize, out ushort sizeTransferred, bool isEndTransaction);
@@ -37,7 +39,13 @@ namespace BringUp_Control
         public static extern FT4222_STATUS FT4222_I2CMaster_Read(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToRead, ref ushort bytesRead);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_I2CMaster_ReadEx(IntPtr ftHandle, ushort deviceAddress, byte flag, in byte buffer, ushort bufferSize, out ushort sizeTransferred);
+
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_Write(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToWrite, ref ushort bytesWritten);
+
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_I2CMaster_WriteEx(IntPtr ftHandle, ushort deviceAddress, byte flag, in byte buffer, ushort bufferSize, out ushort sizeTransferred);
 
         // ============================ GPIO =======================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]

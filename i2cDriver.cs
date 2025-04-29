@@ -13,6 +13,16 @@ namespace BringUp_Control
         private readonly IntPtr _i2cHandle;
         private readonly bool _ownsHandle;
 
+
+
+        public enum I2C_MasterFlag : byte
+        {
+            NONE = 0x80,
+            START = 0x02,
+            Repeated_START = 0x03,     // Repeated_START will not send master code in HS mode
+            STOP = 0x04,
+            START_AND_STOP = 0x06,      // START condition followed by SEND and STOP condition
+        };
         // Open Handle , the frequency is set to 400KHz - will be dinamic in next update
         public i2cDriver(IntPtr sharedHandle, uint kbps = 400)
         {

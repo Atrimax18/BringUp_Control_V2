@@ -14,6 +14,8 @@ namespace BringUp_Control
 
         private IntPtr _ftHandle;
 
+        private readonly object _sync = new object();
+
         private readonly Ft4222Native.FT4222_SPI_Mode _spiMode;
         private readonly Ft4222Native.FT4222_CLK _clkDiv;
         private readonly Ft4222Native.FT4222_SPICPOL _cpol;
@@ -51,7 +53,7 @@ namespace BringUp_Control
                 _ftHandle = IntPtr.Zero; // Reset the handle to IntPtr.Zero after closing
             }
         }
-           
+
 
 
         public void Read(Span<byte> buffer)
@@ -64,6 +66,24 @@ namespace BringUp_Control
                 throw new IOException($"{nameof(Read)} failed to read, error: {ftStatus}");
             }
         }
+        /*
+        public void Read(Span<byte> buffer)
+        {
+            lock (_sync)
+            {
+                ushort read;
+                // Fix: Convert the second argument to a byte array as required by the method signature
+                byte[] bufferArray = buffer.ToArray();
+                var st = Ft4222Native.FT4222_SPIMaster_SingleRead(_ftHandle, bufferArray, (ushort)buffer.Length, out read, true);
+
+                if (st != Ft4222Native.FT4222_STATUS.FT4222_OK)
+                    throw new IOException($"Read() failed → {st}");
+
+                // Copy the data back to the original buffer
+                bufferArray.AsSpan(0, read).CopyTo(buffer);
+            }
+        }*/
+
         public void TransferFullDuplex(ReadOnlySpan<byte> writeBuffer, Span<byte> readBuffer)
         {
             ushort readBytes;
@@ -75,7 +95,7 @@ namespace BringUp_Control
                 throw new IOException($"{nameof(TransferFullDuplex)} failed to do a full duplex transfer, error: {ftStatus}");
             }
         }
-
+        
         public void Write(Span<byte> buffer)
         {
             ushort bytesWritten;
@@ -86,6 +106,23 @@ namespace BringUp_Control
                 throw new IOException($"{nameof(Write)} failed to write, error: {ftStatus}");
             }
         }
+        /*
+        public void Write(ReadOnlySpan<byte> buffer)
+        {
+            lock (_sync) // Global gate
+            {
+                if (buffer.IsEmpty) return;
+
+                // Convert ReadOnlySpan<byte> to byte[] for compatibility
+                byte[] bufferArray = buffer.ToArray();
+
+                ushort written;
+                var st = Ft4222Native.FT4222_SPIMaster_SingleWrite(_ftHandle, bufferArray, (ushort)bufferArray.Length, out written, true);
+
+                if (st != Ft4222Native.FT4222_STATUS.FT4222_OK)
+                    throw new IOException($"Write() failed → {st}");
+            }
+        }*/
 
         private static void Check(Ft4222Native.FT4222_STATUS st)
         {
