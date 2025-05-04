@@ -67,18 +67,7 @@ namespace BringUp_Control
             ushort written = 0;
             Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, data.ToArray(), (ushort)data.Length, ref written));
         }
-
-
-        /*
-        public i2cDriver(uint interfaceIndex)
-        {
-            // Open interface-B (i2c and GPIO) by Location-ID 
-            var native = new Ft4222Native();
-            uint locId = native.GetDeviceLocId(interfaceIndex);
-            var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _i2cHandle);
-            if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
-        }*/
+        
         public void Dispose()
         {
             if (_ownsHandle && _i2cHandle != IntPtr.Zero)

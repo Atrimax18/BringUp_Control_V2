@@ -59,12 +59,20 @@ namespace BringUp_Control
         public void Read(ReadOnlySpan<byte> buffer)
         {
             ushort readBytes;
-            var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleRead(_ftHandle, in MemoryMarshal.GetReference(buffer),
-                (ushort)buffer.Length, out readBytes, true);
-            if (ftStatus != Ft4222Native.FT4222_STATUS.FT4222_OK)
+
+            lock (_sync)
             {
-                throw new IOException($"{nameof(Read)} failed to read, error: {ftStatus}");
+                if (buffer.IsEmpty) return; // Check if the buffer is empty
+                // Read data from SPI
+                var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleRead(_ftHandle, in MemoryMarshal.GetReference(buffer),
+                (ushort)buffer.Length, out readBytes, true);
+                if (ftStatus != Ft4222Native.FT4222_STATUS.FT4222_OK)
+                {
+                    throw new IOException($"{nameof(Read)} failed to read, error: {ftStatus}");
+                }
+
             }
+            
         }
         
 
@@ -94,8 +102,7 @@ namespace BringUp_Control
                 {
                     throw new IOException($"{nameof(Write)} failed to write, error: {ftStatus}");
                 }
-            }
-            
+            }            
         }
         
 

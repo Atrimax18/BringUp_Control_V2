@@ -202,33 +202,25 @@ namespace BringUp_Control
 
                     ftDev?.Dispose();
                     ad4368?.Dispose();
+                    i2cBus?.Dispose();
 
                     // ************************* ONLY FOR PLL EVALUATION BOARD ******************************************
                     gpio_control?.Dispose();
-                    
-                    // dispose any previous handle
+
+                    //  *************************** GPIO INIT DRIVER 1 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);
+                    // **************************** I2C INIT DRIVER  2 ***********************************************
                     i2cBus = new i2cDriver(gpio_control.Handle, 400);
+
                     gpio_control.Write(GPIO3, true);
-                    // **************************************************************************************************
-                    
+                    // ************************** SPI INIT DRIVER 3 **************************************************                  
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
-
                     
-                    //i2cBus = new i2cDriver(_gpioLocId, 400);
-
-
-                    ushort status1 = 0;
-                    Ft4222Native.FT4222_I2CMaster_GetStatus(gpio_control.Handle, out status1);
-
-
-
                     usbflag = true;
                     driverflag = true;
 
-                    SetControlsEnabled(true);
-                    
+                    SetControlsEnabled(true);                    
                 }
 
                     
@@ -374,8 +366,7 @@ namespace BringUp_Control
             
             if (driverflag && usbflag)
             {
-                byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
-                //byte valbyte = ad4368.ReadWrite((ushort)selectedHex);
+                byte valbyte = ad4368.ReadRegister((ushort)selectedHex);                
                 textAD4368_Value.Text = $"0x{valbyte:X2}";
             }
 
