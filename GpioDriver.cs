@@ -50,9 +50,7 @@ namespace BringUp_Control
         }
 
         private void Init(byte outputMask, bool driveHigh)
-        {
-            Check(Ft4222Native.FT4222_SetSuspendOut(_gpioHandle, false));
-            Check(Ft4222Native.FT4222_SetWakeUpInterrupt(_gpioHandle, false));
+        {    
 
             // one byte per GPIO pin: 0 = out, 1 = in
             byte[] dir = new byte[4];
@@ -68,6 +66,8 @@ namespace BringUp_Control
                 if (((outputMask >> pin) & 0x01) == 1)
                     Ft4222Native.FT4222_GPIO_Write(_gpioHandle, pin,
                                                    (byte)(driveHigh ? 1 : 0));
+            Check(Ft4222Native.FT4222_SetSuspendOut(_gpioHandle, false));
+            Check(Ft4222Native.FT4222_SetWakeUpInterrupt(_gpioHandle, false));
         }
 
         public void SetDir(byte pin, Ft4222Native.GPIO_Dir dir)

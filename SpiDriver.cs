@@ -97,23 +97,7 @@ namespace BringUp_Control
             }
             
         }
-        /*
-        public void Write(ReadOnlySpan<byte> buffer)
-        {
-            lock (_sync) // Global gate
-            {
-                if (buffer.IsEmpty) return;
-
-                // Convert ReadOnlySpan<byte> to byte[] for compatibility
-                byte[] bufferArray = buffer.ToArray();
-
-                ushort written;
-                var st = Ft4222Native.FT4222_SPIMaster_SingleWrite(_ftHandle, bufferArray, (ushort)bufferArray.Length, out written, true);
-
-                if (st != Ft4222Native.FT4222_STATUS.FT4222_OK)
-                    throw new IOException($"Write() failed → {st}");
-            }
-        }*/
+        
 
         private static void Check(Ft4222Native.FT4222_STATUS st)
         {

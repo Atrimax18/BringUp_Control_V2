@@ -204,15 +204,18 @@ namespace BringUp_Control
                     ad4368?.Dispose();
 
                     // ************************* ONLY FOR PLL EVALUATION BOARD ******************************************
-                    gpio_control?.Dispose();                       // dispose any previous handle
+                    gpio_control?.Dispose();
+                    
+                    // dispose any previous handle
                     gpio_control = new GpioDriver(_gpioLocId);
+                    i2cBus = new i2cDriver(gpio_control.Handle, 400);
                     gpio_control.Write(GPIO3, true);
                     // **************************************************************************************************
                     
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-                    //i2cBus = new i2cDriver(gpio_control.Handle, 400);
+                    
                     //i2cBus = new i2cDriver(_gpioLocId, 400);
 
 
