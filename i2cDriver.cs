@@ -12,9 +12,6 @@ namespace BringUp_Control
     {
         private readonly IntPtr _i2cHandle;
         private readonly bool _ownsHandle;
-
-
-
         public enum I2C_MasterFlag : byte
         {
             NONE = 0x80,
@@ -23,6 +20,7 @@ namespace BringUp_Control
             STOP = 0x04,
             START_AND_STOP = 0x06,      // START condition followed by SEND and STOP condition
         };
+
         // Open Handle , the frequency is set to 400KHz - will be dinamic in next update
         public i2cDriver(IntPtr sharedHandle, uint kbps = 400)
         {
@@ -44,6 +42,8 @@ namespace BringUp_Control
             _ownsHandle = true;   // close it in Dispose()
             Init(kbps);
         }
+
+        
 
         private void Init(uint kbps)
         {
@@ -69,7 +69,7 @@ namespace BringUp_Control
         }
 
 
-
+        /*
         public i2cDriver(uint interfaceIndex)
         {
             // Open interface-B (i2c and GPIO) by Location-ID 
@@ -78,7 +78,7 @@ namespace BringUp_Control
             var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _i2cHandle);
             if (ftStatus != FTDI.FT_STATUS.FT_OK)
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
-        }
+        }*/
         public void Dispose()
         {
             if (_ownsHandle && _i2cHandle != IntPtr.Zero)

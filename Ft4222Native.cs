@@ -48,6 +48,9 @@ namespace BringUp_Control
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_WriteEx(IntPtr ftHandle, ushort deviceAddress, byte flag, in byte buffer, ushort bufferSize, out ushort sizeTransferred);
 
+        [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+        public static extern FT4222_STATUS FT4222_I2CMaster_GetStatus(IntPtr ftHandle, out ushort controllerStatus);
+
         // ============================ GPIO =======================================================
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_GPIO_Init(IntPtr ftHandlee, byte[] dir);

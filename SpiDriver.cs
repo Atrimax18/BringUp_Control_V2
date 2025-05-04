@@ -56,7 +56,7 @@ namespace BringUp_Control
 
 
 
-        public void Read(Span<byte> buffer)
+        public void Read(ReadOnlySpan<byte> buffer)
         {
             ushort readBytes;
             var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleRead(_ftHandle, in MemoryMarshal.GetReference(buffer),
@@ -66,23 +66,7 @@ namespace BringUp_Control
                 throw new IOException($"{nameof(Read)} failed to read, error: {ftStatus}");
             }
         }
-        /*
-        public void Read(Span<byte> buffer)
-        {
-            lock (_sync)
-            {
-                ushort read;
-                // Fix: Convert the second argument to a byte array as required by the method signature
-                byte[] bufferArray = buffer.ToArray();
-                var st = Ft4222Native.FT4222_SPIMaster_SingleRead(_ftHandle, bufferArray, (ushort)buffer.Length, out read, true);
-
-                if (st != Ft4222Native.FT4222_STATUS.FT4222_OK)
-                    throw new IOException($"Read() failed → {st}");
-
-                // Copy the data back to the original buffer
-                bufferArray.AsSpan(0, read).CopyTo(buffer);
-            }
-        }*/
+        
 
         public void TransferFullDuplex(ReadOnlySpan<byte> writeBuffer, Span<byte> readBuffer)
         {
@@ -96,15 +80,22 @@ namespace BringUp_Control
             }
         }
         
-        public void Write(Span<byte> buffer)
+        public void Write(ReadOnlySpan<byte> buffer)
         {
             ushort bytesWritten;
-            var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleWrite(_ftHandle, in MemoryMarshal.GetReference(buffer),
+
+            lock (_sync)
+            { 
+                if (buffer.IsEmpty) return; // Check if the buffer is empty
+
+                var ftStatus = Ft4222Native.FT4222_SPIMaster_SingleWrite(_ftHandle, in MemoryMarshal.GetReference(buffer),
                 (ushort)buffer.Length, out bytesWritten, true);
-            if (ftStatus != Ft4222Native.FT4222_STATUS.FT4222_OK)
-            {
-                throw new IOException($"{nameof(Write)} failed to write, error: {ftStatus}");
+                if (ftStatus != Ft4222Native.FT4222_STATUS.FT4222_OK)
+                {
+                    throw new IOException($"{nameof(Write)} failed to write, error: {ftStatus}");
+                }
             }
+            
         }
         /*
         public void Write(ReadOnlySpan<byte> buffer)
