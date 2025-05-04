@@ -180,8 +180,8 @@ namespace BringUp_Control
                 else
                 {
                     // FTDI reconnected — reinitialize
-                    uint locfirst = FTDriver.GetDeviceLocId(1);  //0 - is Device A interface
-                    uint locsecond = FTDriver.GetDeviceLocId(0); //1 - is Device B interface for GPIO and I2C
+                    uint locfirst = FTDriver.GetDeviceInterfaceSPI("FT4222 A");   //Device A interface for SPI
+                    uint locsecond = FTDriver.GetDeviceInterfaceSPI("FT4222 B");  //Device B interface for GPIO and I2C
 
                     // ── Guard: if nothing changed we’re already initialised ────────────────────
                     bool locationsUnchanged = (ftDev != null) &&
@@ -194,8 +194,8 @@ namespace BringUp_Control
                         return;   // avoid handle churn
 
                     // ── Either first time or the device list really changed ───────────────────
-                    _spiLocId = locsecond;//lab // locfirst - office;
-                    _gpioLocId = locfirst;//lab // locsecond - office;
+                    _spiLocId = locfirst;    //INTERFACE FT4222 A
+                    _gpioLocId = locsecond;  //INTERFACE FT4222 B                  
 
 
                     ftDev?.Dispose();

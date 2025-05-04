@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 using FTD2XX_NET;
 
 
@@ -396,6 +397,50 @@ namespace BringUp_Control
             }
 
             return "Failed to retrieve driver version";
+        }
+
+        public uint GetDeviceInterfaceSPI(string interfacedata)
+        {
+            uint devCount = 0;
+            // Get number of FTDI devices
+            if (FT_CreateDeviceInfoList(out devCount) != 0 || devCount == 0)
+                throw new InvalidOperationException("No FT4222 devices detected.");
+
+
+            // Iterate through available devices
+            for (uint i = 0; i < devCount; i++)
+            {
+                uint flags = 0, id = 0, locId = 0;
+                FTDI.FT_DEVICE chip = 0;
+                byte[] serialNumber = new byte[16];
+                byte[] description = new byte[64];
+                IntPtr handle = IntPtr.Zero;
+
+                // Get device details
+                FT_GetDeviceInfoDetail(i, ref flags, ref chip, ref id, ref locId, serialNumber, description, ref handle);
+                
+
+                // Convert description to string
+                string descStr = GetCleanDescription(description);
+
+                // Check for interface A
+                if (descStr.Contains(interfacedata))
+                {
+                    return locId; // Return only the location ID of the FT4222H Interface A
+                }
+            }
+
+            
+            throw new InvalidOperationException("No SPI‑capable FT4222 interface found.");
+        }
+
+        string GetCleanDescription(byte[] description)
+        {
+            int nullIndex = Array.IndexOf(description, (byte)0);
+            if (nullIndex >= 0)
+                return Encoding.ASCII.GetString(description, 0, nullIndex);
+            else
+                return Encoding.ASCII.GetString(description); // fallback if no null terminator
         }
 
     }    
