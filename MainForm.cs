@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using FTD2XX_NET;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -31,8 +32,7 @@ namespace BringUp_Control
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         private const int DBT_DEVNODES_CHANGED = 0x0007;
 
-        const int SPI_WRITE_CMD = 0x0000; // spi write code
-        const int SPI_READ_CMD = 0x8000;  // spi read code
+        
 
         public const int GPIO3 = 3;
 
@@ -43,7 +43,9 @@ namespace BringUp_Control
         public System.Timers.Timer _usbDebounceTimer;
 
 
-        Ft4222Native FTDriver = new Ft4222Native();            
+        Ft4222Native FTDriver = new Ft4222Native(); 
+        
+        
 
         DataTable DT4368 = new DataTable();
         DataTable DT9175 = new DataTable();
@@ -210,7 +212,7 @@ namespace BringUp_Control
                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-                    //i2cBus = new i2cDriver(gpio_control.Handle);
+                    i2cBus = new i2cDriver(gpio_control.Handle);
                     
 
                     usbflag = true;
