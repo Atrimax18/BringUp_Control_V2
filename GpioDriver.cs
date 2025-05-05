@@ -23,7 +23,7 @@ namespace BringUp_Control
 
         // Open interface‑B by Location‑ID and take ownership of the handle
         public GpioDriver(uint locId,
-                          byte outputMask = 0b_1000,
+                          byte outputMask = 0b_1100,
                           bool driveHigh = false)
         {
             var st = Ft4222Native.FT_OpenEx(locId,
@@ -38,7 +38,7 @@ namespace BringUp_Control
 
         // Re‑use an already‑opened handle 
         public GpioDriver(IntPtr sharedHandle,
-                          byte outputMask = 0b_0000,
+                          byte outputMask = 0b_1100,
                           bool driveHigh = false)
         {
             if (sharedHandle == IntPtr.Zero)
@@ -55,14 +55,20 @@ namespace BringUp_Control
             // one byte per GPIO pin: 0 = out, 1 = in
             byte[] dir = new byte[4];
             for (int i = 0; i < 4; i++)
+            {
+                // Skip GPIO0 and GPIO1 (reserved for I2C)
+                if (i < 2) continue;
+
                 dir[i] = (byte)(((outputMask >> i) & 0x01) == 1
                                   ? Ft4222Native.GPIO_Dir.GPIO_OUTPUT
                                   : Ft4222Native.GPIO_Dir.GPIO_INPUT);
+            }
+                
 
             Check(Ft4222Native.FT4222_GPIO_Init(_gpioHandle, dir));
 
             // default output level
-            for (byte pin = 0; pin < 4; pin++)
+            for (byte pin = 2; pin < 4; pin++) //Start from GPIO2
                 if (((outputMask >> pin) & 0x01) == 1)
                     Ft4222Native.FT4222_GPIO_Write(_gpioHandle, pin,
                                                    (byte)(driveHigh ? 1 : 0));

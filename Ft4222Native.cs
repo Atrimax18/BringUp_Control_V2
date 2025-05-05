@@ -37,13 +37,15 @@ namespace BringUp_Control
         public static extern FT4222_STATUS FT4222_I2CMaster_Init(IntPtr ftHandle, uint kbps);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_I2CMaster_Read(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToRead, ref ushort bytesRead);
+        //public static extern FT4222_STATUS FT4222_I2CMaster_Read(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToRead, ref ushort bytesRead);
+        public static extern FT4222_STATUS FT4222_I2CMaster_Read(IntPtr ftHandle, byte deviceAddress, in byte buffer, ushort bytesToRead, ref ushort bytesRead);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_ReadEx(IntPtr ftHandle, ushort deviceAddress, byte flag, in byte buffer, ushort bufferSize, out ushort sizeTransferred);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
-        public static extern FT4222_STATUS FT4222_I2CMaster_Write(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToWrite, ref ushort bytesWritten);
+        //public static extern FT4222_STATUS FT4222_I2CMaster_Write(IntPtr ftHandle, byte deviceAddress, byte[] buffer, ushort bytesToWrite, ref ushort bytesWritten);
+        public static extern FT4222_STATUS FT4222_I2CMaster_Write(IntPtr ftHandle, byte deviceAddress, in byte buffer, ushort bytesToWrite, ref ushort bytesWritten);
 
         [DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern FT4222_STATUS FT4222_I2CMaster_WriteEx(IntPtr ftHandle, ushort deviceAddress, byte flag, in byte buffer, ushort bufferSize, out ushort sizeTransferred);

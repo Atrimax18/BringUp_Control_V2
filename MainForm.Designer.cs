@@ -52,6 +52,7 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.Cmd_DAC_Init = new System.Windows.Forms.Button();
             this.Cmd_WriteDAC9175 = new System.Windows.Forms.Button();
             this.Cmd_ReadDAC9175 = new System.Windows.Forms.Button();
             this.Cmd_WriteReg9175 = new System.Windows.Forms.Button();
@@ -66,6 +67,8 @@
             this.tabAD9213 = new System.Windows.Forms.TabPage();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.tabRFLine = new System.Windows.Forms.TabPage();
+            this.checkAmp2 = new System.Windows.Forms.CheckBox();
+            this.checkAmp1 = new System.Windows.Forms.CheckBox();
             this.Cmd_Read_ADC = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -101,9 +104,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.Cmd_DAC_Init = new System.Windows.Forms.Button();
-            this.checkAmp1 = new System.Windows.Forms.CheckBox();
-            this.checkAmp2 = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -385,6 +385,16 @@
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
             // 
+            // Cmd_DAC_Init
+            // 
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 400);
+            this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
+            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 53);
+            this.Cmd_DAC_Init.TabIndex = 13;
+            this.Cmd_DAC_Init.Text = "DAC INIT";
+            this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
+            this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
+            // 
             // Cmd_WriteDAC9175
             // 
             this.Cmd_WriteDAC9175.Location = new System.Drawing.Point(725, 336);
@@ -535,6 +545,26 @@
             this.tabRFLine.TabIndex = 5;
             this.tabRFLine.Text = "TX RF LINEUP";
             this.tabRFLine.UseVisualStyleBackColor = true;
+            // 
+            // checkAmp2
+            // 
+            this.checkAmp2.AutoSize = true;
+            this.checkAmp2.Location = new System.Drawing.Point(525, 55);
+            this.checkAmp2.Name = "checkAmp2";
+            this.checkAmp2.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp2.TabIndex = 22;
+            this.checkAmp2.Text = "BYPASS ON";
+            this.checkAmp2.UseVisualStyleBackColor = true;
+            // 
+            // checkAmp1
+            // 
+            this.checkAmp1.AutoSize = true;
+            this.checkAmp1.Location = new System.Drawing.Point(287, 55);
+            this.checkAmp1.Name = "checkAmp1";
+            this.checkAmp1.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp1.TabIndex = 21;
+            this.checkAmp1.Text = "BYPASS ON";
+            this.checkAmp1.UseVisualStyleBackColor = true;
             // 
             // Cmd_Read_ADC
             // 
@@ -779,7 +809,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 16);
             this.label3.TabIndex = 10;
-            this.label3.Text = "58 °C";
+            this.label3.Text = "00 °C";
             // 
             // label4
             // 
@@ -799,7 +829,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(42, 16);
             this.label5.TabIndex = 12;
-            this.label5.Text = "43 °C";
+            this.label5.Text = "00 °C";
             // 
             // label6
             // 
@@ -841,6 +871,7 @@
             this.Cmd_FT_Temp_Read.TabIndex = 17;
             this.Cmd_FT_Temp_Read.Text = "TEMP Read";
             this.Cmd_FT_Temp_Read.UseVisualStyleBackColor = true;
+            this.Cmd_FT_Temp_Read.Click += new System.EventHandler(this.Cmd_FT_Temp_Read_Click);
             // 
             // Cmd_RF_Temp_Read
             // 
@@ -850,6 +881,7 @@
             this.Cmd_RF_Temp_Read.TabIndex = 18;
             this.Cmd_RF_Temp_Read.Text = "TEMP Read";
             this.Cmd_RF_Temp_Read.UseVisualStyleBackColor = true;
+            this.Cmd_RF_Temp_Read.Click += new System.EventHandler(this.Cmd_RF_Temp_Read_Click);
             // 
             // textLog
             // 
@@ -870,36 +902,6 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
-            // 
-            // Cmd_DAC_Init
-            // 
-            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 400);
-            this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
-            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 53);
-            this.Cmd_DAC_Init.TabIndex = 13;
-            this.Cmd_DAC_Init.Text = "DAC INIT";
-            this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
-            this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
-            // 
-            // checkAmp1
-            // 
-            this.checkAmp1.AutoSize = true;
-            this.checkAmp1.Location = new System.Drawing.Point(287, 55);
-            this.checkAmp1.Name = "checkAmp1";
-            this.checkAmp1.Size = new System.Drawing.Size(112, 20);
-            this.checkAmp1.TabIndex = 21;
-            this.checkAmp1.Text = "BYPASS ON";
-            this.checkAmp1.UseVisualStyleBackColor = true;
-            // 
-            // checkAmp2
-            // 
-            this.checkAmp2.AutoSize = true;
-            this.checkAmp2.Location = new System.Drawing.Point(525, 55);
-            this.checkAmp2.Name = "checkAmp2";
-            this.checkAmp2.Size = new System.Drawing.Size(112, 20);
-            this.checkAmp2.TabIndex = 22;
-            this.checkAmp2.Text = "BYPASS ON";
-            this.checkAmp2.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 

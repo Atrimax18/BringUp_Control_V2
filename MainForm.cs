@@ -80,6 +80,7 @@ namespace BringUp_Control
         AD9175_DAC ad9175;
         GpioDriver gpio_control;
         i2cDriver i2cBus;
+        TMP100 tmp100;
 
         TX_Line txLineData = new TX_Line(); 
         public MainForm()
@@ -235,12 +236,11 @@ namespace BringUp_Control
 
                     // ************************* ONLY FOR PLL EVALUATION BOARD ******************************************
                     gpio_control?.Dispose();
-
-                    //  *************************** GPIO INIT DRIVER 1 ***********************************************
-                    gpio_control = new GpioDriver(_gpioLocId);
                     // **************************** I2C INIT DRIVER  2 ***********************************************
                     i2cBus = new i2cDriver(gpio_control.Handle, 400);
 
+                    //  *************************** GPIO INIT DRIVER 1 ***********************************************
+                    gpio_control = new GpioDriver(_gpioLocId);
                     gpio_control.Write(GPIO3, true);
                     // ************************** SPI INIT DRIVER 3 **************************************************                  
                     
@@ -800,13 +800,15 @@ namespace BringUp_Control
 
         private void Cmd_Init_All_Click(object sender, EventArgs e)
         {
-
+            tmp100 = new TMP100();
+            tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+            tmp100.BultInTest(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Self test the FTDI TMP100
+            tmp100.BultInTest(TMP100.AddressIndex.TMP100_RF_CHIP); // Self test the RF TMP100
+            tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+            tmp100.Config(TMP100.AddressIndex.TMP100_RF_CHIP); // Configure the RF TMP100
+            
         }
-
-        private void Load_INI_TX_LIne()
-        {
-
-        }
+        
 
         private void Cmd_DAC_Init_Click(object sender, EventArgs e)
         {
@@ -861,152 +863,59 @@ namespace BringUp_Control
 
             textDAC9175_Value.Focus();
         }
+
+        private void Cmd_FT_Temp_Read_Click(object sender, EventArgs e)
+        {
+            if (i2cBus == null)
+            {
+                MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (tmp100 == null)
+            {
+                tmp100 = new TMP100();
+                tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+                tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+            }
+
+            try
+            {
+                double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
+                label3.Text = $"{tempval:F1} °C"; // Format the temperature
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void Cmd_RF_Temp_Read_Click(object sender, EventArgs e)
+        {
+            if (i2cBus == null)
+            {
+                MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (tmp100 == null)
+            {
+                tmp100 = new TMP100();
+                tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+                tmp100.Config(TMP100.AddressIndex.TMP100_RF_CHIP); // Configure the RF TMP100
+            }
+
+            try
+            {
+                double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_RF_CHIP);
+                label5.Text = $"{tempval:F1} °C"; // Format the temperature
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }
 
-
-/***************
- * 
- * 
- * 
- * 
- * 
- * 
- * try
-            {
-                //SPI configuration 
-                var spiSettings = new SpiConnectionSettings(0, 1)
-                {
-                    ClockFrequency = 3750000,//ClockDiv16, // 7500000 ClockDiv8, 1875000 ClockDiv32// SPI Clock: System Clock / 16
-                    Mode = SpiMode.Mode0, // SPI Mode 0 (CPOL = 0, CPHA = 0)
-                    DataBitLength = 8, // 8-bit data per transaction
-
-                };
-
-                // Setup SPI communication FTDI A
-                spiDriver = new Ft4222Spi(spiSettings);
-                driverflag = true;
-
-                //Configuration of 0x0000 address with MSB bit and SDO - 4 wire SPI protocol
-                byte nulladress = 0x0000;
-                AD4368_driver.WriteRegister(spiDriver, nulladress, 0x18);
-
-                byte IDC = AD4368_driver.ReadRegister(spiDriver, 0x000C);
-                byte IDD = AD4368_driver.ReadRegister(spiDriver, 0x000D);
-
-                /*if (IDC == 86 && IDD == 4)
-                    check4368.Checked = true;
-                else
-                    check4368.Checked = false;*/
-       /*     }
-            catch (Exception ex)
-            {
-                driverflag = false;
-            }*/
- 
-
-
-/*
- * 
- * private void INIT_FTDI4222()
-        {
-            //devices = FtCommon.GetDevices();
-            
-            if (devices.Count == 0)
-            {
-                
-                comboRegAddress.Enabled = false;
-                comboMUXOUT.Enabled = false;
-                initflag = false;
-                Cmd_WriteReg_ADF4368.Enabled = false;
-                Cmd_WriteReg9175.Enabled = false;
-                
-
-                Cmd_Import_AD4368_File.Enabled = false;
-                Cmd_Export_AD4368_File.Enabled = false;
-                textAD4368_Value.Enabled = false;
-                textDAC9175_Value.Enabled = false;
-                
-                Cmd_ReadAll_AD4368.Enabled = false;
-                Cmd_WriteAll_AD4368.Enabled = false;
-
-                Cmd_PowerONOFF.Enabled = false;
-                Cmd_Init_All.Enabled = false;
-                
-                
-
-                
-                label1.ForeColor = Color.Red;
-                label1.Text = "FTDI STATUS: " + $"FTDI Driver NOT Detected!";
-                Cmd_WriteReg_ADF4368.Enabled = false;
-                
-                return;
-            }
-            else
-            {
-                //var (chip, dll) = Ft4222Common.GetVersions();
-                label1.ForeColor = Color.Green;
-                //label1.Text = "FTDI STATUS: " + $"Detected {devices.Count} FT4222H device(s): Chip Version {chip}, Dll version {dll}";
-
-
-
-                
-                try
-                {
-                        //SPI configuration 
-                   
-                        driverflag = true;
-
-                        //Configuration of 0x0000 address with MSB bit and SDO - 4 wire SPI protocol
-                        byte nulladress = 0x0000;
-                        //AD4368_driver.WriteRegister(spiDriver, nulladress, 0x18);
-
-                        //byte IDC = AD4368_driver.ReadRegister(spiDriver, 0x000C);
-                        //byte IDD = AD4368_driver.ReadRegister(spiDriver, 0x000D);
-
-                    usbflag = true;
-                    initflag = true;
-                    SetControlsEnabled(true);
-
-                    /*if (IDC == 86 && IDD == 4)
-                        check4368.Checked = true;
-                    else
-                        check4368.Checked = false;*/
-            
-       /*         }
-                catch (Exception ex)
-                {
-                    driverflag = false;
-usbflag = false;
-
-label1.ForeColor = Color.Red;
-label1.Text = "FTDI STATUS: SPI Init failed";
-                }
-                
-    
-                comboRegAddress.Enabled = true;
-comboMUXOUT.Enabled = true;
-initflag = true;
-
-Cmd_WriteReg_ADF4368.Enabled = true;
-Cmd_WriteReg9175.Enabled = true;
-
-Cmd_Import_AD4368_File.Enabled = true;
-Cmd_Export_AD4368_File.Enabled = false;
-textAD4368_Value.Enabled = true;
-textDAC9175_Value.Enabled = true;
-
-
-Cmd_ReadAll_AD4368.Enabled = true;
-Cmd_WriteAll_AD4368.Enabled = false;
-
-Cmd_PowerONOFF.Enabled = false;              
-        
-            }
-
-                        
-        }
- * 
- * 
- * 
- * */

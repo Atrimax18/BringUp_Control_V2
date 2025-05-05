@@ -59,13 +59,15 @@ namespace BringUp_Control
         public void Read(byte devAddr, Span<byte> buffer)
         {
             ushort read = 0;
-            Check(Ft4222Native.FT4222_I2CMaster_Read(_i2cHandle, devAddr, buffer.ToArray(), (ushort)buffer.Length, ref read));
+            //Check(Ft4222Native.FT4222_I2CMaster_Read(_i2cHandle, devAddr, buffer.ToArray(), (ushort)buffer.Length, ref read));
+            Check(Ft4222Native.FT4222_I2CMaster_Read(_i2cHandle, devAddr, in MemoryMarshal.GetReference(buffer), (ushort)buffer.Length, ref read));
         }
 
-        public void Write(byte devAddr, ReadOnlySpan<byte> data)
+        public void Write(byte devAddr, ReadOnlySpan<byte> buffer)
         {
             ushort written = 0;
-            Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, data.ToArray(), (ushort)data.Length, ref written));
+            //Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, buffer.ToArray(), (ushort)buffer.Length, ref written));
+            Check(Ft4222Native.FT4222_I2CMaster_Write(_i2cHandle, devAddr, in MemoryMarshal.GetReference(buffer), (ushort)buffer.Length, ref written));
         }
         
         public void Dispose()
