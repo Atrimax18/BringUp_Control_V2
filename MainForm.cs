@@ -56,8 +56,18 @@ namespace BringUp_Control
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
         bool PLL_Init_Flag = false; // PLL Init Flag
+        bool TXline_flag = false;   // TX line up values upload flag
         private bool _disposed;
 
+
+        private struct TX_Line
+        {
+            public bool bypass1;
+            public bool bypass2;
+            public float att1;
+            public float att2;
+            public float att3;
+        }
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -70,6 +80,8 @@ namespace BringUp_Control
         AD9175_DAC ad9175;
         GpioDriver gpio_control;
         i2cDriver i2cBus;
+
+        TX_Line txLineData = new TX_Line(); 
         public MainForm()
         {
             InitializeComponent();            
@@ -105,7 +117,24 @@ namespace BringUp_Control
                     else
                     {                        
                         LogStatus("INI file loaded successfully.");
-                    }                    
+
+                        // Read the INI file and set the values
+
+                        if (configuration["HMC8414:BYPASS_MODE1"] == "0")
+                            txLineData.bypass1 = false;                        
+                        else
+                            txLineData.bypass1 = true;
+
+                        if (configuration["HMC8414:BYPASS_MODE2"] == "0")
+                            txLineData.bypass2 = false;
+                        else
+                            txLineData.bypass2 = true;
+                            
+                        txLineData.att1 = float.Parse(configuration["HMC1119:ATT1"]);
+                        txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
+                        txLineData.att2 = float.Parse(configuration["HMC1119:ATT3"]);
+
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -268,13 +297,7 @@ namespace BringUp_Control
             Application.Exit();
         }
 
-        private void IniSetting(ConfigurationBuilder tt)
-        {
-            var configdata = tt.Build();
-
-            //right configdata["PLL4368:CLOCKFREQ"];
-            
-        }
+        
 
 
         protected override void WndProc(ref Message m)
@@ -780,6 +803,11 @@ namespace BringUp_Control
 
         }
 
+        private void Load_INI_TX_LIne()
+        {
+
+        }
+
         private void Cmd_DAC_Init_Click(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == tabAD9175)
@@ -797,6 +825,17 @@ namespace BringUp_Control
                 comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
                 LogStatus("AD9175 reinitialized on SPI CS1");
                 Cmd_ReadDAC9175.Enabled = true;
+            }
+            else if(tabControl1.SelectedTab == tabRFLine)
+            {
+                if (!TXline_flag)
+                {
+                    checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
+                    checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
+                    textBox1.Text = txLineData.att1.ToString();
+                    textBox2.Text = txLineData.att2.ToString();
+                    textBox3.Text = txLineData.att3.ToString();
+                }
             }
         }
 
