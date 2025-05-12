@@ -229,26 +229,27 @@ namespace BringUp_Control
                     _spiLocId = locfirst;    //INTERFACE FT4222 A
                     _gpioLocId = locsecond;  //INTERFACE FT4222 B                  
 
-
+                    // ************************* Dispose if already has init ******************************************
                     ftDev?.Dispose();
                     ad4368?.Dispose();
                     i2cBus?.Dispose();
-
-                    // ************************* ONLY FOR PLL EVALUATION BOARD ******************************************
                     gpio_control?.Dispose();
-                    // **************************** I2C INIT DRIVER  2 ***********************************************
-                    i2cBus = new i2cDriver(gpio_control.Handle, 400);
 
-                    //  *************************** GPIO INIT DRIVER 1 ***********************************************
+                    
+
+                    // **************************** I2C INIT DRIVER  1 ***********************************************
+                    i2cBus = new i2cDriver(gpio_control.Handle, 400);
+                    //  *************************** GPIO INIT DRIVER 2 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);
                     gpio_control.Write(GPIO3, true);
-                    // ************************** SPI INIT DRIVER 3 **************************************************                  
-                    
+                    // ************************** SPI INIT DRIVER 3 **************************************************                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
                     
+                    // flag status change 
                     usbflag = true;
                     driverflag = true;
 
+                    // GUI elements enabled/disabled
                     SetControlsEnabled(true);                    
                 }
 
@@ -699,9 +700,10 @@ namespace BringUp_Control
             if (!enabled)
             {
                 tabControl1.Enabled = false;
+
                 //Cmd_Init_All.Enabled = false;
-                //Cmd_FT_Temp_Read.Enabled = false;
-                //Cmd_RF_Temp_Read.Enabled=false;
+                Cmd_FT_Temp_Read.Enabled = false;
+                Cmd_RF_Temp_Read.Enabled=false;
                 //Cmd_AD4368_INIT.Enabled = false;
             }
             else
