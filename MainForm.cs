@@ -238,7 +238,7 @@ namespace BringUp_Control
                     
 
                     // **************************** I2C INIT DRIVER  1 ***********************************************
-                    i2cBus = new i2cDriver(gpio_control.Handle, 400);
+                    //i2cBus = new i2cDriver(gpio_control.Handle, 400);
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);
                     gpio_control.Write(GPIO3, true);
@@ -606,51 +606,7 @@ namespace BringUp_Control
             }
 
 
-            /*
-            int index = 1; byte paddress = 0;
-
-            if (ftDev == null)
-            {
-                MessageBox.Show("SPI interface not initialized. Please reconnect the FTDI device.");
-                return;
-            }
-
-            if (usbflag && driverflag)
-            {
-                if (dataGridViewAD4368.Rows.Count > 0)
-                {
-                    dataGridViewAD4368.DataSource = null;
-                    DT4368.Clear();
-                    dataGridViewAD4368.DataSource = DT4368;
-                }
-
-                foreach (var indstring in comboRegAddress.Items)
-                {
-
-                    string getcombo = indstring.ToString();
-                    ushort regValue = Convert.ToUInt16(getcombo.Replace("0x", ""), 16);// Convert.ToInt32(getcombo.Substring(2), 16);
-                    paddress = Convert.ToByte(getcombo.Replace("0x", ""), 16);
-                    byte valbyte = ad4368.ReadRegister(regValue);
-
-                    DataRow row = DT4368.NewRow();
-                    row["Index"] = index++.ToString();
-                    row["Register"] = getcombo;
-                    row["Value"] = $"0x{valbyte:X2}";
-                    row["Value byte"] = valbyte;
-                    DT4368.Rows.Add(row);
-
-                    if (paddress == 0x2B)
-                    {
-                        CheckPowerRegister(paddress);
-                    }
-                }
-
-                if (DT4368.Rows.Count != 0)
-                {
-                    Cmd_WriteAll_AD4368.Enabled = true;
-                }
-            }
-            */
+            
         }
 
         private int RFLockSampling(byte address, int monitoredBitIndex)
@@ -742,6 +698,22 @@ namespace BringUp_Control
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedTab = tabControl1.SelectedTab;
+
+            if (selectedTab == tabRFLine)
+            {
+                if (!TXline_flag)
+                {
+                    checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
+                    checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
+                    textATT1.Text = txLineData.att1.ToString();
+                    textATT2.Text = txLineData.att2.ToString();
+                    textATT3.Text = txLineData.att3.ToString();
+                }
+            }
+            else if (selectedTab == tabFPGA)
+            {
+                textFPGA.Focus();
+            }
         }
         
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
@@ -830,17 +802,7 @@ namespace BringUp_Control
                 LogStatus("AD9175 reinitialized on SPI CS1");
                 Cmd_ReadDAC9175.Enabled = true;
             }
-            else if(tabControl1.SelectedTab == tabRFLine)
-            {
-                if (!TXline_flag)
-                {
-                    checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
-                    checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
-                    textBox1.Text = txLineData.att1.ToString();
-                    textBox2.Text = txLineData.att2.ToString();
-                    textBox3.Text = txLineData.att3.ToString();
-                }
-            }
+            
         }
 
         private void comboRegisters9175_SelectedIndexChanged(object sender, EventArgs e)
@@ -918,6 +880,98 @@ namespace BringUp_Control
                 MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void textATT1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                if (float.TryParse(textATT1.Text, out float att1) && att1 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                {
+                    txLineData.att1 = att1;
+                    textATT1.Text = txLineData.att1.ToString();
+                    textATT2.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid value for ATT1. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textATT1.Clear();
+                    textATT1.Focus();
+                    att1 = 0.0f;
+                }
+            }
+        }
+
+        private void textATT2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                if (float.TryParse(textATT2.Text, out float att2) && att2 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                {
+                    txLineData.att2 = att2;
+                    textATT2.Text = txLineData.att2.ToString();
+                    textATT3.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid value for ATT2. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textATT2.Clear();
+                    textATT2.Focus();
+                    att2 = 0.0f;
+                }
+            }
+        }
+
+        private void textATT3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                if (float.TryParse(textATT3.Text, out float att3) && att3 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                {
+                    txLineData.att1 = att3;
+                    textATT3.Text = txLineData.att1.ToString();
+                    //textATT2.Focus();
+                    Cmd_UpdateTX_Values.Focus();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid value for ATT3. Please enter a valid number less than or equal to 31.5.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textATT3.Clear();
+                    textATT3.Focus();
+                    att3 = 0.0f;
+                }
+            }
+        }
+
+        private void Cmd_Read_ADC_Click(object sender, EventArgs e)
+        {
+            //byte k = ToByte(16.89f);
+            //string tt = ToHex(16.89f);
+        }
+
+        
+
+        public static byte ToByte(float valueDb)
+        {
+            const float step = 0.25f;   // ¼-dB resolution
+            const float min = 0.0f;    // bottom of table
+            const float max = 31.75f;  // top of table
+            const int mask = 0x7F;   // keep only 7 bits
+
+            // --- Clamp ----------------------------------------------------------
+            if (valueDb < min) valueDb = min;
+            else if (valueDb > max) valueDb = max;
+            // --------------------------------------------------------------------
+
+            // Convert dB → code units (¼-dB) and round to nearest
+            int code = (int)Math.Round(valueDb / step, MidpointRounding.AwayFromZero);
+
+            return (byte)(code & mask);
+        }
+
+        /// <summary>
+        /// Same as <see cref="ToByte"/> but returned as "0x??".
+        /// </summary>
+        public static string ToHex(float valueDb) => $"0x{ToByte(valueDb):X2}";
     }
 }
 
