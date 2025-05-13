@@ -235,13 +235,18 @@ namespace BringUp_Control
                     i2cBus?.Dispose();
                     gpio_control?.Dispose();
 
-                    
+
 
                     // **************************** I2C INIT DRIVER  1 ***********************************************
                     //i2cBus = new i2cDriver(gpio_control.Handle, 400);
+                    i2cBus = new i2cDriver(_gpioLocId, 400); // open second bridge for GPIO and I2C
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
-                    gpio_control = new GpioDriver(_gpioLocId);
+                    //gpio_control = new GpioDriver(_gpioLocId);
+                    gpio_control = new GpioDriver(i2cBus.Handle, 0b_1100, true); // open second bridge for GPIO and I2C
                     gpio_control.Write(GPIO3, true);
+
+                    //i2cBus = new i2cDriver(gpio_control.Handle, 400);
+
                     // ************************** SPI INIT DRIVER 3 **************************************************                     
                     ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
                     

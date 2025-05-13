@@ -12,6 +12,8 @@ namespace BringUp_Control
     {
         private readonly IntPtr _i2cHandle;
         private readonly bool _ownsHandle;
+
+        public IntPtr Handle => _i2cHandle;
         public enum I2C_MasterFlag : byte
         {
             NONE = 0x80,
