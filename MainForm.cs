@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using FTD2XX_NET;
+using System.Data.SqlClient;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -68,6 +69,10 @@ namespace BringUp_Control
             public float att2;
             public float att3;
         }
+
+        private byte att1_value = 0x00;
+        private byte att2_value = 0x00;
+        private byte att3_value = 0x00;
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -894,6 +899,7 @@ namespace BringUp_Control
                 {
                     txLineData.att1 = att1;
                     textATT1.Text = txLineData.att1.ToString();
+                    att1_value = ToByte(att1);
                     textATT2.Focus();
                 }
                 else
@@ -902,7 +908,9 @@ namespace BringUp_Control
                     textATT1.Clear();
                     textATT1.Focus();
                     att1 = 0.0f;
+                    att1_value = 0x00;
                 }
+                LogStatus($"ATT1 value: {ToHex(att1_value)}"); // Log the ATT1 value
             }
         }
 
@@ -914,6 +922,7 @@ namespace BringUp_Control
                 {
                     txLineData.att2 = att2;
                     textATT2.Text = txLineData.att2.ToString();
+                    att2_value = ToByte(att2);
                     textATT3.Focus();
                 }
                 else
@@ -922,7 +931,9 @@ namespace BringUp_Control
                     textATT2.Clear();
                     textATT2.Focus();
                     att2 = 0.0f;
+                    att2_value = 0x00;
                 }
+                LogStatus($"ATT2 value: {ToHex(att2_value)}"); // Log the ATT2 value
             }
         }
 
@@ -935,6 +946,7 @@ namespace BringUp_Control
                     txLineData.att1 = att3;
                     textATT3.Text = txLineData.att1.ToString();
                     //textATT2.Focus();
+                    att3_value = ToByte(att3);
                     Cmd_UpdateTX_Values.Focus();
                 }
                 else
@@ -943,7 +955,9 @@ namespace BringUp_Control
                     textATT3.Clear();
                     textATT3.Focus();
                     att3 = 0.0f;
+                    att3_value = 0x00;
                 }
+                LogStatus($"ATT3 value: {ToHex(att3_value)}"); // Log the ATT3 value
             }
         }
 
