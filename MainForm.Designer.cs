@@ -818,9 +818,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(111, 19);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 16);
+            this.label3.Size = new System.Drawing.Size(52, 16);
             this.label3.TabIndex = 10;
-            this.label3.Text = "00 °C";
+            this.label3.Text = "N/A °C";
             // 
             // label4
             // 
@@ -838,9 +838,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(397, 18);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(42, 16);
+            this.label5.Size = new System.Drawing.Size(52, 16);
             this.label5.TabIndex = 12;
-            this.label5.Text = "00 °C";
+            this.label5.Text = "N/A °C";
             // 
             // label6
             // 
@@ -876,7 +876,7 @@
             // Cmd_FT_Temp_Read
             // 
             this.Cmd_FT_Temp_Read.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cmd_FT_Temp_Read.Location = new System.Drawing.Point(159, 9);
+            this.Cmd_FT_Temp_Read.Location = new System.Drawing.Point(169, 9);
             this.Cmd_FT_Temp_Read.Name = "Cmd_FT_Temp_Read";
             this.Cmd_FT_Temp_Read.Size = new System.Drawing.Size(103, 34);
             this.Cmd_FT_Temp_Read.TabIndex = 17;
@@ -886,7 +886,7 @@
             // 
             // Cmd_RF_Temp_Read
             // 
-            this.Cmd_RF_Temp_Read.Location = new System.Drawing.Point(445, 9);
+            this.Cmd_RF_Temp_Read.Location = new System.Drawing.Point(455, 9);
             this.Cmd_RF_Temp_Read.Name = "Cmd_RF_Temp_Read";
             this.Cmd_RF_Temp_Read.Size = new System.Drawing.Size(103, 34);
             this.Cmd_RF_Temp_Read.TabIndex = 18;
