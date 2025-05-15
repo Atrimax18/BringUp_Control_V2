@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using FTD2XX_NET;
 using System.Data.SqlClient;
+using System.Net.Configuration;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -126,10 +127,10 @@ namespace BringUp_Control
 
                         // Read the INI file and set the values
 
-                        if (configuration["HMC8414:BYPASS_MODE1"] == "0")
+                        if (configuration["HMC8414:BYPASS_MODE1"] == "0")   //Bypass ON = false -> (AMP ON)
                             txLineData.bypass1 = false;                        
                         else
-                            txLineData.bypass1 = true;
+                            txLineData.bypass1 = true;                      //Bypass ON = true  -> (AMP OFF) 
 
                         if (configuration["HMC8414:BYPASS_MODE2"] == "0")
                             txLineData.bypass2 = false;
@@ -138,7 +139,7 @@ namespace BringUp_Control
                             
                         txLineData.att1 = float.Parse(configuration["HMC1119:ATT1"]);
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
-                        txLineData.att2 = float.Parse(configuration["HMC1119:ATT3"]);
+                        txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
                     }
                 }
@@ -991,6 +992,27 @@ namespace BringUp_Control
         /// Same as <see cref="ToByte"/> but returned as "0x??".
         /// </summary>
         public static string ToHex(float valueDb) => $"0x{ToByte(valueDb):X2}";
+
+        private void checkAmp1_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkAmp1.CheckState == CheckState.Checked)
+            {
+                txLineData.bypass1 = true; // BYPASS ON
+            }
+            else
+                txLineData.bypass1 = false; // BYPASS OFF (AMP ON)
+
+        }
+
+        private void checkAmp2_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkAmp2.CheckState == CheckState.Checked)
+            {
+                txLineData.bypass2 = true; // BYPASS ON
+            }
+            else
+                txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
+        }
     }
 }
 

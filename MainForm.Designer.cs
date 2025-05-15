@@ -92,6 +92,11 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.radioMUX = new System.Windows.Forms.RadioButton();
             this.radioFPGA = new System.Windows.Forms.RadioButton();
+            this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.Cmd_FPGA_Write = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textFPGA = new System.Windows.Forms.TextBox();
+            this.Cmd_FPGA_Import = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -104,11 +109,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.tabFPGA = new System.Windows.Forms.TabPage();
-            this.Cmd_FPGA_Import = new System.Windows.Forms.Button();
-            this.textFPGA = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.Cmd_FPGA_Write = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -562,6 +562,7 @@
             this.checkAmp2.TabIndex = 22;
             this.checkAmp2.Text = "BYPASS ON";
             this.checkAmp2.UseVisualStyleBackColor = true;
+            this.checkAmp2.CheckStateChanged += new System.EventHandler(this.checkAmp2_CheckStateChanged);
             // 
             // checkAmp1
             // 
@@ -572,6 +573,7 @@
             this.checkAmp1.TabIndex = 21;
             this.checkAmp1.Text = "BYPASS ON";
             this.checkAmp1.UseVisualStyleBackColor = true;
+            this.checkAmp1.CheckStateChanged += new System.EventHandler(this.checkAmp1_CheckStateChanged);
             // 
             // Cmd_Read_ADC
             // 
@@ -797,6 +799,53 @@
             this.radioFPGA.Text = "FPGA";
             this.radioFPGA.UseVisualStyleBackColor = true;
             // 
+            // tabFPGA
+            // 
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Write);
+            this.tabFPGA.Controls.Add(this.textBox2);
+            this.tabFPGA.Controls.Add(this.textFPGA);
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import);
+            this.tabFPGA.Location = new System.Drawing.Point(4, 25);
+            this.tabFPGA.Name = "tabFPGA";
+            this.tabFPGA.Size = new System.Drawing.Size(844, 655);
+            this.tabFPGA.TabIndex = 7;
+            this.tabFPGA.Text = "FPGA";
+            this.tabFPGA.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_FPGA_Write
+            // 
+            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(315, 44);
+            this.Cmd_FPGA_Write.Name = "Cmd_FPGA_Write";
+            this.Cmd_FPGA_Write.Size = new System.Drawing.Size(105, 39);
+            this.Cmd_FPGA_Write.TabIndex = 3;
+            this.Cmd_FPGA_Write.Text = "Write Data";
+            this.Cmd_FPGA_Write.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(23, 123);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(506, 510);
+            this.textBox2.TabIndex = 2;
+            // 
+            // textFPGA
+            // 
+            this.textFPGA.Location = new System.Drawing.Point(23, 55);
+            this.textFPGA.Name = "textFPGA";
+            this.textFPGA.Size = new System.Drawing.Size(220, 22);
+            this.textFPGA.TabIndex = 1;
+            // 
+            // Cmd_FPGA_Import
+            // 
+            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 44);
+            this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
+            this.Cmd_FPGA_Import.Size = new System.Drawing.Size(145, 45);
+            this.Cmd_FPGA_Import.TabIndex = 0;
+            this.Cmd_FPGA_Import.Text = "Import Data";
+            this.Cmd_FPGA_Import.UseVisualStyleBackColor = true;
+            // 
             // timer1
             // 
             this.timer1.Interval = 2000;
@@ -913,53 +962,6 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
-            // 
-            // tabFPGA
-            // 
-            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Write);
-            this.tabFPGA.Controls.Add(this.textBox2);
-            this.tabFPGA.Controls.Add(this.textFPGA);
-            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import);
-            this.tabFPGA.Location = new System.Drawing.Point(4, 25);
-            this.tabFPGA.Name = "tabFPGA";
-            this.tabFPGA.Size = new System.Drawing.Size(844, 655);
-            this.tabFPGA.TabIndex = 7;
-            this.tabFPGA.Text = "FPGA";
-            this.tabFPGA.UseVisualStyleBackColor = true;
-            // 
-            // Cmd_FPGA_Import
-            // 
-            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 44);
-            this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
-            this.Cmd_FPGA_Import.Size = new System.Drawing.Size(145, 45);
-            this.Cmd_FPGA_Import.TabIndex = 0;
-            this.Cmd_FPGA_Import.Text = "Import Data";
-            this.Cmd_FPGA_Import.UseVisualStyleBackColor = true;
-            // 
-            // textFPGA
-            // 
-            this.textFPGA.Location = new System.Drawing.Point(23, 55);
-            this.textFPGA.Name = "textFPGA";
-            this.textFPGA.Size = new System.Drawing.Size(220, 22);
-            this.textFPGA.TabIndex = 1;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(23, 123);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(506, 510);
-            this.textBox2.TabIndex = 2;
-            // 
-            // Cmd_FPGA_Write
-            // 
-            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(315, 44);
-            this.Cmd_FPGA_Write.Name = "Cmd_FPGA_Write";
-            this.Cmd_FPGA_Write.Size = new System.Drawing.Size(105, 39);
-            this.Cmd_FPGA_Write.TabIndex = 3;
-            this.Cmd_FPGA_Write.Text = "Write Data";
-            this.Cmd_FPGA_Write.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
