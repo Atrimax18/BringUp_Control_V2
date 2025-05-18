@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -24,6 +25,12 @@ namespace BringUp_Control
 
 
             // TABLE 50  startup sequence
+            PowerUp();
+        }
+
+        //Table 50 : Power Up registee writing
+        public void PowerUp()
+        {
             WriteRegister(0x0000, 0x81); // Soft reset
             WriteRegister(0x0000, 0x3C); // Release RESET and configure 4-wire SPI protocol
             WriteRegister(0x0091, 0x00); // Power up clock receiver
@@ -32,6 +39,29 @@ namespace BringUp_Control
             WriteRegister(0x0090, 0x00); // Power on DAC and bias circuity
         }
 
+        // Table 51: DAC and PLL configuration sequence
+        public void DAC_PLL_Config()
+        {
+            WriteRegister(0x0095, 0x01); // Power on DAC and bias circuity
+            WriteRegister(0x0790, 0xFF); // Power up clock receiver
+            WriteRegister(0x0791, 0xFF); // Power up PLL
+            WriteRegister(0x0796, 0xE5); // Power up clock receiver PLL
+            WriteRegister(0x07A0, 0xBC); // Power up clock receiver PLL
+            WriteRegister(0x0794, 0x04); // Power up clock receiver PLL
+            WriteRegister(0x0797, 0x10); // Power up clock receiver PLL
+            WriteRegister(0x0797, 0x20); // Power up clock receiver PLL
+            WriteRegister(0x0798, 0x10); // Power up clock receiver PLL
+            WriteRegister(0x07A2, 0x7F); // Power up clock receiver PLL
+            Thread.Sleep(100);  //delay 100ms
+            WriteRegister(0x0799, 0xC8); // DAC PLL divider settings
+            WriteRegister(0x0793, 0x18); // DAC PLL divider settings
+            WriteRegister(0x0094, 0x00); // PLL VCO freq no
+            WriteRegister(0x0792, 0x02); // Reset VCO
+            WriteRegister(0x0792, 0x00); // 
+            Thread.Sleep(100);  //delay 100ms
+            //WriteRegister(0x07B5, 0x00); // No need , not using PLL
+
+        }
         public List<string> LoadComboRegister9175()
         {
             for (int i = 0x0000; i <= 0x07B5; i++)
