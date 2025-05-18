@@ -410,44 +410,45 @@ namespace BringUp_Control
 
         private void Cmd_WriteReg_AD4368_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(textAD4368_Value.Text))
+            if (selectedTab == tabAD4368)
             {
-                string regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
-
-                string dataRaw = textAD4368_Value.Text.Trim();
-
-                if (!TryParseHexU16(regaddress, out ushort regValue))
+                if (!string.IsNullOrWhiteSpace(textAD4368_Value.Text))
                 {
-                    MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
-                                    "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    comboRegAddress.Focus();
-                    return;
+                    string regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
+
+                    string dataRaw = textAD4368_Value.Text.Trim();
+
+                    if (!TryParseHexU16(regaddress, out ushort regValue))
+                    {
+                        MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
+                                        "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        comboRegAddress.Focus();
+                        return;
+                    }
+
+                    if (!TryParseHexByte(dataRaw, out byte dataByte))
+                    {
+                        MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
+                                        "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        textAD4368_Value.Focus();
+                        textAD4368_Value.Clear();
+                        return;
+                    }
+
+                    ad4368.WriteRegister(regValue, dataByte);
+
+                    byte powerAddress = (byte)regValue;
+                    // Check if the register address is the power register
+                    if (powerAddress == 0x2B)
+                        CheckPowerRegister(powerAddress);
                 }
-
-                if (!TryParseHexByte(dataRaw, out byte dataByte))
+                else
                 {
-                    MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
-                                    "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("The textbox value is empty or wrong!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     textAD4368_Value.Focus();
                     textAD4368_Value.Clear();
-                    return;
                 }
-
-                ad4368.WriteRegister(regValue, dataByte);
-
-                byte powerAddress = (byte)regValue;
-                // Check if the register address is the power register
-                if (powerAddress == 0x2B)
-                    CheckPowerRegister(powerAddress);
-            }
-            else
-            {
-                MessageBox.Show("The textbox value is empty or wrong!","Warning", MessageBoxButtons.OK,MessageBoxIcon.Error);
-                textAD4368_Value.Focus(); 
-                textAD4368_Value.Clear();
-            }
-            
-            
+            }            
         }        
 
 
