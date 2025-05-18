@@ -94,8 +94,8 @@
             this.radioFPGA = new System.Windows.Forms.RadioButton();
             this.tabFPGA = new System.Windows.Forms.TabPage();
             this.Cmd_FPGA_Write = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textFPGA = new System.Windows.Forms.TextBox();
+            this.textFPGA_Output = new System.Windows.Forms.TextBox();
+            this.textFPGA_Address = new System.Windows.Forms.TextBox();
             this.Cmd_FPGA_Import = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
@@ -109,6 +109,11 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.Cmd_FPGA_Export = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.textFPGA_Value = new System.Windows.Forms.TextBox();
+            this.Cmd_FPGA_Read = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -801,9 +806,14 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Read);
+            this.tabFPGA.Controls.Add(this.textFPGA_Value);
+            this.tabFPGA.Controls.Add(this.label21);
+            this.tabFPGA.Controls.Add(this.label9);
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Export);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Write);
-            this.tabFPGA.Controls.Add(this.textBox2);
-            this.tabFPGA.Controls.Add(this.textFPGA);
+            this.tabFPGA.Controls.Add(this.textFPGA_Output);
+            this.tabFPGA.Controls.Add(this.textFPGA_Address);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import);
             this.tabFPGA.Location = new System.Drawing.Point(4, 25);
             this.tabFPGA.Name = "tabFPGA";
@@ -814,28 +824,29 @@
             // 
             // Cmd_FPGA_Write
             // 
-            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(315, 44);
+            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(370, 13);
             this.Cmd_FPGA_Write.Name = "Cmd_FPGA_Write";
             this.Cmd_FPGA_Write.Size = new System.Drawing.Size(105, 39);
             this.Cmd_FPGA_Write.TabIndex = 3;
             this.Cmd_FPGA_Write.Text = "Write Data";
             this.Cmd_FPGA_Write.UseVisualStyleBackColor = true;
+            this.Cmd_FPGA_Write.Click += new System.EventHandler(this.Cmd_FPGA_Write_Click);
             // 
-            // textBox2
+            // textFPGA_Output
             // 
-            this.textBox2.Location = new System.Drawing.Point(23, 123);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(506, 510);
-            this.textBox2.TabIndex = 2;
+            this.textFPGA_Output.Location = new System.Drawing.Point(23, 123);
+            this.textFPGA_Output.Multiline = true;
+            this.textFPGA_Output.Name = "textFPGA_Output";
+            this.textFPGA_Output.ReadOnly = true;
+            this.textFPGA_Output.Size = new System.Drawing.Size(506, 510);
+            this.textFPGA_Output.TabIndex = 2;
             // 
-            // textFPGA
+            // textFPGA_Address
             // 
-            this.textFPGA.Location = new System.Drawing.Point(23, 55);
-            this.textFPGA.Name = "textFPGA";
-            this.textFPGA.Size = new System.Drawing.Size(220, 22);
-            this.textFPGA.TabIndex = 1;
+            this.textFPGA_Address.Location = new System.Drawing.Point(23, 55);
+            this.textFPGA_Address.Name = "textFPGA_Address";
+            this.textFPGA_Address.Size = new System.Drawing.Size(172, 22);
+            this.textFPGA_Address.TabIndex = 1;
             // 
             // Cmd_FPGA_Import
             // 
@@ -963,6 +974,50 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
+            // Cmd_FPGA_Export
+            // 
+            this.Cmd_FPGA_Export.Location = new System.Drawing.Point(666, 95);
+            this.Cmd_FPGA_Export.Name = "Cmd_FPGA_Export";
+            this.Cmd_FPGA_Export.Size = new System.Drawing.Size(144, 45);
+            this.Cmd_FPGA_Export.TabIndex = 4;
+            this.Cmd_FPGA_Export.Text = "Export Data";
+            this.Cmd_FPGA_Export.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(20, 36);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(128, 16);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "FPGA ADDRESS:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(232, 36);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(60, 16);
+            this.label21.TabIndex = 6;
+            this.label21.Text = "VALUE:";
+            // 
+            // textFPGA_Value
+            // 
+            this.textFPGA_Value.Location = new System.Drawing.Point(235, 55);
+            this.textFPGA_Value.Name = "textFPGA_Value";
+            this.textFPGA_Value.Size = new System.Drawing.Size(117, 22);
+            this.textFPGA_Value.TabIndex = 7;
+            // 
+            // Cmd_FPGA_Read
+            // 
+            this.Cmd_FPGA_Read.Location = new System.Drawing.Point(370, 58);
+            this.Cmd_FPGA_Read.Name = "Cmd_FPGA_Read";
+            this.Cmd_FPGA_Read.Size = new System.Drawing.Size(105, 39);
+            this.Cmd_FPGA_Read.TabIndex = 8;
+            this.Cmd_FPGA_Read.Text = "Read Data";
+            this.Cmd_FPGA_Read.UseVisualStyleBackColor = true;
+            this.Cmd_FPGA_Read.Click += new System.EventHandler(this.Cmd_FPGA_Read_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1089,9 +1144,14 @@
         private System.Windows.Forms.CheckBox checkAmp1;
         private System.Windows.Forms.TabPage tabFPGA;
         private System.Windows.Forms.Button Cmd_FPGA_Write;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textFPGA;
+        private System.Windows.Forms.TextBox textFPGA_Output;
+        private System.Windows.Forms.TextBox textFPGA_Address;
         private System.Windows.Forms.Button Cmd_FPGA_Import;
+        private System.Windows.Forms.TextBox textFPGA_Value;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button Cmd_FPGA_Export;
+        private System.Windows.Forms.Button Cmd_FPGA_Read;
     }
 }
 

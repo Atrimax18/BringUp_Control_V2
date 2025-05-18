@@ -723,7 +723,7 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabFPGA)
             {
-                textFPGA.Focus();
+                textFPGA_Address.Focus();
             }
         }
         
@@ -1013,6 +1013,35 @@ namespace BringUp_Control
             else
                 txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
         }
+
+        private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Cmd_FPGA_Write_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Cmd_FPGA_Read_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabFPGA)
+            {
+
+            }
+        }
+
+        private void FPGA_Address()
+        {
+            if (selectedTab == tabFPGA)
+            {
+                //byte address = Convert.ToByte(textFPGA.Text, 16);
+                //byte data = ftDev.Read(address);
+                //textFPGA_Value.Text = $"0x{data:X2}";
+            }
+        }
+
     }
 }
 
