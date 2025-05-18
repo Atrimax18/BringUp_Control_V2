@@ -70,9 +70,7 @@ namespace BringUp_Control
                 {
                     throw new IOException($"{nameof(Read)} failed to read, error: {ftStatus}");
                 }
-
-            }
-            
+            }            
         }
         
 

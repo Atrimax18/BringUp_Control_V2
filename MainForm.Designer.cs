@@ -434,6 +434,7 @@
             this.Cmd_WriteReg9175.TabIndex = 10;
             this.Cmd_WriteReg9175.Text = "Write Register";
             this.Cmd_WriteReg9175.UseVisualStyleBackColor = true;
+            this.Cmd_WriteReg9175.Click += new System.EventHandler(this.Cmd_WriteReg9175_Click);
             // 
             // textDAC9175_Value
             // 
@@ -847,6 +848,7 @@
             this.textFPGA_Address.Name = "textFPGA_Address";
             this.textFPGA_Address.Size = new System.Drawing.Size(172, 22);
             this.textFPGA_Address.TabIndex = 1;
+            this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textFPGA_Address_KeyPress);
             // 
             // Cmd_FPGA_Import
             // 
@@ -1007,6 +1009,7 @@
             this.textFPGA_Value.Name = "textFPGA_Value";
             this.textFPGA_Value.Size = new System.Drawing.Size(117, 22);
             this.textFPGA_Value.TabIndex = 7;
+            this.textFPGA_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textFPGA_Value_KeyPress);
             // 
             // Cmd_FPGA_Read
             // 

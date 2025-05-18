@@ -347,7 +347,7 @@ namespace BringUp_Control
 
         public void Dispose()
         {
-            //_spi1?.Dispose();
+            _ft?.Dispose();
         }
     }
 }

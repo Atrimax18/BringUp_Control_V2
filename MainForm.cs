@@ -19,6 +19,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using FTD2XX_NET;
 using System.Data.SqlClient;
 using System.Net.Configuration;
+using System.Security.Cryptography.X509Certificates;
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -75,8 +76,12 @@ namespace BringUp_Control
         private byte att2_value = 0x00;
         private byte att3_value = 0x00;
 
+        private string fgpa_address = string.Empty; // FPGA address for register access (string)
+        private string fgpa_data = string.Empty;    // FPGA data for register access (string)
+
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
+        private static readonly Regex HexU32Pattern = new Regex(@"^0x[0-9A-Fa-f]{8}$");
 
         private uint _spiLocId = UInt32.MaxValue;   // interface-A  (SPI)
         private uint _gpioLocId = UInt32.MaxValue;   // interface-B  (GPIO / future I²C)
@@ -84,6 +89,7 @@ namespace BringUp_Control
         SpiDriver ftDev;
         AD4368_PLL ad4368;
         AD9175_DAC ad9175;
+        FPGA fpga;
         GpioDriver gpio_control;
         i2cDriver i2cBus;
         TMP100 tmp100;
@@ -149,20 +155,7 @@ namespace BringUp_Control
                     MessageBox.Show(ex.Message, "Info");
                 }
             }  
-        }
-
-        private static bool TryParseHexByte(string input, out byte value)
-        {
-            value = 0;
-
-            // Replace the range operator with a substring method for compatibility with C# 7.3
-            if (!HexBytePattern.IsMatch(input?.Trim() ?? string.Empty))
-                return false;
-
-            // Use Substring instead of the range operator
-            string hexPart = input.Substring(2);
-            return byte.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
-        }
+        }        
 
 
         private void CheckFTDIConnection()
@@ -202,12 +195,12 @@ namespace BringUp_Control
 
                 if (!isConnected)
                 {
-                    // Dispose resources if FTDI is disconnected                   
-                    
+                    // Dispose resources if FTDI is disconnected                            
                     ad4368?.Dispose();
                     ad9175?.Dispose();
                     ftDev?.Dispose();
                     gpio_control?.Dispose();
+                    fpga?.Dispose();
 
                     usbflag = false;
                     driverflag = false;
@@ -307,10 +300,7 @@ namespace BringUp_Control
 
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
-        }
-
-        
-
+        }  
 
         protected override void WndProc(ref Message m)
         {
@@ -356,15 +346,15 @@ namespace BringUp_Control
             }
         }
 
-        private void Cmd_Exit_Click(object sender, EventArgs e) => SafeShutdown();
-        
+        private void Cmd_Exit_Click(object sender, EventArgs e) => SafeShutdown();        
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             SafeShutdown();
             base.OnFormClosing(e);
         }
-        // Validation of Hex register value
+
+        // Validation of Hex register value, return ushort value
         private static bool TryParseHexU16(string input, out ushort value)
         {
             value = 0;
@@ -377,13 +367,39 @@ namespace BringUp_Control
             return ushort.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
             
         }
-        // Validation of correct HEX value
+        
+        // Validation of correct HEX value, return int value
         private bool IsHexString(string input)
         {
-            if (input.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                input = input.Substring(2); // Remove "0x" prefix
-
+            if (!HexBytePattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+                        
+            input = input.Substring(2); // Remove "0x" prefix
             return int.TryParse(input, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
+        }
+        
+        // Validation of correct HEX value, return byte value
+        private static bool TryParseHexByte(string input, out byte value)
+        {
+            value = 0;
+
+            // Replace the range operator with a substring method for compatibility with C# 7.3
+            if (!HexBytePattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            // Use Substring instead of the range operator
+            string hexPart = input.Substring(2);
+            return byte.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
+        }
+        private bool IsHexString4bytes(string input)
+        {
+
+            // Replace the range operator with a substring method for compatibility with C# 7.3
+            if (!HexU32Pattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            input = input.Substring(8); // Remove "0x" prefix
+            return ulong.TryParse(input, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
         }
 
         private void comboRegAddress_SelectedIndexChanged(object sender, EventArgs e)
@@ -450,7 +466,6 @@ namespace BringUp_Control
                 }
             }            
         }        
-
 
         private void Cmd_AD4368_INIT_Click(object sender, EventArgs e)
         {
@@ -654,12 +669,18 @@ namespace BringUp_Control
 
         private void Cmd_Import9175_file_Click(object sender, EventArgs e)
         {
-            labelFilePath9175.Text = $"DAC File Path: {ad9175.LoadDataTableToCsv()}";
+            if (selectedTab == tabAD9175)
+            {
+                labelFilePath9175.Text = $"DAC File Path: {ad9175.LoadDataTableToCsv()}";
+            }            
         }
 
         private void Cmd_Export9175_file_Click(object sender, EventArgs e)
         {
-            ad9175.SaveDataTableToCsv(DT9175);
+            if (selectedTab == tabAD9175)
+            {
+                ad9175.SaveDataTableToCsv(DT9175);
+            }            
         }               
 
         // Set Control Enabled via USB connection status
@@ -724,26 +745,44 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabFPGA)
             {
+                fpga = new FPGA();
+                fpga.Init(ftDev); // Initialize FPGA with the current FTDI device
                 textFPGA_Address.Focus();
             }
+            else if (selectedTab == tabAD9175)
+            {
+                ad9175 = new AD9175_DAC();
+                
+                comboRegisters9175.Focus();
+            }
+            else if (selectedTab == tabAD4368)
+            {
+                comboRegAddress.Focus();
+            }
+            
+
         }
         
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textAD4368_Value.Text))
+            if (selectedTab == tabAD4368)
             {
-                // Validate Hex value entered in this field
-                if (IsHexString(textAD4368_Value.Text))
-                {                  
-                    Cmd_WriteReg_AD4368.Focus();
-                }
-                else
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textAD4368_Value.Text))
                 {
-                    textAD4368_Value.Clear();                    
-                    textAD4368_Value.Focus();
+                    // Validate Hex value entered in this field
+                    if (IsHexString(textAD4368_Value.Text))
+                    {
+                        Cmd_WriteReg_AD4368.Focus();
+                    }
+                    else
+                    {
+                        textAD4368_Value.Clear();
+                        textAD4368_Value.Focus();
+                    }
                 }
             }
+            
         }
 
         private void Cmd_Import_AD4368_File_Click(object sender, EventArgs e)
@@ -968,9 +1007,7 @@ namespace BringUp_Control
             //byte k = ToByte(16.89f);
             //string tt = ToHex(16.89f);
         }
-
         
-
         public static byte ToByte(float valueDb)
         {
             const float step = 0.25f;   // ¼-dB resolution
@@ -988,10 +1025,7 @@ namespace BringUp_Control
 
             return (byte)(code & mask);
         }
-
-        /// <summary>
-        /// Same as <see cref="ToByte"/> but returned as "0x??".
-        /// </summary>
+        
         public static string ToHex(float valueDb) => $"0x{ToByte(valueDb):X2}";
 
         private void checkAmp1_CheckStateChanged(object sender, EventArgs e)
@@ -1022,27 +1056,150 @@ namespace BringUp_Control
 
         private void Cmd_FPGA_Write_Click(object sender, EventArgs e)
         {
-
+            byte[] TxBuffer = new byte[11];
+            if (selectedTab == tabFPGA)
+            {
+                try 
+                {                    
+                    fpga.SpiWrite(HexStringToUInt(textFPGA_Address.Text), HexStringToUInt(textFPGA_Value.Text));
+                    LogStatus($"The register address {textFPGA_Address.Text} passed value {textFPGA_Value.Text} to FPGA");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LogStatus("Writing to FPGA Caused an ERROR!!!");
+                }
+               
+            }            
         }
 
         private void Cmd_FPGA_Read_Click(object sender, EventArgs e)
         {
+            byte[] RxBuffer = new byte[4];
+            byte[] TxBuffer = new byte[11];
             if (selectedTab == tabFPGA)
             {
+                try
+                {
+                    uint addr = HexStringToUInt(textFPGA_Address.Text);
+                    uint retval = fpga.SpiRead(HexStringToUInt(textFPGA_Address.Text));                    
+                    LogStatus($"The register address {textFPGA_Address.Text} gets value [0x{retval:X8}] from FPGA");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LogStatus("Writing to FPGA Caused an ERROR!!!");
+                }
 
             }
         }
 
-        private void FPGA_Address()
+        public static uint HexStringToUInt(string hex)
+        {
+            if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                hex = hex.Substring(2);
+
+            return Convert.ToUInt32(hex, 16);
+        }
+
+        public static byte[] HexStringToByteArray(string hex)
+        {
+            if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                hex = hex.Substring(2);
+
+            return Enumerable.Range(0, hex.Length / 2)
+                .Select(i => Convert.ToByte(hex.Substring(i * 2, 2), 16))
+                .ToArray();
+        }
+        public static byte[] BuildSpiWriteBuffer(byte[] addressBytes, byte[] valueBytes)
+        {
+            if (addressBytes.Length != 4 || valueBytes.Length != 4)
+                throw new ArgumentException("Both address and value must be exactly 4 bytes.");
+
+            byte[] buffer = new byte[11];
+
+            buffer[0] = 0x00; // Write command
+
+            Array.Copy(addressBytes, 0, buffer, 1, 4); // Copy address to buffer[1–4]
+            Array.Copy(valueBytes, 0, buffer, 5, 4);   // Copy value to buffer[5–8]
+
+            buffer[9] = 0x00; // Don't care
+            buffer[10] = 0x00;
+
+            return buffer;
+        }
+
+        public static byte[] BuildSpiReadBuffer(byte[] addressBytes)
+        {
+            if (addressBytes.Length != 4)
+                throw new ArgumentException("Regiser address must be exactly 4 bytes.");
+
+            byte[] buffer = new byte[11];
+            
+            buffer[0] = 0x01; // Read command
+            buffer[5] = 0x00; // Don't care
+            buffer[6] = 0x00; // Don't care   
+            buffer[7] = 0x00; // Don't care
+            buffer[8] = 0x00; // Don't care
+
+            Array.Copy(addressBytes, 0, buffer, 1, 4); // Copy address to buffer[1–4]
+            
+            buffer[9] = 0x00; // Don't care
+            buffer[10] = 0x00;
+
+            return buffer;
+        }
+
+        private void textFPGA_Address_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
-                //byte address = Convert.ToByte(textFPGA.Text, 16);
-                //byte data = ftDev.Read(address);
-                //textFPGA_Value.Text = $"0x{data:X2}";
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textFPGA_Address.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (IsHexString4bytes(textFPGA_Address.Text))
+                    {
+                        textFPGA_Value.Focus();
+                    }
+                    else
+                    {
+                        textFPGA_Address.Clear();
+                        textFPGA_Address.Focus();
+                        MessageBox.Show("The register address is not correct!", "Warning");
+                    }
+                }
+            }            
+        }
+
+        private void textFPGA_Value_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (selectedTab == tabFPGA)
+            {
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textFPGA_Value.Text))
+                {
+                    if (IsHexString4bytes(textFPGA_Value.Text))
+                    {
+                        Cmd_FPGA_Write.Focus();
+                    }
+                    else
+                    {
+                        textFPGA_Value.Clear();
+                        textFPGA_Value.Focus();
+                        MessageBox.Show("The register value is not correct!", "Warning");                       
+                        
+                    }
+                }                
             }
         }
 
+        private void Cmd_WriteReg9175_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+
+            }
+
+        }
     }
 }
 
