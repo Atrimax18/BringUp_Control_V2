@@ -34,6 +34,10 @@ namespace BringUp_Control
             JESD204B_Setup();
             MainDAC_Datapath_Setup();
 
+            JESD204B_SERDES_Setup();
+            TransportLayer_Setup();
+            CleanUpRegisterList();
+
 
         }
 
@@ -181,7 +185,7 @@ namespace BringUp_Control
             WriteRegister(0x0113, 0x01); // Update all NCO phase and FTW words
         }
 
-
+        // Table 57 : JESD204B SERDES configuration sequence
         public void JESD204B_SERDES_Setup()
         {
             WriteRegister(0x0240, 0xAA); // EQ settings IN_Loss < 11dB value 0xAA
@@ -196,14 +200,69 @@ namespace BringUp_Control
             WriteRegister(0x0249, 0x1F); // EQ settings
             WriteRegister(0x024A, 0x1F); // EQ settings
             WriteRegister(0x024B, 0x1F); // EQ settings
-            WriteRegister(0x0201, 0x00); // EQ settings
-            WriteRegister(0x0203, 0x00); // EQ settings
-            WriteRegister(0x0253, 0x01); // EQ settings
-            WriteRegister(0x0254, 0x01); // EQ settings
-            WriteRegister(0x0210, 0x16); // EQ settings
-            WriteRegister(0x0216, 0x11); // EQ settings
+           
+            WriteRegister(0x0201, 0x00); // Power down unused PHYs - - 0x00 = all PHYs powered up
+            WriteRegister(0x0203, 0x00); // Powe up SYNCOUT0/1 - 0x00 = all SYNCOUT powered up
+            WriteRegister(0x0253, 0x01); // Set SYNCOUT0' to be LVDS
+            WriteRegister(0x0254, 0x01); // Set SYNCOUT1' to be LVDS
+            WriteRegister(0x0210, 0x16); // SERDES required register write value
+            WriteRegister(0x0216, 0x05); // SERDES required register write value
+            WriteRegister(0x0212, 0xFF); // SERDES required register write value
+            WriteRegister(0x0212, 0x00); // SERDES required register write value
+            WriteRegister(0x0210, 0x87); // SERDES required register write value
+            WriteRegister(0x0216, 0x11); // SERDES required register write value
+            WriteRegister(0x0213, 0x01); // SERDES required register write value
+            WriteRegister(0x0213, 0x00); // SERDES required register write value
+            WriteRegister(0x0200, 0x00); // Powe up SERDES circuittry blocks
+            Thread.Sleep(100); // delay 100ms
+            
+            WriteRegister(0x0210, 0x86); // EQ settings
+            WriteRegister(0x0216, 0x40); // EQ settings
+            WriteRegister(0x0213, 0x01); // EQ settings
+            WriteRegister(0x0213, 0x00); // EQ settings
+
+            WriteRegister(0x0210, 0x86); // EQ settings
+            WriteRegister(0x0216, 0x00); // EQ settings
+            WriteRegister(0x0213, 0x01); // EQ settings
+            WriteRegister(0x0213, 0x00); // EQ settings
+            
+            WriteRegister(0x0210, 0x87); // EQ settings
+            WriteRegister(0x0216, 0x01); // EQ settings
+            WriteRegister(0x0213, 0x01); // EQ settings
+            WriteRegister(0x0213, 0x00); // EQ settings
+            
+            WriteRegister(0x0280, 0x05); // EQ settings
+            WriteRegister(0x0280, 0x01); // EQ settings
+
+            byte bit0 = ReadRegister(0x0281); //Ensure Bit0 reads back 1 to indicate SERDES PLL is locked
 
 
+        }
+
+        //Table 58: Transport layer configuration sequence
+        public void TransportLayer_Setup()
+        {
+            WriteRegister(0x0308, 0x08); // Crosbar setup , program the physical lane value
+            WriteRegister(0x0309, 0x1A); // logical lines 3 and 2
+            WriteRegister(0x030A, 0x2C); // logical lines 5 and 4
+            WriteRegister(0x030B, 0x3E); // logical lines 7 and 6
+            //WriteRegister(0x0306, 0x0C); // 
+            //WriteRegister(0x0307, 0x0C); // 
+            //WriteRegister(0x0304, 0x00); // 
+            //WriteRegister(0x0305, 0x08); // 
+            WriteRegister(0x003B, 0xF1); // Enable the sync logic , rotation mode
+            WriteRegister(0x003A, 0x02); // Setup sync for one-shot sync mode
+            WriteRegister(0x0300, 0x0B); // Link modes duallink
+            
+        }
+
+        // Table 59: Register cleanup sequence
+        public void CleanUpRegisterList()
+        {
+            WriteRegister(0x0085, 0x13); // Set the default register value
+            WriteRegister(0x01DE, 0x03); // Disable analog SPI
+            WriteRegister(0x0008, 0xC0); // Page all main DACs fro TXEN control update
+            WriteRegister(0x0596, 0x0C); // SPU turn on TXEnx feature
         }
 
         public List<string> LoadComboRegister9175()
