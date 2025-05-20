@@ -908,6 +908,7 @@
             this.textFPGA_Output.Multiline = true;
             this.textFPGA_Output.Name = "textFPGA_Output";
             this.textFPGA_Output.ReadOnly = true;
+            this.textFPGA_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textFPGA_Output.Size = new System.Drawing.Size(506, 510);
             this.textFPGA_Output.TabIndex = 2;
             // 

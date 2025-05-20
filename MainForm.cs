@@ -1217,7 +1217,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                Load_FGPA_Register(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001FFF"));
+                Load_FGPA_Register(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001020"));
             }            
         }
 
@@ -1285,7 +1285,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                Read_FPGA_Registers(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001FFF"));
+                Read_FPGA_Registers(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001020"));
             }
 
         }
