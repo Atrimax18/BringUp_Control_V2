@@ -1263,6 +1263,32 @@ namespace BringUp_Control
                 LogStatusFPGA($"The FPGA register address 0x{addr:X8} received value [0x{counternumber:X8}]");
             }
         }
+
+        // Reads register values from the FPGA registers in the specified range.
+        public void Read_FPGA_Registers(uint StartAddress, uint StopAddress)
+        {
+            if (StartAddress == 0 || StopAddress == 0)
+                throw new ArgumentException("Start Address and Stop Address must be not equal to zero!!!");
+
+            if (StartAddress > StopAddress)
+                throw new ArgumentException("Start Address must be less or equal to Stop Address!!!");
+
+            for (uint addr = StartAddress; addr < StopAddress; addr++)
+            {
+                uint receiveddata = fpga.SpiRead(addr);
+                LogStatusFPGA($"The FPGA register address 0x{addr:X8} has value [0x{receiveddata:X8}]");
+            }
+
+        }
+
+        private void Cmd_Read_Registers_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabFPGA)
+            {
+                Read_FPGA_Registers(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001FFF"));
+            }
+
+        }
     }
 }
 

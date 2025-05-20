@@ -835,6 +835,7 @@
             this.Cmd_Read_Registers.TabIndex = 10;
             this.Cmd_Read_Registers.Text = "Read Registers";
             this.Cmd_Read_Registers.UseVisualStyleBackColor = true;
+            this.Cmd_Read_Registers.Click += new System.EventHandler(this.Cmd_Read_Registers_Click);
             // 
             // Cmd_LoadCounter
             // 
