@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,6 +95,9 @@ namespace BringUp_Control
                 (byte)(value & 0xFF)
             };
         }
+
+        
+        
 
         public void Dispose()
         {

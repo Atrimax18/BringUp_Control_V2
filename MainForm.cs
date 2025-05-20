@@ -232,6 +232,7 @@ namespace BringUp_Control
                     ftDev?.Dispose();
                     ad4368?.Dispose();
                     i2cBus?.Dispose();
+                    fpga?.Dispose();
                     gpio_control?.Dispose();
 
 
@@ -273,7 +274,20 @@ namespace BringUp_Control
         private void LogStatus(string message)
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss");
-            textLog.AppendText($"[{timestamp}] {message}{Environment.NewLine}");
+            string fullMessage = $"[{timestamp}] {message}{Environment.NewLine}";
+            //textLog.AppendText($"[{timestamp}] {message}{Environment.NewLine}");
+
+            if (textLog.InvokeRequired)
+            {
+                textLog.BeginInvoke(new Action(() =>
+                {
+                    textLog.AppendText(fullMessage);
+                }));
+            }
+            else
+            {
+                textLog.AppendText(fullMessage);
+            }
         }
 
         private void SafeShutdown()
@@ -292,6 +306,7 @@ namespace BringUp_Control
             // 3) dispose high-level chip helpers (they only reference spi/i2c)
             ad4368?.Dispose();
             ad9175?.Dispose();
+            fpga?.Dispose();
 
             // 4) dispose the transports
             ftDev?.Dispose();          // SPI (interface-A)
@@ -1049,14 +1064,11 @@ namespace BringUp_Control
                 txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
         }
 
-        private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void Cmd_FPGA_Write_Click(object sender, EventArgs e)
         {
-            byte[] TxBuffer = new byte[11];
+            
             if (selectedTab == tabFPGA)
             {
                 try 
@@ -1075,8 +1087,7 @@ namespace BringUp_Control
 
         private void Cmd_FPGA_Read_Click(object sender, EventArgs e)
         {
-            byte[] RxBuffer = new byte[4];
-            byte[] TxBuffer = new byte[11];
+            
             if (selectedTab == tabFPGA)
             {
                 try
@@ -1111,6 +1122,7 @@ namespace BringUp_Control
                 .Select(i => Convert.ToByte(hex.Substring(i * 2, 2), 16))
                 .ToArray();
         }
+        
         public static byte[] BuildSpiWriteBuffer(byte[] addressBytes, byte[] valueBytes)
         {
             if (addressBytes.Length != 4 || valueBytes.Length != 4)
@@ -1200,6 +1212,59 @@ namespace BringUp_Control
             }
 
         }
+
+        private void Cmd_LoadCounter_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabFPGA)
+            {
+                Load_FGPA_Register(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001FFF"));
+            }            
+        }
+
+        private void LogStatusFPGA(string message)
+        {
+            string timestamp = DateTime.Now.ToString("HH:mm:ss");
+            string fullMessage = $"[{timestamp}] {message}{Environment.NewLine}";
+            //textFPGA_Output.AppendText($"[{timestamp}] {message}{Environment.NewLine}");
+
+            if (textFPGA_Output.InvokeRequired)
+            {
+                textFPGA_Output.BeginInvoke(new Action(() =>
+                {
+                    textFPGA_Output.AppendText(fullMessage);
+                }));
+            }
+            else
+            {
+                textFPGA_Output.AppendText(fullMessage);
+            }
+        }
+
+        // Import FPGA file with relevant data
+        private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // Writes counter values to the FPGA registers in the specified range.
+        public void Load_FGPA_Register(uint StartAddress, uint StopAddress)
+        {
+            if (StartAddress == 0 || StopAddress == 0)
+                throw new ArgumentException("Start Address and Stop Address must be not equal to zero!!!");
+
+            if (StartAddress > StopAddress)
+                throw new ArgumentException("Start Address must be less or equal to Stop Address!!!");
+
+            uint counternumber = 0;
+
+            for (uint addr = StartAddress; addr < StopAddress; addr++)
+            {
+                fpga.SpiWrite(addr, counternumber++);
+                LogStatusFPGA($"The FPGA register address 0x{addr:X8} received value [0x{counternumber:X8}]");
+            }
+        }
     }
 }
+
+
 
