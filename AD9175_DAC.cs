@@ -104,7 +104,7 @@ namespace BringUp_Control
             WriteRegister(0x0110, 0x37); // dual link and mode 23
             WriteRegister(0x0111, 0x61); // Main datapath configuration
             WriteRegister(0x0084, 0x01); // SYSREF singla input
-            WriteRegister(0x0312, 0x000000); // ?????????????????????? NO DATA
+            WriteRegister(0x0312, 0x00); // ?????????????????????? NO DATA
             
             //run LINK = 0
             WriteRegister(0x0300, 0x08); // Corresponds to the mode selection made in register 0x110
