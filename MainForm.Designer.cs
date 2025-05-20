@@ -93,6 +93,8 @@
             this.radioMUX = new System.Windows.Forms.RadioButton();
             this.radioFPGA = new System.Windows.Forms.RadioButton();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.Cmd_Read_Registers = new System.Windows.Forms.Button();
+            this.Cmd_LoadCounter = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Read = new System.Windows.Forms.Button();
             this.textFPGA_Value = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -114,8 +116,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.Cmd_LoadCounter = new System.Windows.Forms.Button();
-            this.Cmd_Read_Registers = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -827,6 +827,25 @@
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
             // 
+            // Cmd_Read_Registers
+            // 
+            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 228);
+            this.Cmd_Read_Registers.Name = "Cmd_Read_Registers";
+            this.Cmd_Read_Registers.Size = new System.Drawing.Size(145, 55);
+            this.Cmd_Read_Registers.TabIndex = 10;
+            this.Cmd_Read_Registers.Text = "Read Registers";
+            this.Cmd_Read_Registers.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_LoadCounter
+            // 
+            this.Cmd_LoadCounter.Location = new System.Drawing.Point(666, 168);
+            this.Cmd_LoadCounter.Name = "Cmd_LoadCounter";
+            this.Cmd_LoadCounter.Size = new System.Drawing.Size(145, 54);
+            this.Cmd_LoadCounter.TabIndex = 9;
+            this.Cmd_LoadCounter.Text = "Load Counter";
+            this.Cmd_LoadCounter.UseVisualStyleBackColor = true;
+            this.Cmd_LoadCounter.Click += new System.EventHandler(this.Cmd_LoadCounter_Click);
+            // 
             // Cmd_FPGA_Read
             // 
             this.Cmd_FPGA_Read.Location = new System.Drawing.Point(370, 58);
@@ -867,7 +886,7 @@
             // 
             this.Cmd_FPGA_Export.Location = new System.Drawing.Point(666, 95);
             this.Cmd_FPGA_Export.Name = "Cmd_FPGA_Export";
-            this.Cmd_FPGA_Export.Size = new System.Drawing.Size(144, 45);
+            this.Cmd_FPGA_Export.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Export.TabIndex = 4;
             this.Cmd_FPGA_Export.Text = "Export Data";
             this.Cmd_FPGA_Export.UseVisualStyleBackColor = true;
@@ -1025,25 +1044,6 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
-            // 
-            // Cmd_LoadCounter
-            // 
-            this.Cmd_LoadCounter.Location = new System.Drawing.Point(666, 168);
-            this.Cmd_LoadCounter.Name = "Cmd_LoadCounter";
-            this.Cmd_LoadCounter.Size = new System.Drawing.Size(143, 54);
-            this.Cmd_LoadCounter.TabIndex = 9;
-            this.Cmd_LoadCounter.Text = "Load Counter";
-            this.Cmd_LoadCounter.UseVisualStyleBackColor = true;
-            this.Cmd_LoadCounter.Click += new System.EventHandler(this.Cmd_LoadCounter_Click);
-            // 
-            // Cmd_Read_Registers
-            // 
-            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 228);
-            this.Cmd_Read_Registers.Name = "Cmd_Read_Registers";
-            this.Cmd_Read_Registers.Size = new System.Drawing.Size(143, 55);
-            this.Cmd_Read_Registers.TabIndex = 10;
-            this.Cmd_Read_Registers.Text = "Read Registers";
-            this.Cmd_Read_Registers.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
