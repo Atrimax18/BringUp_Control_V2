@@ -26,16 +26,13 @@ using System.Security.Cryptography.X509Certificates;
 namespace BringUp_Control
 {
     public partial class MainForm : Form
-    {
-
-        
+    {       
 
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
         private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
         private const int DBT_DEVNODES_CHANGED = 0x0007;
-
-        
+         
 
         public const int GPIO3 = 3;
 
@@ -76,8 +73,8 @@ namespace BringUp_Control
         private byte att2_value = 0x00;
         private byte att3_value = 0x00;
 
-        private string fgpa_address = string.Empty; // FPGA address for register access (string)
-        private string fgpa_data = string.Empty;    // FPGA data for register access (string)
+        private string fpga_address = string.Empty; // FPGA address for register access (string)
+        private string fpga_data = string.Empty;    // FPGA data for register access (string)
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -248,7 +245,7 @@ namespace BringUp_Control
                     //i2cBus = new i2cDriver(gpio_control.Handle, 400);
 
                     // ************************** SPI INIT DRIVER 3 **************************************************                     
-                    ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
+                    ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_64, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
                     
                     // flag status change 
                     usbflag = true;
@@ -1073,8 +1070,8 @@ namespace BringUp_Control
             {
                 try 
                 {                    
-                    fpga.SpiWrite(HexStringToUInt(textFPGA_Address.Text), HexStringToUInt(textFPGA_Value.Text));
-                    LogStatus($"The register address {textFPGA_Address.Text} passed value {textFPGA_Value.Text} to FPGA");
+                    fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
+                    LogStatus($"The register address {fpga_address} passed value {fpga_data} to FPGA");
                 }
                 catch (Exception ex)
                 {
@@ -1092,16 +1089,15 @@ namespace BringUp_Control
             {
                 try
                 {
-                    uint addr = HexStringToUInt(textFPGA_Address.Text);
-                    uint retval = fpga.SpiRead(HexStringToUInt(textFPGA_Address.Text));                    
-                    LogStatus($"The register address {textFPGA_Address.Text} gets value [0x{retval:X8}] from FPGA");
+                    uint addr = HexStringToUInt(fpga_address);
+                    uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));                    
+                    LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     LogStatus("Writing to FPGA Caused an ERROR!!!");
                 }
-
             }
         }
 
@@ -1171,12 +1167,14 @@ namespace BringUp_Control
                     // Validate Hex value entered in this field
                     if (IsHexString4bytes(textFPGA_Address.Text))
                     {
+                        fpga_address = textFPGA_Address.Text;
                         textFPGA_Value.Focus();
                     }
                     else
                     {
                         textFPGA_Address.Clear();
                         textFPGA_Address.Focus();
+                        fpga_address = string.Empty;
                         MessageBox.Show("The register address is not correct!", "Warning");
                     }
                 }
@@ -1191,12 +1189,14 @@ namespace BringUp_Control
                 {
                     if (IsHexString4bytes(textFPGA_Value.Text))
                     {
+                        fpga_data = textFPGA_Value.Text;
                         Cmd_FPGA_Write.Focus();
                     }
                     else
                     {
                         textFPGA_Value.Clear();
                         textFPGA_Value.Focus();
+                        fpga_data = string.Empty;
                         MessageBox.Show("The register value is not correct!", "Warning");                       
                         
                     }
@@ -1217,7 +1217,10 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                Load_FGPA_Register(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001020"));
+
+                string startaddress = "0x00001000";
+                string stopaddress = "0x00001020";
+                Load_FGPA_Register(HexStringToUInt(startaddress), HexStringToUInt(stopaddress));
             }            
         }
 
@@ -1255,13 +1258,21 @@ namespace BringUp_Control
             if (StartAddress > StopAddress)
                 throw new ArgumentException("Start Address must be less or equal to Stop Address!!!");
 
-            uint counternumber = 0;
+            uint counternumber = 0x00000000;
 
             for (uint addr = StartAddress; addr < StopAddress; addr++)
             {
-                fpga.SpiWrite(addr, counternumber++);
+                
+                fpga.SpiWrite(addr, counternumber);
                 LogStatusFPGA($"The FPGA register address 0x{addr:X8} received value [0x{counternumber:X8}]");
+                Thread.Sleep(10);
+                uint returnvalue = fpga.SpiRead(addr);
+                LogStatusFPGA($"The FPGA register address 0x{addr:X8} READ OK");
+                counternumber++;
+                Thread.Sleep(50);
+                
             }
+            counternumber = 0x00000000;
         }
 
         // Reads register values from the FPGA registers in the specified range.
@@ -1285,7 +1296,9 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                Read_FPGA_Registers(HexStringToUInt("0x00001000"), HexStringToUInt("0x00001020"));
+                string startaddress = "0x00001000";
+                string stopaaddress = "0x00001020";
+                Read_FPGA_Registers(HexStringToUInt(startaddress), HexStringToUInt(stopaaddress));
             }
 
         }
