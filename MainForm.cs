@@ -1073,7 +1073,7 @@ namespace BringUp_Control
             {
                 try 
                 {                    
-                    fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
+                    fpga.SpiWrite(AlignmentRegister(HexStringToUInt(fpga_address)), HexStringToUInt(fpga_data));
                     LogStatus($"The register address {fpga_address} passed value {fpga_data} to FPGA");
                 }
                 catch (Exception ex)
@@ -1093,7 +1093,7 @@ namespace BringUp_Control
                 try
                 {
                     uint addr = HexStringToUInt(fpga_address);
-                    uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));                    
+                    uint retval = fpga.SpiRead(AlignmentRegister(HexStringToUInt(fpga_address)));                    
                     LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                 }
                 catch (Exception ex)
@@ -1249,7 +1249,7 @@ namespace BringUp_Control
         // Import FPGA file with relevant data
         private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
         {
-
+            TestRegister();
         }
 
         // Writes counter values to the FPGA registers in the specified range.
@@ -1304,6 +1304,34 @@ namespace BringUp_Control
                 Read_FPGA_Registers(HexStringToUInt(startaddress), HexStringToUInt(stopaaddress));
             }
 
+        }
+
+        //Alignment Register Map 32-bit word
+        private uint AlignmentRegister(uint alignaddress)
+        {
+            return alignaddress & 0xFFFFFFFC;
+        }
+
+        private void TestRegister()
+        {
+            uint startaddress = 0x00001000;
+            uint stopaaddress = 0x00001FFF;
+            uint prevAlignAddress = 0xFFFFFFFF;
+
+            uint counter = 0x0;
+            for (uint addr = startaddress; addr < stopaaddress; addr++)
+            {
+                uint alignaddress = addr & 0xFFFFFFFC;
+               
+                if (alignaddress != prevAlignAddress)
+                {
+                    LogStatusFPGA($"The FPGA register address 0x{alignaddress:X8} received value [0x{counter:X8}]");
+                    counter++;
+                    prevAlignAddress = alignaddress;
+                }
+                
+            }
+            counter = 0x0;
         }
     }
 }

@@ -116,6 +116,7 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -809,6 +810,7 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.label22);
             this.tabFPGA.Controls.Add(this.Cmd_Read_Registers);
             this.tabFPGA.Controls.Add(this.Cmd_LoadCounter);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Read);
@@ -1047,6 +1049,15 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(20, 104);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(96, 16);
+            this.label22.TabIndex = 11;
+            this.label22.Text = "FPGA DATA:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1183,6 +1194,7 @@
         private System.Windows.Forms.Button Cmd_FPGA_Read;
         private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
+        private System.Windows.Forms.Label label22;
     }
 }
 
