@@ -1325,13 +1325,15 @@ namespace BringUp_Control
                
                 if (alignaddress != prevAlignAddress)
                 {
-                    LogStatusFPGA($"The FPGA register address 0x{alignaddress:X8} received value [0x{counter:X8}]");
-                    counter++;
+                    LogStatusFPGA($"The FPGA register address 0x{alignaddress:X8} received value [0x{counter++:X8}]");                    
+                    //counter++;
                     prevAlignAddress = alignaddress;
                 }
-                
-            }
-            counter = 0x0;
+                else
+                {
+                    LogStatusFPGA($"FGPA Alignment register address [0x{alignaddress:X8}] of regular address 0x{addr:X8}");
+                }                
+            }            
         }
     }
 }
