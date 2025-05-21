@@ -1312,6 +1312,7 @@ namespace BringUp_Control
             return alignaddress & 0xFFFFFFFC;
         }
 
+        // test fpga register logics
         private void TestRegister()
         {
             uint startaddress = 0x00001000;
