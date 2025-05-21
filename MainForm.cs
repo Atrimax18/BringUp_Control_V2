@@ -992,26 +992,29 @@ namespace BringUp_Control
 
         private void textATT3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (selectedTab == tabRFLine)
             {
-                if (float.TryParse(textATT3.Text, out float att3) && att3 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                if (e.KeyChar == 13)
                 {
-                    txLineData.att1 = att3;
-                    textATT3.Text = txLineData.att1.ToString();
-                    //textATT2.Focus();
-                    att3_value = ToByte(att3);
-                    Cmd_UpdateTX_Values.Focus();
+                    if (float.TryParse(textATT3.Text, out float att3) && att3 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                    {
+                        txLineData.att1 = att3;
+                        textATT3.Text = txLineData.att1.ToString();
+                        //textATT2.Focus();
+                        att3_value = ToByte(att3);
+                        Cmd_UpdateTX_Values.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid value for ATT3. Please enter a valid number less than or equal to 31.5.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        textATT3.Clear();
+                        textATT3.Focus();
+                        att3 = 0.0f;
+                        att3_value = 0x00;
+                    }
+                    LogStatus($"ATT3 value: {ToHex(att3_value)}"); // Log the ATT3 value
                 }
-                else
-                {
-                    MessageBox.Show("Invalid value for ATT3. Please enter a valid number less than or equal to 31.5.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    textATT3.Clear();
-                    textATT3.Focus();
-                    att3 = 0.0f;
-                    att3_value = 0x00;
-                }
-                LogStatus($"ATT3 value: {ToHex(att3_value)}"); // Log the ATT3 value
-            }
+            }            
         }
 
         private void Cmd_Read_ADC_Click(object sender, EventArgs e)
@@ -1260,7 +1263,7 @@ namespace BringUp_Control
 
             uint counternumber = 0x00000000;
 
-            for (uint addr = StartAddress; addr < StopAddress; addr++)
+            for (uint addr = StartAddress; addr < StopAddress; addr +=4)
             {
                 
                 fpga.SpiWrite(addr, counternumber);
@@ -1284,7 +1287,7 @@ namespace BringUp_Control
             if (StartAddress > StopAddress)
                 throw new ArgumentException("Start Address must be less or equal to Stop Address!!!");
 
-            for (uint addr = StartAddress; addr < StopAddress; addr++)
+            for (uint addr = StartAddress; addr < StopAddress; addr +=4)
             {
                 uint receiveddata = fpga.SpiRead(addr);
                 LogStatusFPGA($"The FPGA register address 0x{addr:X8} has value [0x{receiveddata:X8}]");
