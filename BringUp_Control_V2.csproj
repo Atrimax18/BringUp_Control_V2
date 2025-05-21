@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AD4368_PLL.cs" />
+    <Compile Include="AD7091.cs" />
     <Compile Include="AD9175_DAC.cs" />
     <Compile Include="AD9213_ADC.cs" />
     <Compile Include="FPGA.cs" />
