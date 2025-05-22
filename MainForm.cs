@@ -67,6 +67,8 @@ namespace BringUp_Control
             public float att1;
             public float att2;
             public float att3;
+            public double nco_dac0;
+            public double nco_dac1;
         }
 
         private byte att1_value = 0x00;
@@ -143,6 +145,11 @@ namespace BringUp_Control
                         txLineData.att1 = float.Parse(configuration["HMC1119:ATT1"]);
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
+
+                        txLineData.nco_dac0 = double.Parse(configuration["AD9175:NCO_DAC0"]);
+                        txLineData.nco_dac1 = double.Parse(configuration["AD9175:NCO_DAC1"]);
+
+
 
                     }
                 }
@@ -764,7 +771,9 @@ namespace BringUp_Control
             else if (selectedTab == tabAD9175)
             {
                 ad9175 = new AD9175_DAC();
-                
+                ad9175.DAC0_freq = txLineData.nco_dac0;
+                ad9175.DAC1_freq = txLineData.nco_dac1;
+
                 comboRegisters9175.Focus();
             }
             else if (selectedTab == tabAD4368)

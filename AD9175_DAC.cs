@@ -16,6 +16,13 @@ namespace BringUp_Control
     {
         private SpiDriver _ft;
 
+
+        public double DAC0_freq { get; set; }
+        public double DAC1_freq { get; set; }
+
+        byte[] DAC0;
+        byte[] DAC1;
+
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
 
@@ -23,25 +30,33 @@ namespace BringUp_Control
         {
             _ft = ft;
 
-
             // Iinit of the DAC
             PowerUp();
             DAC_PLL_Config();
 
-            DelayLockLoop();
+            if (DelayLockLoop() == 0x01)
+            {
+                // TODO : Add a message box or log to indicate that the DLL is locked
+            }
+            else
+            {
+                // TODO : Add a message box or log to indicate that the DLL is not locked
+            }
             Calibration();
 
             JESD204B_Setup();
-            MainDAC_Datapath_Setup();
+
+            //TODO : TEST IT 
+            DAC0 = GetBytes48BitBigEndian(CalculateDdsmFtw(DAC0_freq));   //2 GHz
+            DAC1 = GetBytes48BitBigEndian(CalculateDdsmFtw(DAC1_freq));   //3 Ghz
+            MainDAC_Datapath_Setup(DAC0, DAC1);
 
             JESD204B_SERDES_Setup();
             TransportLayer_Setup();
             CleanUpRegisterList();
-
-
         }
 
-        //Table 50 : Power Up registee writing
+        //Table 50 : Power Up registee writing - DONE
         public void PowerUp()
         {
             WriteRegister(0x0000, 0x81); // Soft reset
@@ -52,31 +67,17 @@ namespace BringUp_Control
             WriteRegister(0x0090, 0x00); // Power on DAC and bias circuity
         }
 
-        // Table 51: DAC and PLL configuration sequence
+        // Table 51: DAC and PLL configuration sequence - DONE
         public void DAC_PLL_Config()
         {
             WriteRegister(0x0095, 0x01); // Bypass internal PLL
             WriteRegister(0x0790, 0xFF); // Bypass internal PLL
-            WriteRegister(0x0791, 0xFF); // Bypass internal PLL
-            WriteRegister(0x0796, 0xE5); // DAC PLL required write value
-            WriteRegister(0x07A0, 0xBC); // DAC PLL required write value
-            WriteRegister(0x0794, 0x04); // DAC PLL charge pump current settings
-            WriteRegister(0x0797, 0x10); // DAC PLL required write value
-            WriteRegister(0x0797, 0x20); // DAC PLL required write value
-            WriteRegister(0x0798, 0x10); // DAC PLL required write value
-            WriteRegister(0x07A2, 0x7F); // DAC PLL required write value
-            Thread.Sleep(100);  //delay 100ms
-            WriteRegister(0x0799, 0xC8); // DAC PLL divider settings
-            WriteRegister(0x0793, 0x18); // DAC PLL predivider settings
-            WriteRegister(0x0094, 0x00); // PLL VCO freq default
-            WriteRegister(0x0792, 0x02); // Reset VCO
-            WriteRegister(0x0792, 0x00); // 
-            Thread.Sleep(100);  //delay 100ms
-            // (0x07B5, 0x00); // No need , not using PLL
+            WriteRegister(0x0791, 0xFF); // Bypass internal PLL            
 
         }
-        // Table 52: Delay lock loop configuration sequence
-        public void DelayLockLoop()
+        
+        // Table 52: Delay lock loop configuration sequence - DONE
+        public byte DelayLockLoop()
         {
             WriteRegister(0x00C0, 0x00); // Power up delay line
             WriteRegister(0x00DB, 0x00); // 
@@ -85,10 +86,11 @@ namespace BringUp_Control
             WriteRegister(0x00C1, 0x68); // Set DLL search mode Fdac > 4.5GHz
             WriteRegister(0x00C1, 0x69); // Set DLL search mode Fdac > 4.5GHz
             WriteRegister(0x00C7, 0x01); // Enable DLL read status
-            // (0x00C3, 0x01); // Ensure DLL is locked by reading value 1 for Bit0 of this register
+            return ReadRegister(0x00C3); // Ensure DLL is locked by reading value 1 for Bit0 of this register
 
         }
-        // Table 53: Calibration sequence
+        
+        // Table 53: Calibration sequence - DONE
         public void Calibration()
         {
             WriteRegister(0x0050, 0x2A); // Optimized calibration setting register
@@ -97,7 +99,8 @@ namespace BringUp_Control
             WriteRegister(0x0051, 0x83); // Required calibration control register 
             WriteRegister(0x0081, 0x03); // Required calibration control register
         }
-        // Table 54: JESD204B configuration sequence
+        
+        // Table 54: JESD204B configuration sequence - DONE
         public void JESD204B_Setup()
         {
             WriteRegister(0x0100, 0x00); // Power up digital datapath clocks
@@ -108,15 +111,17 @@ namespace BringUp_Control
             
             //run LINK = 0
             WriteRegister(0x0300, 0x08); // Corresponds to the mode selection made in register 0x110
+            
             WriteRegister(0x0475, 0x09); // Soft reset JESD2024B quad byte deframer
             WriteRegister(0x0453, 0x03); // Set scrambling option for SERDES data
-            WriteRegister(0x0458, 0x11); // L value to JESD_MODE
+            WriteRegister(0x0458, 0x0B); // L value to JESD_MODE            
             WriteRegister(0x0475, 0x01); // Bring the JESD204B quad byte deframer out of reset
             //run LINK = 1
             WriteRegister(0x0300, 0x0C); // Corresponds to the mode selection made in register 0x110
+            
             WriteRegister(0x0475, 0x09); // Soft reset JESD2024B quad byte deframer
-            WriteRegister(0x0453, 0x00); // Set scrambling option for SERDES data
-            WriteRegister(0x0458, 0x00); // L value to JESD_MODE
+            WriteRegister(0x0453, 0x03); // Set scrambling option for SERDES data
+            WriteRegister(0x0458, 0x0B); // L value to JESD_MODE
             WriteRegister(0x0475, 0x01); // Bring the JESD204B quad byte deframer out of reset
         }
 
@@ -126,19 +131,26 @@ namespace BringUp_Control
             
         }
 
-        // Table 56: Main datapath and Main NCO configuration sequence
-        public void MainDAC_Datapath_Setup()
+        // Table 56: Main datapath and Main NCO configuration sequence - TEST IT!!!
+        public void MainDAC_Datapath_Setup(byte[] DDCM_DAC0, byte[] DDCM_DAC1)
         {
 
             //DAC 0
             WriteRegister(0x0008, 0x40); // SELECT DAC0
             WriteRegister(0x0112, 0x38); // Enable NCO for selected channels in paging Register 0x008
-            WriteRegister(0x0114, 0x2B); // Write DDSM_FTW[7:0]
-            WriteRegister(0x0115, 0xC2); // Write DDSM_FTW[15:8]
-            WriteRegister(0x0116, 0xBC); // Write DDSM_FTW[23:16]
-            WriteRegister(0x0117, 0x2B); // Write DDSM_FTW[31:24]
-            WriteRegister(0x0118, 0xC2); // Write DDSM_FTW[39:32]
-            WriteRegister(0x0119, 0xBC); // Write DDSM_FTW[47:40]
+
+            //WriteRegister(0x0114, 0xBC); // Write DDSM_FTW[7:0]                     2B C2 BC 2B C2 BC 
+            //WriteRegister(0x0115, 0xC2); // Write DDSM_FTW[15:8]                    41 A4 1A 41 A4 1A
+            //WriteRegister(0x0116, ); // Write DDSM_FTW[23:16]
+            //WriteRegister(0x0117, 0xBC); // Write DDSM_FTW[31:24]
+            //WriteRegister(0x0118, 0xC2); // Write DDSM_FTW[39:32]
+            //WriteRegister(0x0119, 0x2B); // Write DDSM_FTW[47:40]
+
+            for (ushort i = 0x0114; i <= 0x0119; i++)
+            {
+                WriteRegister(i, DDCM_DAC0[0x0119-i]);
+            }
+            
             WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]
             WriteRegister(0x011D, 0x00); // Write DDSM_NCO_PHASE_OFFSET[15:8]
             
@@ -158,14 +170,20 @@ namespace BringUp_Control
             WriteRegister(0x0113, 0x01); // Update all NCO phase and FTW words
 
             //DAC 1
-            WriteRegister(0x0008, 0x80); // SELECT DAC0
+            WriteRegister(0x0008, 0x80); // SELECT DAC1
             WriteRegister(0x0112, 0x38); // Enable NCO for selected channels in paging Register 0x008
-            WriteRegister(0x0114, 0x41); // Write DDSM_FTW[7:0]
-            WriteRegister(0x0115, 0xA4); // Write DDSM_FTW[15:8]
-            WriteRegister(0x0116, 0x1A); // Write DDSM_FTW[23:16]
-            WriteRegister(0x0117, 0x41); // Write DDSM_FTW[31:24]
-            WriteRegister(0x0118, 0xA4); // Write DDSM_FTW[39:32]
-            WriteRegister(0x0119, 0x1A); // Write DDSM_FTW[47:40]
+            //WriteRegister(0x0114, 0x1A); // Write DDSM_FTW[7:0]
+            //WriteRegister(0x0115, 0xA4); // Write DDSM_FTW[15:8]
+            //WriteRegister(0x0116, 0x41); // Write DDSM_FTW[23:16]
+            //WriteRegister(0x0117, 0x1A); // Write DDSM_FTW[31:24]
+            //WriteRegister(0x0118, 0xA4); // Write DDSM_FTW[39:32]
+            //WriteRegister(0x0119, 0x41); // Write DDSM_FTW[47:40]
+
+            for (ushort i = 0x0114; i <= 0x0119; i++)
+            {
+                WriteRegister(i, DDCM_DAC1[0x0119 - i]);
+            }
+
             WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]
             WriteRegister(0x011D, 0x00); // Write DDSM_NCO_PHASE_OFFSET[15:8]
 
@@ -239,24 +257,21 @@ namespace BringUp_Control
 
         }
 
-        //Table 58: Transport layer configuration sequence
+        //Table 58: Transport layer configuration sequence - DONE
         public void TransportLayer_Setup()
         {
             WriteRegister(0x0308, 0x08); // Crosbar setup , program the physical lane value
             WriteRegister(0x0309, 0x1A); // logical lines 3 and 2
             WriteRegister(0x030A, 0x2C); // logical lines 5 and 4
             WriteRegister(0x030B, 0x3E); // logical lines 7 and 6
-            //WriteRegister(0x0306, 0x0C); // 
-            //WriteRegister(0x0307, 0x0C); // 
-            //WriteRegister(0x0304, 0x00); // 
-            //WriteRegister(0x0305, 0x08); // 
+            
             WriteRegister(0x003B, 0xF1); // Enable the sync logic , rotation mode
             WriteRegister(0x003A, 0x02); // Setup sync for one-shot sync mode
             WriteRegister(0x0300, 0x0B); // Link modes duallink
             
         }
 
-        // Table 59: Register cleanup sequence
+        // Table 59: Register cleanup sequence - DONE
         public void CleanUpRegisterList()
         {
             WriteRegister(0x0085, 0x13); // Set the default register value
@@ -422,7 +437,21 @@ namespace BringUp_Control
         }
 
 
+        // DAC_FS measurement and output value calculation
+        public int DAC_FS(int dac_index, float IOUTFS_mA)
+        {
+            uint DAC_FS_Value = 0;
+            if (IOUTFS_mA < 15.625 || IOUTFS_mA > 25.977)
+                DAC_FS_Value = 0;
 
+
+            DAC_FS_Value = (uint)(1 << (6 + dac_index));
+            WriteRegister(0x0008, (byte)DAC_FS_Value);
+
+            int FSC_Ctrl = Convert.ToInt16((IOUTFS_mA-15.625)*256/25);
+
+            return FSC_Ctrl;
+        }
         
 
         public DataTable InitDataTableDAC()
@@ -437,6 +466,22 @@ namespace BringUp_Control
         }
 
         
+        public byte[] DDSM_Calculation()
+        {
+            byte[] DDSM = new byte[8];
+            DDSM[0] = 0x00;
+            DDSM[1] = 0x00;
+            DDSM[2] = 0x00;
+            DDSM[3] = 0x00;
+            DDSM[4] = 0x00;
+            DDSM[5] = 0x00;
+            DDSM[6] = 0x00;
+            DDSM[7] = 0x00;
+
+
+
+            return DDSM;
+        }
 
         public void WriteRegister(ushort address, byte data)
         {
@@ -466,7 +511,21 @@ namespace BringUp_Control
             _ft.TransferFullDuplex(tx, rx);
             return rx[2];
         }
-       
+        // Method to calculate the DDSM FTW value based on the given frequency ratio
+        public static ulong CalculateDdsmFtw(double numeratorHz)
+        {
+            double fraction = numeratorHz / 11.7e9;
+            double result = fraction * Math.Pow(2, 48);
+            return (ulong)Math.Round(result); // Round to nearest integer
+        }
+
+        // Method to convert a 48-bit unsigned integer to a  6-byte array in big-endian format
+        public static byte[] GetBytes48BitBigEndian(ulong value)
+        {
+            byte[] full = BitConverter.GetBytes(value); // Little-endian on most PCs
+            Array.Reverse(full); // Make it big-endian
+            return full.Skip(2).ToArray(); // Take the last 6 bytes
+        }
         public void SaveDataTableToCsv(DataTable table)
         {
             using (SaveFileDialog saveDialog = new SaveFileDialog())
