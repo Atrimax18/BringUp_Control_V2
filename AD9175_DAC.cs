@@ -209,7 +209,7 @@ namespace BringUp_Control
         }
 
         // Table 57 : JESD204B SERDES configuration sequence
-        public void JESD204B_SERDES_Setup()
+        public byte JESD204B_SERDES_Setup()
         {
             WriteRegister(0x0240, 0xAA); // EQ settings IN_Loss < 11dB value 0xAA
             WriteRegister(0x0241, 0xAA); // EQ settings IN_Loss < 11dB value 0xAA
@@ -235,31 +235,29 @@ namespace BringUp_Control
             WriteRegister(0x0210, 0x87); // SERDES required register write value
             WriteRegister(0x0216, 0x11); // SERDES required register write value
             WriteRegister(0x0213, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x00); // SERDES required register write value
+            WriteRegister(0x0213, 0x00); // 
             WriteRegister(0x0200, 0x00); // Powe up SERDES circuittry blocks
             Thread.Sleep(100); // delay 100ms
             
-            WriteRegister(0x0210, 0x86); // EQ settings
-            WriteRegister(0x0216, 0x40); // EQ settings
-            WriteRegister(0x0213, 0x01); // EQ settings
-            WriteRegister(0x0213, 0x00); // EQ settings
+            WriteRegister(0x0210, 0x86); // SERDES required register write value
+            WriteRegister(0x0216, 0x40); // SERDES required register write value
+            WriteRegister(0x0213, 0x01); // SERDES required register write value
+            WriteRegister(0x0213, 0x00); // SERDES required register write value
 
-            WriteRegister(0x0210, 0x86); // EQ settings
-            WriteRegister(0x0216, 0x00); // EQ settings
-            WriteRegister(0x0213, 0x01); // EQ settings
-            WriteRegister(0x0213, 0x00); // EQ settings
-            
-            WriteRegister(0x0210, 0x87); // EQ settings
-            WriteRegister(0x0216, 0x01); // EQ settings
-            WriteRegister(0x0213, 0x01); // EQ settings
-            WriteRegister(0x0213, 0x00); // EQ settings
-            
-            WriteRegister(0x0280, 0x05); // EQ settings
-            WriteRegister(0x0280, 0x01); // EQ settings
+            WriteRegister(0x0210, 0x86); // SERDES required register write value
+            WriteRegister(0x0216, 0x00); // SERDES required register write value
+            WriteRegister(0x0213, 0x01); // SERDES required register write value
+            WriteRegister(0x0213, 0x00); // SERDES required register write value
 
-            byte bit0 = ReadRegister(0x0281); //Ensure Bit0 reads back 1 to indicate SERDES PLL is locked
+            WriteRegister(0x0210, 0x87); // SERDES required register write value
+            WriteRegister(0x0216, 0x01); // SERDES required register write value
+            WriteRegister(0x0213, 0x01); // SERDES required register write value
+            WriteRegister(0x0213, 0x00); // SERDES required register write value
 
+            WriteRegister(0x0280, 0x05); // SERDES required register write value
+            WriteRegister(0x0280, 0x01); // SERDES required register write value
 
+            return ReadRegister(0x0281); //Ensure Bit0 reads back 1 to indicate SERDES PLL is locked
         }
 
         //Table 58: Transport layer configuration sequence - DONE
