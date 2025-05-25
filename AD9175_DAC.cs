@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -635,6 +636,70 @@ namespace BringUp_Control
                     MessageBox.Show(ex.Message, "Warning");
                 }
             }
+        }
+
+        public void PRBS_Test(string PRBS_Type)
+        {
+            byte prbs_byte = 0x00;
+            if (PRBS_Type.Equals("PRBS7"))
+                prbs_byte = 0x00;
+            else if (PRBS_Type.Equals("PRBS15"))
+                prbs_byte = 0x01;
+            else
+                prbs_byte = 0x02;
+
+
+            double PRBS_LaneRate = 14.625e9;
+            int PRBS_TestTime = 1; //1 second
+            byte PRBS_Lanes_Bits = 0xFF; // All lanes enabled
+
+            WriteRegister(0x0315, PRBS_Lanes_Bits); // select all lines to be tested  (each bit = lane (0 to 7))
+            
+            byte PRBS_Err_Threshold = 0x00; // Error threshold for PRBS test
+            
+            WriteRegister(0x317, (byte)((PRBS_Err_Threshold >> 0) & 0xFF));
+            WriteRegister(0x318, (byte)((PRBS_Err_Threshold >> 8) & 0xFF));
+            WriteRegister(0x319, (byte)((PRBS_Err_Threshold >> 16) & 0xFF));
+
+            
+
+            byte val_0x316 = (byte)(prbs_byte << 2); // Set PRBS type and enable PRBS test
+
+            WriteRegister(0x0316, (byte)(val_0x316 | 0x0));
+            WriteRegister(0x0316, (byte)(val_0x316 | 0x1)); 
+            WriteRegister(0x0316, (byte)(val_0x316 | 0x0)); 
+
+            WriteRegister(0x0316, (byte)(val_0x316 | 0x2)); // Start PRBS test
+
+            Thread.Sleep(PRBS_TestTime * 500); // Wait for the test duration
+
+            WriteRegister(0x0316, (byte)(val_0x316 | 0x0)); // Stop PRBS test Bit 1 must 0.
+
+            byte prbs_status = ReadRegister(0x031D); // Read PRBS status register
+
+            MainForm.Instance?.LogStatus($"PRBS Test Status: 0x{prbs_status:X2}");
+
+
+            for(int i = 0; i < 8; i++)
+            {
+                WriteRegister(0x0316, (byte)(val_0x316 | i << 4)); // Enable each lane for PRBS test
+                int prbs_error_count = 0;
+                ushort start_address = 0x031A;
+                for (int j = 0; j < 3; j++)
+                {
+                    Thread.Sleep(1000); // Wait for 1 second
+
+                    
+                    
+                    prbs_error_count |= (ReadRegister(start_address) & 0xFF) << (8*j); // Read error count for each lane
+                    start_address = (ushort)(start_address + j);
+                }
+
+                double ber = prbs_error_count / PRBS_LaneRate / PRBS_TestTime; // Calculate Bit Error Rate (BER)
+
+                MainForm.Instance?.LogStatus($"Lane = {i}, ErrCount = {prbs_error_count}, BER = {ber:E}");
+            }
+
         }
 
         public void Dispose()
