@@ -686,11 +686,7 @@ namespace BringUp_Control
                 int prbs_error_count = 0;
                 ushort start_address = 0x031A;
                 for (int j = 0; j < 3; j++)
-                {
-                    Thread.Sleep(1000); // Wait for 1 second
-
-                    
-                    
+                {                   
                     prbs_error_count |= (ReadRegister(start_address) & 0xFF) << (8*j); // Read error count for each lane
                     start_address = (ushort)(start_address + j);
                 }
