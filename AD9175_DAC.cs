@@ -16,9 +16,10 @@ namespace BringUp_Control
     {
         private SpiDriver _ft;
 
-
+        
         public double DAC0_freq { get; set; }
         public double DAC1_freq { get; set; }
+        public string message_log {  get; set; }
 
         byte[] DAC0;
         byte[] DAC1;
@@ -54,7 +55,7 @@ namespace BringUp_Control
             JESD204B_SERDES_Setup();
             TransportLayer_Setup();
             CleanUpRegisterList();
-        }
+        }        
 
         //Table 50 : Power Up registee writing - DONE
         public void PowerUp()
@@ -149,6 +150,8 @@ namespace BringUp_Control
             for (ushort i = 0x0114; i <= 0x0119; i++)
             {
                 WriteRegister(i, DDCM_DAC0[0x0119-i]);
+                MainForm.Instance?.LogStatus($"DDCM DAC0 register 0x{i:X4} received value 0x{DDCM_DAC0[0x0119 - i]:X2}");
+                
             }
             
             WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]
@@ -182,6 +185,7 @@ namespace BringUp_Control
             for (ushort i = 0x0114; i <= 0x0119; i++)
             {
                 WriteRegister(i, DDCM_DAC1[0x0119 - i]);
+                MainForm.Instance?.LogStatus($"DDCM DAC1 register 0x{i:X4} received value 0x{DDCM_DAC1[0x0119 - i]:X2}");
             }
 
             WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]

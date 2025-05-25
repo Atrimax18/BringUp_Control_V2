@@ -26,7 +26,8 @@ using System.Security.Cryptography.X509Certificates;
 namespace BringUp_Control
 {
     public partial class MainForm : Form
-    {       
+    {
+        public static MainForm Instance;
 
         private const int WM_DEVICECHANGE = 0x0219;
         private const int DBT_DEVICEARRIVAL = 0x8000;
@@ -96,7 +97,8 @@ namespace BringUp_Control
         TX_Line txLineData = new TX_Line(); 
         public MainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            Instance = this;
 
             // Get Version of application and show it Form Title
             string title = Assembly.GetEntryAssembly().GetName().Version.ToString();
@@ -146,8 +148,8 @@ namespace BringUp_Control
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
-                        txLineData.nco_dac0 = double.Parse(configuration["AD9175:NCO_DAC0"]);
-                        txLineData.nco_dac1 = double.Parse(configuration["AD9175:NCO_DAC1"]);
+                        txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0"]);
+                        txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1"]);
 
 
 
@@ -275,7 +277,7 @@ namespace BringUp_Control
             
         }
 
-        private void LogStatus(string message)
+        public void LogStatus(string message)
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss");
             string fullMessage = $"[{timestamp}] {message}{Environment.NewLine}";
@@ -771,8 +773,10 @@ namespace BringUp_Control
             else if (selectedTab == tabAD9175)
             {
                 ad9175 = new AD9175_DAC();
-                ad9175.DAC0_freq = txLineData.nco_dac0;
-                ad9175.DAC1_freq = txLineData.nco_dac1;
+                
+                ad9175.DAC0_freq = txLineData.nco_dac0 * 1e9;
+                ad9175.DAC1_freq = txLineData.nco_dac1 * 1e9;
+                ad9175.Init(ftDev);
 
                 comboRegisters9175.Focus();
             }
@@ -1320,6 +1324,8 @@ namespace BringUp_Control
         {
             return alignaddress & 0xFFFFFFFC;
         }
+
+        
 
         // test fpga register logics
         private void TestRegister()
