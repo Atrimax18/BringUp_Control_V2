@@ -693,9 +693,37 @@ namespace BringUp_Control
 
                 double ber = prbs_error_count / PRBS_LaneRate / PRBS_TestTime; // Calculate Bit Error Rate (BER)
 
-                MainForm.Instance?.LogStatus($"Lane = {i}, ErrCount = {prbs_error_count}, BER = {ber:E}");
+                MainForm.Instance?.LogStatus($"Lane = {i}, ErrCount = {prbs_error_count}, BER = {ber:E}");  //BE is bps
             }
+        }
 
+        public void Calibration_NCO(int dac_index, int NCO_Freq, int ToneAmp_PR)
+        {
+
+            // MAIN DAC PAGE for DAC0 or DAC1
+            WriteRegister(0x0008, (byte)(1<<(6+dac_index))); // Optimized calibration setting register
+
+            int DDSM_CAL_FTW = (int)(1.0*(NCO_Freq / 11.7) * Math.Pow(2, 32)); // Enabling Calibration NCO accumulator by setting Bit 2 to 1
+            WriteRegister(0x01E6, 1 << 2); // 
+
+            for(int i = 0; i < 4; i++)
+            {
+                WriteRegister((ushort)(0x01E2 + i), (byte)((DDSM_CAL_FTW >> (8 * i)) & 0xFF)); // Write DDSM_FTW[7:0] to DDSM_FTW[31:24]
+            }
+            
+            
+            WriteRegister(0x0113, 0x00); // Toggling register to update NCO phase and FTW words
+            WriteRegister(0x0113, 0x01); // Toggling register to update NCO phase and FTW words
+
+            WriteRegister(0x01E6, 0x07); // Disabling Calibration NCO accumulator by setting Bit 1 to 1
+
+            WriteRegister(0x0008, (byte)(1 << (0 + dac_index))); // Disabling Calibration NCO accumulator by setting Bit 1 to 0
+
+            int ToneValue = (int)(0x50FF *1.0 * ToneAmp_PR / 100.0); // Calculate the tone value based on the percentage
+            for (int i = 0; i < 2; i++)
+            {
+                WriteRegister((ushort)(0x0148 + i), (byte)((ToneValue >> (8 * i)) & 0xFF)); // Write Tone Value to DDSM_ACC_DELTA[7:0] to DDSM_ACC_DELTA[15:8]
+            }
         }
 
         public void Dispose()
