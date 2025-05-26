@@ -636,6 +636,7 @@ namespace BringUp_Control
             }
         }
 
+        // TODO - QA tests
         public void PRBS_Test(string PRBS_Type)
         {
             byte prbs_byte = 0x00;
@@ -695,6 +696,7 @@ namespace BringUp_Control
             }
         }
 
+        // TODO - QA tests
         public void Calibration_NCO(int dac_index, int NCO_Freq, int ToneAmp_PR)
         {
 
@@ -706,7 +708,7 @@ namespace BringUp_Control
 
             for(int i = 0; i < 4; i++)
             {
-                WriteRegister((ushort)(0x01E2 + i), (byte)((DDSM_CAL_FTW >> (8 * i)) & 0xFF)); // Write DDSM_FTW[7:0] to DDSM_FTW[31:24]
+                WriteRegister((ushort)(0x01E2 + i), (byte)((DDSM_CAL_FTW >> (8 * i)) & 0xFF)); // Write Registers
             }
             
             
