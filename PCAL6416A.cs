@@ -198,7 +198,6 @@ namespace BringUp_Control
             _ft.Write(PCAL6416A_I2C_ADDRESS, buff_wr);
         }
         
-
         private void ReadByte(byte regAddr, out byte data)
         {
             if (_ft == null)
@@ -211,7 +210,9 @@ namespace BringUp_Control
             _ft.Write(PCAL6416A_I2C_ADDRESS, registerAddress);
             _ft.Read(PCAL6416A_I2C_ADDRESS, buff_rd);
             data = buff_rd[0];
-        }  
+        }
+
+        //LED TEST: Run a simple LED chase test
         public void Led_Test()
         {
             RunLedChase();
@@ -233,8 +234,9 @@ namespace BringUp_Control
                     WriteByte((byte)IO_Register, 0x00);
             }               
                         
-        }       
+        }
 
+        // Run a simple LED chase test
         public void RunLedChase(int delayMs = 500)
         {
             // Turn ON LEDs one by one (active LOW: write 0 to turn ON)
@@ -264,10 +266,6 @@ namespace BringUp_Control
             // Final: all OFF
             WriteByte(OUTPUT_PORT_0, 0xFF);
             
-        }
-
-
-
-        
+        }        
     }
 }
