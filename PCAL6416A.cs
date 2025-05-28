@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BringUp_Control
 {
-    internal class PCAL6416A
+    internal class PCAL6416A : IDisposable
     {
         //private const byte PCAL6416A_I2C_ADDRESS0 = 0x20; // Fixed I2C address
         private const byte PCAL6416A_I2C_ADDRESS = 0x21;
@@ -266,6 +266,11 @@ namespace BringUp_Control
             // Final: all OFF
             WriteByte(OUTPUT_PORT_0, 0xFF);
             
-        }        
+        }
+
+        public void Dispose()
+        {
+            _ft?.Dispose();
+        }
     }
 }

@@ -242,6 +242,9 @@ namespace BringUp_Control
                     ad4368?.Dispose();
                     i2cBus?.Dispose();
                     fpga?.Dispose();
+                    ad9175?.Dispose();
+                    MUX?.Dispose();
+                    IO_Exp?.Dispose();
                     gpio_control?.Dispose();
 
 
