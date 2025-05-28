@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static BringUp_Control.PCAL6416A;
 
 
 namespace BringUp_Control
@@ -36,13 +37,15 @@ namespace BringUp_Control
             PowerUp();
             DAC_PLL_Config();
 
-            if (DelayLockLoop() == 0x01)
+            if (GetBit(DelayLockLoop(), 0))
             {
                 // TODO : Add a message box or log to indicate that the DLL is locked
+                // True - DAC DLL is locked
             }
             else
             {
                 // TODO : Add a message box or log to indicate that the DLL is not locked
+                // False - DAC DLL is not locked
             }
             Calibration();
 
@@ -88,10 +91,21 @@ namespace BringUp_Control
             WriteRegister(0x00C1, 0x68); // Set DLL search mode Fdac > 4.5GHz
             WriteRegister(0x00C1, 0x69); // Set DLL search mode Fdac > 4.5GHz
             WriteRegister(0x00C7, 0x01); // Enable DLL read status
+            
+
             return ReadRegister(0x00C3); // Ensure DLL is locked by reading value 1 for Bit0 of this register
 
         }
-        
+
+        // parse bit position value: value - byte of data, bitIndex - position of the bit that must be tested
+        public static bool GetBit(byte value, int bitIndex)
+        {
+            if (bitIndex < 0 || bitIndex > 7)
+                throw new ArgumentOutOfRangeException(nameof(bitIndex), "Bit index must be between 0 and 7");
+
+            return (value & (1 << bitIndex)) != 0;
+        }
+
         // Table 53: Calibration sequence - DONE
         public void Calibration()
         {

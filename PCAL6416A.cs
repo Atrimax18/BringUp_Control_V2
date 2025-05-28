@@ -2,19 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BringUp_Control
 {
     internal class PCAL6416A
     {
-        private const byte PCAL6416A_I2C_ADDRESS = 0x20; // Fixed I2C address
+        //private const byte PCAL6416A_I2C_ADDRESS0 = 0x20; // Fixed I2C address
+        private const byte PCAL6416A_I2C_ADDRESS = 0x21;
         private const byte INPUT_PORT_0 = 0x00; // Input port 0 register
         private const byte INPUT_PORT_1 = 0x01; // Input port 1 register
         private const byte OUTPUT_PORT_0 = 0x02; // Output port 0 register
         private const byte OUTPUT_PORT_1 = 0x03; // Output port 1 register
         private const byte CONFIG_PORT_0 = 0x06; // Configuration port 0 register
         private const byte CONFIG_PORT_1 = 0x07; // Configuration port 1 register
+
+        
+
 
         public enum PinIndex
         {
@@ -181,16 +186,18 @@ namespace BringUp_Control
             Console.WriteLine($"TMUX1104 set to MUX_SPI_CSn_{muxSpiIndex} (Mask: 0b{Convert.ToString(muxMask, 2).PadLeft(2, '0')}).");
         }
 
-        private void WriteByte(byte regAddr, in byte data)
+        public void WriteByte(byte regAddr, in byte data)
         {
             if (_ft == null)
             {
                 throw new InvalidOperationException("I2C driver is not initialized. Call Init() first.");
             }
 
+            //ReadOnlySpan<byte> buff_wr = stackalloc byte[4] { regAddr, data, 0x00, 0x00 };
             ReadOnlySpan<byte> buff_wr = stackalloc byte[2] { regAddr, data };
             _ft.Write(PCAL6416A_I2C_ADDRESS, buff_wr);
         }
+        
 
         private void ReadByte(byte regAddr, out byte data)
         {
@@ -204,6 +211,63 @@ namespace BringUp_Control
             _ft.Write(PCAL6416A_I2C_ADDRESS, registerAddress);
             _ft.Read(PCAL6416A_I2C_ADDRESS, buff_rd);
             data = buff_rd[0];
+        }  
+        public void Led_Test()
+        {
+            RunLedChase();
+        }      
+
+
+        //GPIO_IN_OUT: 0 for output, 1 for input
+        public void PCAL6416A_CONFIG_IO_EXP(int IO_Register, int GPIO_IN_OUT)
+        {
+            byte value;
+            
+            if (IO_Register < 6 || IO_Register > 7)
+                throw new Exception("IO CONFIG REGISTER must be 6 or 7");
+            else
+            {
+                ReadByte((byte)IO_Register, out value);
+
+                if (value == 255)
+                    WriteByte((byte)IO_Register, 0x00);
+            }               
+                        
+        }       
+
+        public void RunLedChase(int delayMs = 500)
+        {
+            // Turn ON LEDs one by one (active LOW: write 0 to turn ON)
+            for (int i = 0; i < 8; i++)
+            {
+                byte val = (byte)~(1 << i);  // only one bit = 0, others = 1
+                WriteByte(OUTPUT_PORT_0, val);
+            
+                Thread.Sleep(delayMs);
+            }
+
+            // All LEDs ON (all bits LOW)
+            WriteByte(OUTPUT_PORT_0, 0x00);
+            
+            Thread.Sleep(500);
+
+            // Turn OFF LEDs one by one (bit by bit go back to 1)
+            for (int i = 0; i < 8; i++)
+            {
+                byte val = (byte)(0x00 | (1 << i)); // bit i = HIGH
+                val = (byte)(val | ((1 << i) - 1)); // accumulate bits as OFF
+                WriteByte(OUTPUT_PORT_0, val);
+                ;
+                Thread.Sleep(delayMs);
+            }
+
+            // Final: all OFF
+            WriteByte(OUTPUT_PORT_0, 0xFF);
+            
         }
+
+
+
+        
     }
 }

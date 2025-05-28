@@ -93,6 +93,9 @@ namespace BringUp_Control
         GpioDriver gpio_control;
         i2cDriver i2cBus;
         TMP100 tmp100;
+        PCAL6416A IO_Exp;
+
+        PCA9547A MUX; // I2C MUX SNOW EVB Board
 
         TX_Line txLineData = new TX_Line(); 
         public MainForm()
@@ -148,8 +151,8 @@ namespace BringUp_Control
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
-                        txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0"]);
-                        txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1"]);
+                        txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0_GHz"]);
+                        txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1_GHz"]);
 
 
 
@@ -245,17 +248,18 @@ namespace BringUp_Control
 
                     // **************************** I2C INIT DRIVER  1 ***********************************************
                     //i2cBus = new i2cDriver(gpio_control.Handle, 400);
-                    i2cBus = new i2cDriver(_gpioLocId, 400); // open second bridge for GPIO and I2C
+                    //i2cBus = new i2cDriver(_gpioLocId, 100); // open second bridge for GPIO and I2C
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
-                    //gpio_control = new GpioDriver(_gpioLocId);
-                    gpio_control = new GpioDriver(i2cBus.Handle, 0b_1100, true); // open second bridge for GPIO and I2C
+                    gpio_control = new GpioDriver(_gpioLocId);
+                    //gpio_control = new GpioDriver(i2cBus.Handle, 0b_1100, true); // open second bridge for GPIO and I2C
                     gpio_control.Write(GPIO3, true);
 
                     //i2cBus = new i2cDriver(gpio_control.Handle, 400);
 
                     // ************************** SPI INIT DRIVER 3 **************************************************                     
-                    ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
+                    //ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
                     
+                    i2cBus = new i2cDriver(_spiLocId, 400); // open second bridge for GPIO and I2C
                     // flag status change 
                     usbflag = true;
                     driverflag = true;
@@ -784,6 +788,24 @@ namespace BringUp_Control
             {
                 comboRegAddress.Focus();
             }
+            else if (selectedTab == tabMux)
+            {
+                if (ftDev != null)
+                    ftDev.Dispose();
+
+                if (i2cBus == null)
+                    i2cBus = new i2cDriver(_spiLocId, 400);
+
+                IO_Exp = new PCAL6416A();
+                IO_Exp.Init(i2cBus);
+                MUX = new PCA9547A();
+                MUX.Init(i2cBus); // Initialize MUX with the current I²C device
+                MUX.Set_Mux_Channel(1, 5);
+
+
+
+            }
+
             
 
         }
@@ -850,6 +872,13 @@ namespace BringUp_Control
 
         private void Cmd_Init_All_Click(object sender, EventArgs e)
         {
+            IO_Exp = new PCAL6416A();
+            IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+            MUX = new PCA9547A();
+            MUX.Init(i2cBus); // Initialize MUX with the current I²C device
+            MUX.Set_Mux_Channel(1, 5);
+
+
             tmp100 = new TMP100();
             tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
             tmp100.BultInTest(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Self test the FTDI TMP100
@@ -923,6 +952,7 @@ namespace BringUp_Control
             {
                 double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
                 label3.Text = $"{tempval:F1} °C"; // Format the temperature
+                LogStatus("Temp FT: "+label3.Text);
             }
             catch (Exception ex)
             {
@@ -950,6 +980,7 @@ namespace BringUp_Control
             {
                 double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_RF_CHIP);
                 label5.Text = $"{tempval:F1} °C"; // Format the temperature
+                LogStatus("Temp RF: "+ label5.Text);
             }
             catch (Exception ex)
             {
@@ -1350,6 +1381,29 @@ namespace BringUp_Control
                     LogStatusFPGA($"FGPA Alignment register address [0x{alignaddress:X8}] of regular address 0x{addr:X8}");
                 }                
             }            
+        }
+
+        private void Cmd_Led_Test_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabMux)
+            {
+
+                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
+                // Test the LED functionality of the PCAL6416A I/O expander
+                IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                IO_Exp.Led_Test();
+            }
+        }
+
+        private void Cmd_Led_ON_Click(object sender, EventArgs e)
+        {
+            IO_Exp.WriteByte(0x02, 0x00); //ALL LEDS ON            
+        }
+
+        private void Cmd_Led_OFF_Click(object sender, EventArgs e)
+        {
+            IO_Exp.WriteByte(0x02, 0xFF); //ALL LEDS OFF
         }
     }
 }

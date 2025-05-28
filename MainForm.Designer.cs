@@ -85,6 +85,14 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabMux = new System.Windows.Forms.TabPage();
+            this.Cmd_I2C_Write = new System.Windows.Forms.Button();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.Cmd_Led_OFF = new System.Windows.Forms.Button();
+            this.Cmd_Led_ON = new System.Windows.Forms.Button();
+            this.Cmd_Led_Test = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -93,6 +101,7 @@
             this.radioMUX = new System.Windows.Forms.RadioButton();
             this.radioFPGA = new System.Windows.Forms.RadioButton();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.label22 = new System.Windows.Forms.Label();
             this.Cmd_Read_Registers = new System.Windows.Forms.Button();
             this.Cmd_LoadCounter = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Read = new System.Windows.Forms.Button();
@@ -116,7 +125,7 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
+            this.Cmd_I2C_Read = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -723,6 +732,15 @@
             // 
             // tabMux
             // 
+            this.tabMux.Controls.Add(this.Cmd_I2C_Read);
+            this.tabMux.Controls.Add(this.Cmd_I2C_Write);
+            this.tabMux.Controls.Add(this.label24);
+            this.tabMux.Controls.Add(this.label23);
+            this.tabMux.Controls.Add(this.textBox2);
+            this.tabMux.Controls.Add(this.textBox1);
+            this.tabMux.Controls.Add(this.Cmd_Led_OFF);
+            this.tabMux.Controls.Add(this.Cmd_Led_ON);
+            this.tabMux.Controls.Add(this.Cmd_Led_Test);
             this.tabMux.Controls.Add(this.groupBox4);
             this.tabMux.Controls.Add(this.label13);
             this.tabMux.Controls.Add(this.label8);
@@ -734,6 +752,77 @@
             this.tabMux.TabIndex = 6;
             this.tabMux.Text = "TX MUXES";
             this.tabMux.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_I2C_Write
+            // 
+            this.Cmd_I2C_Write.Location = new System.Drawing.Point(135, 383);
+            this.Cmd_I2C_Write.Name = "Cmd_I2C_Write";
+            this.Cmd_I2C_Write.Size = new System.Drawing.Size(107, 54);
+            this.Cmd_I2C_Write.TabIndex = 12;
+            this.Cmd_I2C_Write.Text = "WRITE";
+            this.Cmd_I2C_Write.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(6, 380);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(78, 16);
+            this.label24.TabIndex = 11;
+            this.label24.Text = "I2C DATA:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(6, 336);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(114, 16);
+            this.label23.TabIndex = 10;
+            this.label23.Text = "I2C REGISTER:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(9, 399);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(107, 22);
+            this.textBox2.TabIndex = 9;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(9, 355);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(107, 22);
+            this.textBox1.TabIndex = 8;
+            // 
+            // Cmd_Led_OFF
+            // 
+            this.Cmd_Led_OFF.Location = new System.Drawing.Point(635, 218);
+            this.Cmd_Led_OFF.Name = "Cmd_Led_OFF";
+            this.Cmd_Led_OFF.Size = new System.Drawing.Size(107, 54);
+            this.Cmd_Led_OFF.TabIndex = 7;
+            this.Cmd_Led_OFF.Text = "LED OFF";
+            this.Cmd_Led_OFF.UseVisualStyleBackColor = true;
+            this.Cmd_Led_OFF.Click += new System.EventHandler(this.Cmd_Led_OFF_Click);
+            // 
+            // Cmd_Led_ON
+            // 
+            this.Cmd_Led_ON.Location = new System.Drawing.Point(634, 141);
+            this.Cmd_Led_ON.Name = "Cmd_Led_ON";
+            this.Cmd_Led_ON.Size = new System.Drawing.Size(109, 52);
+            this.Cmd_Led_ON.TabIndex = 6;
+            this.Cmd_Led_ON.Text = "LED ON";
+            this.Cmd_Led_ON.UseVisualStyleBackColor = true;
+            this.Cmd_Led_ON.Click += new System.EventHandler(this.Cmd_Led_ON_Click);
+            // 
+            // Cmd_Led_Test
+            // 
+            this.Cmd_Led_Test.Location = new System.Drawing.Point(632, 51);
+            this.Cmd_Led_Test.Name = "Cmd_Led_Test";
+            this.Cmd_Led_Test.Size = new System.Drawing.Size(112, 58);
+            this.Cmd_Led_Test.TabIndex = 5;
+            this.Cmd_Led_Test.Text = "SNOW TEST";
+            this.Cmd_Led_Test.UseVisualStyleBackColor = true;
+            this.Cmd_Led_Test.Click += new System.EventHandler(this.Cmd_Led_Test_Click);
             // 
             // groupBox4
             // 
@@ -756,7 +845,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(3, 151);
+            this.label8.Location = new System.Drawing.Point(6, 272);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(102, 16);
             this.label8.TabIndex = 2;
@@ -770,7 +859,7 @@
             "PLL4368",
             "ADC7091",
             "SKYPLLSi5518"});
-            this.comboBox1.Location = new System.Drawing.Point(3, 170);
+            this.comboBox1.Location = new System.Drawing.Point(9, 291);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(158, 24);
             this.comboBox1.TabIndex = 1;
@@ -828,6 +917,15 @@
             this.tabFPGA.TabIndex = 7;
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(20, 104);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(96, 16);
+            this.label22.TabIndex = 11;
+            this.label22.Text = "FPGA DATA:";
             // 
             // Cmd_Read_Registers
             // 
@@ -1049,14 +1147,14 @@
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
-            // label22
+            // Cmd_I2C_Read
             // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(20, 104);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(96, 16);
-            this.label22.TabIndex = 11;
-            this.label22.Text = "FPGA DATA:";
+            this.Cmd_I2C_Read.Location = new System.Drawing.Point(248, 383);
+            this.Cmd_I2C_Read.Name = "Cmd_I2C_Read";
+            this.Cmd_I2C_Read.Size = new System.Drawing.Size(107, 54);
+            this.Cmd_I2C_Read.TabIndex = 13;
+            this.Cmd_I2C_Read.Text = "READ";
+            this.Cmd_I2C_Read.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1195,6 +1293,15 @@
         private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button Cmd_Led_Test;
+        private System.Windows.Forms.Button Cmd_Led_OFF;
+        private System.Windows.Forms.Button Cmd_Led_ON;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button Cmd_I2C_Write;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button Cmd_I2C_Read;
     }
 }
 
