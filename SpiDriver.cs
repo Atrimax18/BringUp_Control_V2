@@ -13,6 +13,7 @@ namespace BringUp_Control
     {
 
         private IntPtr _ftHandle;
+        private bool _ownsHandle;
 
         private readonly object _sync = new object();
 
@@ -37,14 +38,38 @@ namespace BringUp_Control
             var ftStatus = Ft4222Native.FT_OpenEx(locId, Ft4222Native.FtOpenType.OpenByLocation, out _ftHandle);
             if (ftStatus != FTDI.FT_STATUS.FT_OK) // Updated to compare with FTDI.FT_STATUS.FT_OK
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
-            
 
+            
             byte csPol = csActiveHigh;// (byte)(csActiveHigh ? 1 : 0);
 
             Check(Ft4222Native.FT4222_SPIMaster_Init(_ftHandle, _spiMode, _clkDiv, _cpol, _cpha, csPol));
         }
-        
-         public void Dispose()
+
+        public SpiDriver(IntPtr handle,
+                            Ft4222Native.FT4222_SPI_Mode spiMode,
+                            Ft4222Native.FT4222_CLK clkDiv,
+                            Ft4222Native.FT4222_SPICPOL cpol,
+                            Ft4222Native.FT4222_SPICPHA cpha,
+                            byte csActiveHigh, bool ownsHandle)
+        {
+            _spiMode = spiMode;
+            _cpol = cpol;
+            _cpha = cpha;
+            _clkDiv = clkDiv;
+
+            // open by USB‑location ID
+
+            _ftHandle = handle;
+            _ownsHandle = ownsHandle;
+
+
+            byte csPol = csActiveHigh;// (byte)(csActiveHigh ? 1 : 0);
+
+            Check(Ft4222Native.FT4222_SPIMaster_Init(_ftHandle, _spiMode, _clkDiv, _cpol, _cpha, csPol));
+            //_ownsHandle = ownsHandle;
+        }
+
+        public void Dispose()
         {
             if (_ftHandle != IntPtr.Zero) // Check if the handle is not null
             {

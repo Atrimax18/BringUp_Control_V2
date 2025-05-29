@@ -11,7 +11,7 @@ namespace BringUp_Control
     internal sealed class i2cDriver : IDisposable
     {
         private readonly IntPtr _i2cHandle;
-        private readonly bool _ownsHandle;
+        private bool _ownsHandle;
 
         public IntPtr Handle => _i2cHandle;
         public enum I2C_MasterFlag : byte
@@ -76,6 +76,7 @@ namespace BringUp_Control
         {
             if (_ownsHandle && _i2cHandle != IntPtr.Zero)
             {
+                _ownsHandle = false;
                 Ft4222Native.FT4222_UnInitialize(_i2cHandle);
                 Ft4222Native.FT_Close(_i2cHandle);
             }
