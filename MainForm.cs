@@ -45,8 +45,9 @@ namespace BringUp_Control
 
 
         Ft4222Native FTDriver = new Ft4222Native(); 
-        
-        
+        FtdiInterfaceManager InterfaceManager; // FTDI SPI interface manager
+
+
 
         DataTable DT4368 = new DataTable();
         DataTable DT9175 = new DataTable();
@@ -235,17 +236,22 @@ namespace BringUp_Control
 
                     // ── Either first time or the device list really changed ───────────────────
                     _spiLocId = locfirst;    //INTERFACE FT4222 A
-                    _gpioLocId = locsecond;  //INTERFACE FT4222 B                  
+                    _gpioLocId = locsecond;  //INTERFACE FT4222 B
+                    InterfaceManager = new FtdiInterfaceManager(_spiLocId); // Initialize FTDI interface manager
+                    InterfaceManager.BusModeChanged += OnBusModeChanged;
 
                     // ************************* Dispose if already has init ******************************************
-                    ftDev?.Dispose();
-                    ad4368?.Dispose();
-                    i2cBus?.Dispose();
+                    //ftDev?.Dispose();
+                    //ad4368?.Dispose();
+                    //i2cBus?.Dispose();
                     fpga?.Dispose();
                     ad9175?.Dispose();
                     MUX?.Dispose();
                     IO_Exp?.Dispose();
                     gpio_control?.Dispose();
+
+
+                    
 
 
 
@@ -256,13 +262,24 @@ namespace BringUp_Control
                     gpio_control = new GpioDriver(_gpioLocId);
                     //gpio_control = new GpioDriver(i2cBus.Handle, 0b_1100, true); // open second bridge for GPIO and I2C
                     gpio_control.Write(GPIO3, true);
+                    
+                    if (selectedTab == tabAD4368)
+                    {
+                        Control_Init(true); // Set controls enabled/disabled
+                        ad4368 = new AD4368_PLL();
+
+                        ftDev = InterfaceManager.GetSpi();
+                        ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+                    }                                            
+                    else
+                        Control_Init(false);
 
                     //i2cBus = new i2cDriver(gpio_control.Handle, 400);
 
                     // ************************** SPI INIT DRIVER 3 **************************************************                     
                     //ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
-                    
-                    i2cBus = new i2cDriver(_spiLocId, 400); // open second bridge for GPIO and I2C
+
+                    //i2cBus = new i2cDriver(_spiLocId, 400); // open second bridge for GPIO and I2C
                     // flag status change 
                     usbflag = true;
                     driverflag = true;
@@ -283,12 +300,25 @@ namespace BringUp_Control
             }
             
         }
+        private void OnBusModeChanged(object sender, string message)
+        {
+            /*if (InvokeRequired)
+            {
+                Invoke(new Action(() => logStatus.AppendText($"{message}{Environment.NewLine}")));
+            }
+            else
+            {
+                logStatus.AppendText($"{message}{Environment.NewLine}");
+            }*/
+            LogStatus(message);
+        }
+
 
         public void LogStatus(string message)
         {
             string timestamp = DateTime.Now.ToString("HH:mm:ss");
             string fullMessage = $"[{timestamp}] {message}{Environment.NewLine}";
-            //textLog.AppendText($"[{timestamp}] {message}{Environment.NewLine}");
+            
 
             if (textLog.InvokeRequired)
             {
@@ -320,12 +350,15 @@ namespace BringUp_Control
             ad4368?.Dispose();
             ad9175?.Dispose();
             fpga?.Dispose();
+            IO_Exp?.Dispose(); 
+            MUX?.Dispose(); //snow evb
 
             // 4) dispose the transports
             ftDev?.Dispose();          // SPI (interface-A)
-            i2cBus?.Dispose();         // I2C (interface-B) shared with GPIO control
+            i2cBus?.Dispose();         // I2C (interface-A) 
             gpio_control?.Dispose();   // GPIO (interface-B)
 
+            InterfaceManager.Dispose();
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
         }  
@@ -502,8 +535,8 @@ namespace BringUp_Control
 
                 PLL_Init_Flag = true;
                 Control_Init(PLL_Init_Flag);
-
-                ad4368 = new AD4368_PLL();
+                
+                ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                 ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
                 
 
@@ -790,22 +823,21 @@ namespace BringUp_Control
             else if (selectedTab == tabAD4368)
             {
                 comboRegAddress.Focus();
+                ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                ad4368.Init(ftDev);
             }
             else if (selectedTab == tabMux)
-            {
-                if (ftDev != null)
-                    ftDev.Dispose();
+            {                
 
-                if (i2cBus == null)
-                    i2cBus = new i2cDriver(_spiLocId, 400);
+                i2cBus = InterfaceManager.GetI2c();               
 
                 IO_Exp = new PCAL6416A();
                 IO_Exp.Init(i2cBus);
+                
                 MUX = new PCA9547A();
                 MUX.Init(i2cBus); // Initialize MUX with the current I²C device
+                
                 MUX.Set_Mux_Channel(1, 5);
-
-
 
             }
 

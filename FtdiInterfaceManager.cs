@@ -1,6 +1,9 @@
-﻿using System;
+﻿using FTD2XX_NET;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,10 +21,12 @@ namespace BringUp_Control
         private IntPtr _ftHandle = IntPtr.Zero;
         private BusMode _currentMode = BusMode.None;
 
+        public event EventHandler<string> BusModeChanged;
+
         private SpiDriver _spi;
         private i2cDriver _i2c;
 
-        private readonly uint _locId;
+        private uint _locId;
 
         public FtdiInterfaceManager(uint locId)
         {
@@ -32,8 +37,10 @@ namespace BringUp_Control
         {
             if (_currentMode != BusMode.SPI)
             {
-                SwitchToSpi();  
+                SwitchToSpi();
+                //MainForm.Instance.LogStatus("SPI Driver Loaded");
                 
+
             }
             return _spi;
         }
@@ -43,6 +50,8 @@ namespace BringUp_Control
             if (_currentMode != BusMode.I2C)
             {
                 SwitchToI2c();
+                //MainForm.Instance.LogStatus("I2C Driver Loaded");
+                
             }
             return _i2c;
         }
@@ -52,11 +61,34 @@ namespace BringUp_Control
             Dispose(); // Dispose previous resources if any
             
             var status = Ft4222Native.FT_OpenEx(_locId, Ft4222Native.FtOpenType.OpenByLocation, out _ftHandle);
-            if (status == FTD2XX_NET.FTDI.FT_STATUS.FT_OK)
-                throw new InvalidOperationException($"Failed to open FTDI device{status}.");
 
-            _spi = new SpiDriver(_locId, Ft4222Native.FT4222_SPI_Mode.SPI_MODE0, Ft4222Native.FT4222_CLK.CLK_DIV_1, Ft4222Native.FT4222_SPICPOL.CPOL_LOW, Ft4222Native.FT4222_SPICPHA.CPHA_FIRST, 0);
+
+            if (status != FTDI.FT_STATUS.FT_OK || _ftHandle == IntPtr.Zero)
+                throw new IOException($"FT_OpenEx failed: {status}, Handle: {_ftHandle}");
+
+            /*if (status == FTDI.FT_STATUS.FT_OK)
+                throw new InvalidOperationException($"Failed to open FTDI device{status}.");*/
+
+            _spi = new SpiDriver(_ftHandle, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01, false);
+            
             _currentMode = BusMode.SPI;
+            BusModeChanged?.Invoke(this, "SPI Driver initialized");
+        }
+
+        private void SwitchToI2c()
+        {
+            Dispose(); // Dispose previous resources if any
+            
+            var status = Ft4222Native.FT_OpenEx(_locId, Ft4222Native.FtOpenType.OpenByLocation, out _ftHandle);
+            if (status != FTDI.FT_STATUS.FT_OK || _ftHandle == IntPtr.Zero)
+                throw new IOException($"FT_OpenEx failed: {status}, Handle: {_ftHandle}");
+
+
+            /*if (status == FTDI.FT_STATUS.FT_OK)
+                throw new InvalidOperationException($"Failed to open FTDI device{status}.");*/
+            _i2c = new i2cDriver(_ftHandle, 400, true);
+            _currentMode = BusMode.I2C;
+            BusModeChanged?.Invoke(this, "I2C Driver initialized");
         }
 
 

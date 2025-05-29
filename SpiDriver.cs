@@ -21,6 +21,7 @@ namespace BringUp_Control
         private readonly Ft4222Native.FT4222_CLK _clkDiv;
         private readonly Ft4222Native.FT4222_SPICPOL _cpol;
         private readonly Ft4222Native.FT4222_SPICPHA _cpha;
+        
         public SpiDriver(uint locId,
                             Ft4222Native.FT4222_SPI_Mode spiMode,
                             Ft4222Native.FT4222_CLK clkDiv,
@@ -78,7 +79,6 @@ namespace BringUp_Control
                 _ftHandle = IntPtr.Zero; // Reset the handle to IntPtr.Zero after closing
             }
         }
-
 
 
         public void Read(ReadOnlySpan<byte> buffer)

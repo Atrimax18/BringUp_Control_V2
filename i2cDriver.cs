@@ -10,8 +10,9 @@ namespace BringUp_Control
 {
     internal sealed class i2cDriver : IDisposable
     {
-        private readonly IntPtr _i2cHandle;
+        private IntPtr _i2cHandle;
         private bool _ownsHandle;
+        private ushort _clockKHz;
 
         public IntPtr Handle => _i2cHandle;
         public enum I2C_MasterFlag : byte
@@ -45,7 +46,19 @@ namespace BringUp_Control
             Init(kbps);
         }
 
-        
+        public i2cDriver(IntPtr ftHandle, ushort clockKHz = 400, bool ownsHandle = false)
+        {
+            if (ftHandle == IntPtr.Zero)
+                throw new ArgumentException("Handle cannot be zero.", nameof(ftHandle));
+            
+            _i2cHandle = ftHandle;
+            _clockKHz = clockKHz;
+
+            _ownsHandle = ownsHandle; // will close it in Dispose() if true
+            Init(_clockKHz);
+        }
+
+
 
         private void Init(uint kbps)
         {
@@ -79,6 +92,7 @@ namespace BringUp_Control
                 _ownsHandle = false;
                 Ft4222Native.FT4222_UnInitialize(_i2cHandle);
                 Ft4222Native.FT_Close(_i2cHandle);
+                _i2cHandle = IntPtr.Zero; // Reset the handle to IntPtr.Zero after closing
             }
         }
     }

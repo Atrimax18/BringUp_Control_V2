@@ -8,12 +8,12 @@ namespace BringUp_Control
 {
     internal class AD7091 : IDisposable
     {
-        private readonly SpiDriver _ft;
+        private SpiDriver _ft;
 
 
         public void Dispose()
         {
-            _ft?.Dispose();
+            _ft = null;
         }
     }
 }
