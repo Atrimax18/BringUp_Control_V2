@@ -72,8 +72,9 @@ namespace BringUp_Control
 
         public void Dispose()
         {
-            if (_ftHandle != IntPtr.Zero) // Check if the handle is not null
+            if (_ownsHandle && _ftHandle != IntPtr.Zero) // Check if the handle is not null
             {
+                _ownsHandle = false;
                 Ft4222Native.FT4222_UnInitialize(_ftHandle);
                 Ft4222Native.FT_Close(_ftHandle);
                 _ftHandle = IntPtr.Zero; // Reset the handle to IntPtr.Zero after closing

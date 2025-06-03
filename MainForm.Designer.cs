@@ -85,6 +85,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabMux = new System.Windows.Forms.TabPage();
+            this.Cmd_I2C_Read = new System.Windows.Forms.Button();
             this.Cmd_I2C_Write = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
@@ -96,7 +97,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboDevice = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.radioMUX = new System.Windows.Forms.RadioButton();
             this.radioFPGA = new System.Windows.Forms.RadioButton();
@@ -125,7 +126,6 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
-            this.Cmd_I2C_Read = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -744,7 +744,7 @@
             this.tabMux.Controls.Add(this.groupBox4);
             this.tabMux.Controls.Add(this.label13);
             this.tabMux.Controls.Add(this.label8);
-            this.tabMux.Controls.Add(this.comboBox1);
+            this.tabMux.Controls.Add(this.comboDevice);
             this.tabMux.Controls.Add(this.groupBox3);
             this.tabMux.Location = new System.Drawing.Point(4, 25);
             this.tabMux.Name = "tabMux";
@@ -752,6 +752,15 @@
             this.tabMux.TabIndex = 6;
             this.tabMux.Text = "TX MUXES";
             this.tabMux.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_I2C_Read
+            // 
+            this.Cmd_I2C_Read.Location = new System.Drawing.Point(248, 383);
+            this.Cmd_I2C_Read.Name = "Cmd_I2C_Read";
+            this.Cmd_I2C_Read.Size = new System.Drawing.Size(107, 54);
+            this.Cmd_I2C_Read.TabIndex = 13;
+            this.Cmd_I2C_Read.Text = "READ";
+            this.Cmd_I2C_Read.UseVisualStyleBackColor = true;
             // 
             // Cmd_I2C_Write
             // 
@@ -851,18 +860,20 @@
             this.label8.TabIndex = 2;
             this.label8.Text = "DEVICE MUX:";
             // 
-            // comboBox1
+            // comboDevice
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.comboDevice.FormattingEnabled = true;
+            this.comboDevice.Items.AddRange(new object[] {
             "DAC9175",
             "PLL4368",
             "ADC7091",
-            "SKYPLLSi5518"});
-            this.comboBox1.Location = new System.Drawing.Point(9, 291);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(158, 24);
-            this.comboBox1.TabIndex = 1;
+            "Si5518",
+            "PCAL6416A"});
+            this.comboDevice.Location = new System.Drawing.Point(9, 291);
+            this.comboDevice.Name = "comboDevice";
+            this.comboDevice.Size = new System.Drawing.Size(158, 24);
+            this.comboDevice.TabIndex = 1;
+            this.comboDevice.SelectedIndexChanged += new System.EventHandler(this.comboDevice_SelectedIndexChanged);
             // 
             // groupBox3
             // 
@@ -1081,19 +1092,19 @@
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(585, 18);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(110, 16);
+            this.label6.Size = new System.Drawing.Size(142, 16);
             this.label6.TabIndex = 13;
-            this.label6.Text = "RF ADC Value:";
+            this.label6.Text = "RF ADC7091 Value:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(701, 19);
+            this.label7.Location = new System.Drawing.Point(731, 19);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(40, 16);
+            this.label7.Size = new System.Drawing.Size(49, 16);
             this.label7.TabIndex = 14;
-            this.label7.Text = "0xFF";
+            this.label7.Text = "0xFFF";
             // 
             // Cmd_Init_All
             // 
@@ -1146,15 +1157,6 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
-            // 
-            // Cmd_I2C_Read
-            // 
-            this.Cmd_I2C_Read.Location = new System.Drawing.Point(248, 383);
-            this.Cmd_I2C_Read.Name = "Cmd_I2C_Read";
-            this.Cmd_I2C_Read.Size = new System.Drawing.Size(107, 54);
-            this.Cmd_I2C_Read.TabIndex = 13;
-            this.Cmd_I2C_Read.Text = "READ";
-            this.Cmd_I2C_Read.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1252,7 +1254,7 @@
         private System.Windows.Forms.RadioButton radioMUX;
         private System.Windows.Forms.RadioButton radioFPGA;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboDevice;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label12;

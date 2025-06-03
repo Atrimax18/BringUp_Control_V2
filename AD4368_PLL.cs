@@ -67,7 +67,6 @@ namespace BringUp_Control
         public void Dispose()
         {
             _ft = null; // Release the SpiDriver reference
-
         }
 
         public DataTable InitDataTable()

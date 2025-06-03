@@ -117,6 +117,27 @@ namespace BringUp_Control
             Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
         }
 
+        public void SetPinsFromValue(byte value, bool status)
+        {
+            byte outputRegister = OUTPUT_PORT_0;
+            byte writeValue;
+
+            if (status)
+            {
+                // status = true
+                writeValue = value;
+            }
+            else
+            {
+                // status = false toggle
+                writeValue = (byte)~value;
+            }
+
+            // Write in one I2C command
+            WriteByte(outputRegister, writeValue);
+            
+        }
+
         public bool GetPinState(byte pin)
         {
             byte inputRegister = pin < 8 ? INPUT_PORT_0 : INPUT_PORT_1;
@@ -266,6 +287,16 @@ namespace BringUp_Control
             // Final: all OFF
             WriteByte(OUTPUT_PORT_0, 0xFF);
             
+        }
+
+        public void ChipSelect_IO(byte chipselect, bool OnOff)
+        {
+            if (chipselect < 0 || chipselect > 7)
+            {
+                throw new ArgumentOutOfRangeException(nameof(chipselect), "Chip select must be between 0 and 7.");
+            }
+            // Set the pin state for the specified chip select
+            SetPinState(chipselect, OnOff);
         }
 
         public void Dispose()

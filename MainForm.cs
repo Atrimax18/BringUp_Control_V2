@@ -97,6 +97,7 @@ namespace BringUp_Control
         PCAL6416A IO_Exp;
 
         PCA9547A MUX; // I2C MUX SNOW EVB Board
+        AD7091 ad7091; // ADC for RF Power measurement
 
         TX_Line txLineData = new TX_Line(); 
         public MainForm()
@@ -1098,8 +1099,11 @@ namespace BringUp_Control
 
         private void Cmd_Read_ADC_Click(object sender, EventArgs e)
         {
-            //byte k = ToByte(16.89f);
-            //string tt = ToHex(16.89f);
+            if (selectedTab == tabRFLine)
+            {
+
+            }
+            
         }
         
         public static byte ToByte(float valueDb)
@@ -1439,6 +1443,24 @@ namespace BringUp_Control
         private void Cmd_Led_OFF_Click(object sender, EventArgs e)
         {
             IO_Exp.WriteByte(0x02, 0xFF); //ALL LEDS OFF
+        }
+
+        private void comboDevice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboDevice.SelectedItem.ToString() == "PCAL6416A")
+            {
+                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
+                // Test the LED functionality of the PCAL6416A I/O expander
+                IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                //IO_Exp.ChipSelect_IO(3, false); // Enable chip select for PCAL6416A
+                IO_Exp.SetPinsFromValue(3, false);
+                //IO_Exp.ChipSelect_IO(3, true); // Disable chip select for PCAL6416A
+
+                IO_Exp.SetPinsFromValue(34, false); 
+
+                IO_Exp.SetPinsFromValue(255, true);
+            }
         }
     }
 }

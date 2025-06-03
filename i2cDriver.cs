@@ -59,7 +59,6 @@ namespace BringUp_Control
         }
 
 
-
         private void Init(uint kbps)
         {
             Check(Ft4222Native.FT4222_I2CMaster_Init(_i2cHandle, kbps));
