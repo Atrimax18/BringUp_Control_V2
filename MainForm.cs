@@ -358,7 +358,7 @@ namespace BringUp_Control
             i2cBus?.Dispose();         // I2C (interface-A) 
             gpio_control?.Dispose();   // GPIO (interface-B)
 
-            InterfaceManager.Dispose();
+            //InterfaceManager.Dispose();
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
         }  
