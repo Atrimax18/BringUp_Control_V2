@@ -1100,6 +1100,10 @@ namespace BringUp_Control
                         //IO_Exp.ChipSelect_IO(3, false); // Enable chip select for PCAL6416A
                         IO_Exp.SetPinsFromValue(3, false);
                         
+                        string hexval = string.Empty;
+                        string voltage = string.Empty;
+
+                        label7.Text = $"Hex value: 0x{hexval:X3} Decimal Voltage value: {voltage} V";
 
                         
                     }
