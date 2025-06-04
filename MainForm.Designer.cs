@@ -965,7 +965,7 @@
             // 
             // Cmd_FPGA_Read
             // 
-            this.Cmd_FPGA_Read.Location = new System.Drawing.Point(370, 58);
+            this.Cmd_FPGA_Read.Location = new System.Drawing.Point(325, 58);
             this.Cmd_FPGA_Read.Name = "Cmd_FPGA_Read";
             this.Cmd_FPGA_Read.Size = new System.Drawing.Size(105, 39);
             this.Cmd_FPGA_Read.TabIndex = 8;
@@ -975,7 +975,7 @@
             // 
             // textFPGA_Value
             // 
-            this.textFPGA_Value.Location = new System.Drawing.Point(235, 55);
+            this.textFPGA_Value.Location = new System.Drawing.Point(201, 55);
             this.textFPGA_Value.Name = "textFPGA_Value";
             this.textFPGA_Value.Size = new System.Drawing.Size(117, 22);
             this.textFPGA_Value.TabIndex = 7;
@@ -984,7 +984,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(232, 36);
+            this.label21.Location = new System.Drawing.Point(198, 36);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(60, 16);
             this.label21.TabIndex = 6;
@@ -1011,7 +1011,7 @@
             // 
             // Cmd_FPGA_Write
             // 
-            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(370, 13);
+            this.Cmd_FPGA_Write.Location = new System.Drawing.Point(325, 13);
             this.Cmd_FPGA_Write.Name = "Cmd_FPGA_Write";
             this.Cmd_FPGA_Write.Size = new System.Drawing.Size(105, 39);
             this.Cmd_FPGA_Write.TabIndex = 3;
