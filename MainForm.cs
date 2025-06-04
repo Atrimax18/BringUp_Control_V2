@@ -1027,47 +1027,53 @@ namespace BringUp_Control
 
         private void textATT1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (selectedTab == tabRFLine)
             {
-                if (float.TryParse(textATT1.Text, out float att1) && att1 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                if (e.KeyChar == 13)
                 {
-                    txLineData.att1 = att1;
-                    textATT1.Text = txLineData.att1.ToString();
-                    att1_value = ToByte(att1);
-                    textATT2.Focus();
+                    if (float.TryParse(textATT1.Text, out float att1) && att1 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                    {
+                        txLineData.att1 = att1;
+                        textATT1.Text = txLineData.att1.ToString();
+                        att1_value = ToByte(att1);
+                        textATT2.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid value for ATT1. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        att1 = 0.0f;
+                        att1_value = 0x00;
+                        textATT1.Clear();
+                        textATT1.Focus();
+                    }
+                    LogStatus($"ATT1 value: {ToHex(att1_value)}"); // Log the ATT1 value
                 }
-                else
-                {
-                    MessageBox.Show("Invalid value for ATT1. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    textATT1.Clear();
-                    textATT1.Focus();
-                    att1 = 0.0f;
-                    att1_value = 0x00;
-                }
-                LogStatus($"ATT1 value: {ToHex(att1_value)}"); // Log the ATT1 value
             }
         }
 
         private void textATT2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (selectedTab == tabRFLine)
             {
-                if (float.TryParse(textATT2.Text, out float att2) && att2 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                if (e.KeyChar == 13)
                 {
-                    txLineData.att2 = att2;
-                    textATT2.Text = txLineData.att2.ToString();
-                    att2_value = ToByte(att2);
-                    textATT3.Focus();
+                    if (float.TryParse(textATT2.Text, out float att2) && att2 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
+                    {
+                        txLineData.att2 = att2;
+                        textATT2.Text = txLineData.att2.ToString();
+                        att2_value = ToByte(att2);
+                        textATT3.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid value for ATT2. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        att2 = 0.0f;
+                        att2_value = 0x00;
+                        textATT2.Clear();
+                        textATT2.Focus();
+                    }
+                    LogStatus($"ATT2 value: {ToHex(att2_value)}"); // Log the ATT2 value
                 }
-                else
-                {
-                    MessageBox.Show("Invalid value for ATT2. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    textATT2.Clear();
-                    textATT2.Focus();
-                    att2 = 0.0f;
-                    att2_value = 0x00;
-                }
-                LogStatus($"ATT2 value: {ToHex(att2_value)}"); // Log the ATT2 value
             }
         }
 
@@ -1088,10 +1094,10 @@ namespace BringUp_Control
                     else
                     {
                         MessageBox.Show("Invalid value for ATT3. Please enter a valid number less than or equal to 31.5.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        textATT3.Clear();
-                        textATT3.Focus();
                         att3 = 0.0f;
                         att3_value = 0x00;
+                        textATT3.Clear();
+                        textATT3.Focus();
                     }
                     LogStatus($"ATT3 value: {ToHex(att3_value)}"); // Log the ATT3 value
                 }
