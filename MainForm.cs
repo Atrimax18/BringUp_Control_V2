@@ -111,6 +111,15 @@ namespace BringUp_Control
             InitializeComponent();
             Instance = this;
 
+            numericATT1.Minimum = 0.00M;
+            numericATT1.Maximum = 31.75M;
+
+            numericATT2.Minimum = 0.00M;
+            numericATT2.Maximum = 31.75M;
+
+            numericATT3.Minimum = 0.00M;
+            numericATT3.Maximum = 31.75M;
+
             // Get Version of application and show it Form Title
             string title = Assembly.GetEntryAssembly().GetName().Version.ToString();
             this.Text = $"BringUP SW App ver: {title}";            
@@ -759,7 +768,7 @@ namespace BringUp_Control
                 Cmd_WriteReg_AD4368.Enabled = false;
                 Cmd_Import_AD4368_File.Enabled = false;
                 textAD4368_Value.Enabled = false;
-                Cmd_AD4368_INIT.Enabled=true;
+                
             }
         }
 
@@ -791,9 +800,9 @@ namespace BringUp_Control
                 {
                     checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
                     checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
-                    textATT1.Text = txLineData.att1.ToString();
-                    textATT2.Text = txLineData.att2.ToString();
-                    textATT3.Text = txLineData.att3.ToString();
+                    numericATT1.Value = Convert.ToDecimal(txLineData.att1);
+                    numericATT2.Value = Convert.ToDecimal(txLineData.att2);
+                    numericATT3.Value = Convert.ToDecimal(txLineData.att3);
                 }
             }
             else if (selectedTab == tabFPGA)
@@ -815,7 +824,7 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabAD4368)
             {
-                PLL_Init_Flag = true;
+                PLL_Init_Flag = true; //TODO test QA - set this flag to true if you want to reinitialize AD4368 on tab change
                 if (PLL_Init_Flag)
                 {
                     Control_Init(PLL_Init_Flag);
@@ -1065,86 +1074,9 @@ namespace BringUp_Control
             {
                 MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }       
 
-        private void textATT1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (selectedTab == tabRFLine)
-            {
-                if (e.KeyChar == 13)
-                {
-                    if (float.TryParse(textATT1.Text, out float att1) && att1 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
-                    {
-                        txLineData.att1 = att1;
-                        textATT1.Text = txLineData.att1.ToString();
-                        att1_value = ToByte(att1);
-                        textATT2.Focus();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid value for ATT1. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        att1 = 0.0f;
-                        att1_value = 0x00;
-                        textATT1.Clear();
-                        textATT1.Focus();
-                    }
-                    LogStatus($"ATT1 value: {ToHex(att1_value)}"); // Log the ATT1 value
-                }
-            }
-        }
-
-        private void textATT2_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (selectedTab == tabRFLine)
-            {
-                if (e.KeyChar == 13)
-                {
-                    if (float.TryParse(textATT2.Text, out float att2) && att2 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
-                    {
-                        txLineData.att2 = att2;
-                        textATT2.Text = txLineData.att2.ToString();
-                        att2_value = ToByte(att2);
-                        textATT3.Focus();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid value for ATT2. Please enter a valid number less than or equal to 31.75.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        att2 = 0.0f;
-                        att2_value = 0x00;
-                        textATT2.Clear();
-                        textATT2.Focus();
-                    }
-                    LogStatus($"ATT2 value: {ToHex(att2_value)}"); // Log the ATT2 value
-                }
-            }
-        }
-
-        private void textATT3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (selectedTab == tabRFLine)
-            {
-                if (e.KeyChar == 13)
-                {
-                    if (float.TryParse(textATT3.Text, out float att3) && att3 <= 31.75) // Fix: Ensure the second condition uses the parsed value 'att1'
-                    {
-                        txLineData.att1 = att3;
-                        textATT3.Text = txLineData.att1.ToString();
-                        //textATT2.Focus();
-                        att3_value = ToByte(att3);
-                        Cmd_UpdateTX_Values.Focus();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid value for ATT3. Please enter a valid number less than or equal to 31.5.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        att3 = 0.0f;
-                        att3_value = 0x00;
-                        textATT3.Clear();
-                        textATT3.Focus();
-                    }
-                    LogStatus($"ATT3 value: {ToHex(att3_value)}"); // Log the ATT3 value
-                }
-            }            
-        }
+        
 
         private void Cmd_Read_ADC_Click(object sender, EventArgs e)
         {
@@ -1551,6 +1483,51 @@ namespace BringUp_Control
             if (selectedTab == tabRFLine)
             {
 
+            }
+        }
+
+        private void numericATT1_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+                if (numericATT1.Value == numericATT1.Maximum)
+                {
+                    MessageBox.Show("Status: MAX VALUE REACHED!","Warning");                   
+                }
+                else
+                {
+                    att1_value = ToByte((float)numericATT1.Value);
+                }
+            }
+        }
+
+        private void numericATT2_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+                if (numericATT2.Value == numericATT2.Maximum)
+                {
+                    MessageBox.Show("Status: MAX VALUE REACHED!", "Warning");
+                }
+                else
+                {
+                    att2_value = ToByte((float)numericATT2.Value);
+                }
+            }
+        }
+
+        private void numericATT3_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+                if (numericATT3.Value == numericATT3.Maximum)
+                {
+                    MessageBox.Show("Status: MAX VALUE REACHED!", "Warning");
+                }
+                else
+                {
+                    att1_value = ToByte((float)numericATT3.Value);
+                }
             }
         }
     }

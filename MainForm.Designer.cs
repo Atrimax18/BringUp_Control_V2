@@ -71,9 +71,6 @@
             this.checkAmp2 = new System.Windows.Forms.CheckBox();
             this.checkAmp1 = new System.Windows.Forms.CheckBox();
             this.Cmd_Read_ADC = new System.Windows.Forms.Button();
-            this.textATT3 = new System.Windows.Forms.TextBox();
-            this.textATT2 = new System.Windows.Forms.TextBox();
-            this.textATT1 = new System.Windows.Forms.TextBox();
             this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
@@ -130,6 +127,9 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.numericATT1 = new System.Windows.Forms.NumericUpDown();
+            this.numericATT2 = new System.Windows.Forms.NumericUpDown();
+            this.numericATT3 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             this.tabAD4368.SuspendLayout();
@@ -145,6 +145,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -564,12 +567,12 @@
             // 
             // tabRFLine
             // 
+            this.tabRFLine.Controls.Add(this.numericATT3);
+            this.tabRFLine.Controls.Add(this.numericATT2);
+            this.tabRFLine.Controls.Add(this.numericATT1);
             this.tabRFLine.Controls.Add(this.checkAmp2);
             this.tabRFLine.Controls.Add(this.checkAmp1);
             this.tabRFLine.Controls.Add(this.Cmd_Read_ADC);
-            this.tabRFLine.Controls.Add(this.textATT3);
-            this.tabRFLine.Controls.Add(this.textATT2);
-            this.tabRFLine.Controls.Add(this.textATT1);
             this.tabRFLine.Controls.Add(this.label7);
             this.tabRFLine.Controls.Add(this.Cmd_UpdateTX_Values);
             this.tabRFLine.Controls.Add(this.label6);
@@ -621,33 +624,6 @@
             this.Cmd_Read_ADC.Text = "READ ADC VALUE";
             this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
             this.Cmd_Read_ADC.Click += new System.EventHandler(this.Cmd_Read_ADC_Click);
-            // 
-            // textATT3
-            // 
-            this.textATT3.Location = new System.Drawing.Point(613, 197);
-            this.textATT3.Name = "textATT3";
-            this.textATT3.Size = new System.Drawing.Size(56, 22);
-            this.textATT3.TabIndex = 19;
-            this.textATT3.Text = "0";
-            this.textATT3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textATT3_KeyPress);
-            // 
-            // textATT2
-            // 
-            this.textATT2.Location = new System.Drawing.Point(454, 197);
-            this.textATT2.Name = "textATT2";
-            this.textATT2.Size = new System.Drawing.Size(56, 22);
-            this.textATT2.TabIndex = 18;
-            this.textATT2.Text = "0";
-            this.textATT2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textATT2_KeyPress);
-            // 
-            // textATT1
-            // 
-            this.textATT1.Location = new System.Drawing.Point(233, 196);
-            this.textATT1.Name = "textATT1";
-            this.textATT1.Size = new System.Drawing.Size(56, 22);
-            this.textATT1.TabIndex = 17;
-            this.textATT1.Text = "0";
-            this.textATT1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textATT1_KeyPress);
             // 
             // Cmd_UpdateTX_Values
             // 
@@ -1209,6 +1185,49 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // numericATT1
+            // 
+            this.numericATT1.DecimalPlaces = 2;
+            this.numericATT1.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT1.Location = new System.Drawing.Point(233, 199);
+            this.numericATT1.Name = "numericATT1";
+            this.numericATT1.Size = new System.Drawing.Size(56, 22);
+            this.numericATT1.TabIndex = 23;
+            this.numericATT1.TabStop = false;
+            this.numericATT1.ValueChanged += new System.EventHandler(this.numericATT1_ValueChanged);
+            // 
+            // numericATT2
+            // 
+            this.numericATT2.DecimalPlaces = 2;
+            this.numericATT2.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT2.Location = new System.Drawing.Point(454, 199);
+            this.numericATT2.Name = "numericATT2";
+            this.numericATT2.Size = new System.Drawing.Size(56, 22);
+            this.numericATT2.TabIndex = 24;
+            this.numericATT2.ValueChanged += new System.EventHandler(this.numericATT2_ValueChanged);
+            // 
+            // numericATT3
+            // 
+            this.numericATT3.DecimalPlaces = 2;
+            this.numericATT3.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT3.Location = new System.Drawing.Point(613, 199);
+            this.numericATT3.Name = "numericATT3";
+            this.numericATT3.Size = new System.Drawing.Size(56, 22);
+            this.numericATT3.TabIndex = 25;
+            this.numericATT3.ValueChanged += new System.EventHandler(this.numericATT3_ValueChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1255,6 +1274,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1327,9 +1349,6 @@
         private System.Windows.Forms.Button Cmd_WriteDAC9175;
         private System.Windows.Forms.Button Cmd_ReadDAC9175;
         private System.Windows.Forms.Button Cmd_UpdateTX_Values;
-        private System.Windows.Forms.TextBox textATT3;
-        private System.Windows.Forms.TextBox textATT2;
-        private System.Windows.Forms.TextBox textATT1;
         private System.Windows.Forms.Button Cmd_Read_ADC;
         private System.Windows.Forms.Button Cmd_DAC_Init;
         private System.Windows.Forms.CheckBox checkAmp2;
@@ -1362,6 +1381,9 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.NumericUpDown numericATT1;
+        private System.Windows.Forms.NumericUpDown numericATT3;
+        private System.Windows.Forms.NumericUpDown numericATT2;
     }
 }
 
