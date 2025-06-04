@@ -19,12 +19,11 @@ namespace BringUp_Control
         private SpiDriver _ft;
 
         
-        public double DAC0_freq { get; set; }
-        public double DAC1_freq { get; set; }
+        //public double DAC0_freq { get; set; }
+        //public double DAC1_freq { get; set; }
         public string message_log {  get; set; }
 
-        byte[] DAC0;
-        byte[] DAC1;
+        
 
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
@@ -33,32 +32,7 @@ namespace BringUp_Control
         {
             _ft = ft;
 
-            // Iinit of the DAC
-            PowerUp();
-            DAC_PLL_Config();
-
-            if (GetBit(DelayLockLoop(), 0))
-            {
-                // TODO : Add a message box or log to indicate that the DLL is locked
-                // True - DAC DLL is locked
-            }
-            else
-            {
-                // TODO : Add a message box or log to indicate that the DLL is not locked
-                // False - DAC DLL is not locked
-            }
-            Calibration();
-
-            JESD204B_Setup();
-
-            //TODO : TEST IT 
-            DAC0 = GetBytes48BitBigEndian(CalculateDdsmFtw(DAC0_freq));   //2 GHz
-            DAC1 = GetBytes48BitBigEndian(CalculateDdsmFtw(DAC1_freq));   //3 Ghz
-            MainDAC_Datapath_Setup(DAC0, DAC1);
-
-            JESD204B_SERDES_Setup();
-            TransportLayer_Setup();
-            CleanUpRegisterList();
+            
         }        
 
         //Table 50 : Power Up registee writing - DONE
@@ -98,7 +72,7 @@ namespace BringUp_Control
         }
 
         // parse bit position value: value - byte of data, bitIndex - position of the bit that must be tested
-        public static bool GetBit(byte value, int bitIndex)
+        public bool GetBit(byte value, int bitIndex)
         {
             if (bitIndex < 0 || bitIndex > 7)
                 throw new ArgumentOutOfRangeException(nameof(bitIndex), "Bit index must be between 0 and 7");
@@ -529,7 +503,7 @@ namespace BringUp_Control
             return rx[2];
         }
         // Method to calculate the DDSM FTW value based on the given frequency ratio
-        public static ulong CalculateDdsmFtw(double numeratorHz)
+        public ulong CalculateDdsmFtw(double numeratorHz)
         {
             double fraction = numeratorHz / 11.7e9;
             double result = fraction * Math.Pow(2, 48);
@@ -537,7 +511,7 @@ namespace BringUp_Control
         }
 
         // Method to convert a 48-bit unsigned integer to a  6-byte array in big-endian format
-        public static byte[] GetBytes48BitBigEndian(ulong value)
+        public byte[] GetBytes48BitBigEndian(ulong value)
         {
             byte[] full = BitConverter.GetBytes(value); // Little-endian on most PCs
             Array.Reverse(full); // Make it big-endian
@@ -684,7 +658,7 @@ namespace BringUp_Control
 
             WriteRegister(0x0316, (byte)(val_0x316 | 0x2)); // Start PRBS test
 
-            Thread.Sleep(PRBS_TestTime * 500); // Wait for the test duration
+            Thread.Sleep(PRBS_TestTime * 1000); // Wait for the test duration 1 seconf
 
             WriteRegister(0x0316, (byte)(val_0x316 | 0x0)); // Stop PRBS test Bit 1 must 0.
 

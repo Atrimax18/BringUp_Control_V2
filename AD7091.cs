@@ -9,8 +9,8 @@ namespace BringUp_Control
     internal class AD7091 : IDisposable
     {
         private SpiDriver _ft;
-        const double LSB = 3.3 / 4096.0; // 12-bit ADC, Vref = 3.3V
-        const double Vdd  = 3.3; // Reference voltage
+        
+        const double Vdd  = 3.3; // 2.5 ????Supply voltage
 
 
         public void Init(SpiDriver ft)

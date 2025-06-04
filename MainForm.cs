@@ -77,6 +77,12 @@ namespace BringUp_Control
         private byte att2_value = 0x00;
         private byte att3_value = 0x00;
 
+        private double DAC0_freq;
+        private double DAC1_freq;
+
+        byte[] DAC0;
+        byte[] DAC1;
+
         private string fpga_address = string.Empty; // FPGA address for register access (string)
         private string fpga_data = string.Empty;    // FPGA data for register access (string)
 
@@ -531,22 +537,7 @@ namespace BringUp_Control
 
         private void Cmd_AD4368_INIT_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab == tabAD4368)
-            {
-
-                PLL_Init_Flag = true;
-                Control_Init(PLL_Init_Flag);
-                
-                ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
-                
-
-                DT4368 = ad4368.InitDataTable();
-                dataGridViewAD4368.DataSource = DT4368;
-                comboRegAddress.DataSource = ad4368.LoadComboRegisters();
-                LogStatus("AD4368 reinitialized on SPI CS1");
-                Cmd_ReadAll_AD4368.Enabled = true;
-            }
+            
             
         }
 
@@ -816,17 +807,41 @@ namespace BringUp_Control
                 ad9175 = new AD9175_DAC();
                 ftDev = InterfaceManager.GetSpi();
                 ad9175.Init(ftDev);
-                ad9175.DAC0_freq = txLineData.nco_dac0 * 1e9;
-                ad9175.DAC1_freq = txLineData.nco_dac1 * 1e9;
+                DAC0_freq = txLineData.nco_dac0 * 1e9;
+                DAC1_freq = txLineData.nco_dac1 * 1e9;
                 ad9175.Init(ftDev);
 
                 comboRegisters9175.Focus();
             }
             else if (selectedTab == tabAD4368)
             {
+                PLL_Init_Flag = true;
+                if (PLL_Init_Flag)
+                {
+                    Control_Init(PLL_Init_Flag);
+                    ad4368 = new AD4368_PLL();
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+
+
+                    DT4368 = ad4368.InitDataTable();
+                    dataGridViewAD4368.DataSource = DT4368;
+                    comboRegAddress.DataSource = ad4368.LoadComboRegisters();
+                    LogStatus("AD4368 reinitialized on SPI CS1");
+                    Cmd_ReadAll_AD4368.Enabled = true;
+                    PLL_Init_Flag = false; // Reset the flag after initialization
+                }
+                else
+                {
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+                }
+                
+
+                /*
                 comboRegAddress.Focus();
                 ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                ad4368.Init(ftDev);
+                ad4368.Init(ftDev);*/
             }
             else if (selectedTab == tabMux)
             {                
@@ -931,8 +946,7 @@ namespace BringUp_Control
             if (tabControl1.SelectedTab == tabAD9175)
             {
 
-                //PLL_Init_Flag = true;
-                //Control_Init(PLL_Init_Flag);
+                
 
                 ad9175 = new AD9175_DAC();
                 ad9175.Init(ftDev); // Initialize AD4368 with the current FTDI device
@@ -943,6 +957,33 @@ namespace BringUp_Control
                 comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
                 LogStatus("AD9175 reinitialized on SPI CS1");
                 Cmd_ReadDAC9175.Enabled = true;
+
+                // Iinit of the DAC
+                ad9175.PowerUp();
+                ad9175.DAC_PLL_Config();
+
+                if (ad9175.GetBit(ad9175.DelayLockLoop(), 0))
+                {
+                    // TODO : Add a message box or log to indicate that the DLL is locked
+                    // True - DAC DLL is locked
+                }
+                else
+                {
+                    // TODO : Add a message box or log to indicate that the DLL is not locked
+                    // False - DAC DLL is not locked
+                }
+                ad9175.Calibration();
+
+                ad9175.JESD204B_Setup();
+
+                //TODO : TEST IT 
+                DAC0 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC0_freq));   //2 GHz
+                DAC1 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC1_freq));   //3 Ghz
+                ad9175.MainDAC_Datapath_Setup(DAC0, DAC1);
+
+                ad9175.JESD204B_SERDES_Setup();
+                ad9175.TransportLayer_Setup();
+                ad9175.CleanUpRegisterList();
             }
             
         }
@@ -1109,6 +1150,30 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
+                if (i2cBus == null)
+                {
+                    MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                else
+                {
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    if (IO_Exp == null)
+                    {
+                        IO_Exp = new PCAL6416A();
+                        IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+                    }
+                    else
+                    {
+                        IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I²C device
+                        IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                        //IO_Exp.ChipSelect_IO(3, false); // Enable chip select for PCAL6416A
+                        IO_Exp.SetPinsFromValue(3, false);
+                        
+
+                        
+                    }
+                }
 
             }
             
@@ -1479,6 +1544,14 @@ namespace BringUp_Control
         private void Cmd_FPGA_Export_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Cmd_UpdateTX_Values_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+
+            }
         }
     }
 }
