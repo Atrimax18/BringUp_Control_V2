@@ -865,9 +865,7 @@ namespace BringUp_Control
                 
                 MUX.Set_Mux_Channel(1, 5);
 
-            }
-
-            
+            }            
 
         }
         
@@ -1482,6 +1480,11 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
+                att1_value = ToByte((float)numericATT1.Value);
+                att2_value = ToByte((float)numericATT2.Value);
+                att3_value = ToByte((float)numericATT3.Value);
+
+                
 
             }
         }
