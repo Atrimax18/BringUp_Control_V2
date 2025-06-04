@@ -420,6 +420,7 @@
             this.Cmd_DAC_Init.TabIndex = 13;
             this.Cmd_DAC_Init.Text = "DAC INIT";
             this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
+            this.Cmd_DAC_Init.Visible = false;
             this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
             // 
             // Cmd_WriteDAC9175

@@ -814,7 +814,8 @@ namespace BringUp_Control
             else if (selectedTab == tabAD9175)
             {
                 ad9175 = new AD9175_DAC();
-                
+                ftDev = InterfaceManager.GetSpi();
+                ad9175.Init(ftDev);
                 ad9175.DAC0_freq = txLineData.nco_dac0 * 1e9;
                 ad9175.DAC1_freq = txLineData.nco_dac1 * 1e9;
                 ad9175.Init(ftDev);
