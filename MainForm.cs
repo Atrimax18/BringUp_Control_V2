@@ -976,6 +976,7 @@ namespace BringUp_Control
                 MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            
 
             if (tmp100 == null)
             {
@@ -1332,7 +1333,12 @@ namespace BringUp_Control
         // Import FPGA file with relevant data
         private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
         {
-            TestRegister();
+            if (selectedTab == tabFPGA)
+            {
+                // TEST function now
+                TestRegister();
+            }
+            
         }
 
         // Writes counter values to the FPGA registers in the specified range.

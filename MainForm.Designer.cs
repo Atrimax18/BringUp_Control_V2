@@ -126,6 +126,7 @@
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -143,7 +144,7 @@
             // Cmd_Exit
             // 
             this.Cmd_Exit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cmd_Exit.Location = new System.Drawing.Point(993, 679);
+            this.Cmd_Exit.Location = new System.Drawing.Point(1019, 696);
             this.Cmd_Exit.Name = "Cmd_Exit";
             this.Cmd_Exit.Size = new System.Drawing.Size(129, 66);
             this.Cmd_Exit.TabIndex = 0;
@@ -389,6 +390,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.label25);
             this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
             this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_ReadDAC9175);
@@ -440,9 +442,9 @@
             // Cmd_WriteReg9175
             // 
             this.Cmd_WriteReg9175.Enabled = false;
-            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(462, 52);
+            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(423, 27);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
-            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 63);
+            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 43);
             this.Cmd_WriteReg9175.TabIndex = 10;
             this.Cmd_WriteReg9175.Text = "Write Register";
             this.Cmd_WriteReg9175.UseVisualStyleBackColor = true;
@@ -450,7 +452,7 @@
             // 
             // textDAC9175_Value
             // 
-            this.textDAC9175_Value.Location = new System.Drawing.Point(334, 72);
+            this.textDAC9175_Value.Location = new System.Drawing.Point(316, 37);
             this.textDAC9175_Value.Name = "textDAC9175_Value";
             this.textDAC9175_Value.Size = new System.Drawing.Size(101, 22);
             this.textDAC9175_Value.TabIndex = 9;
@@ -458,7 +460,7 @@
             // comboRegisters9175
             // 
             this.comboRegisters9175.FormattingEnabled = true;
-            this.comboRegisters9175.Location = new System.Drawing.Point(181, 72);
+            this.comboRegisters9175.Location = new System.Drawing.Point(181, 37);
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
@@ -467,7 +469,7 @@
             // labelDAC9175_Register
             // 
             this.labelDAC9175_Register.AutoSize = true;
-            this.labelDAC9175_Register.Location = new System.Drawing.Point(10, 75);
+            this.labelDAC9175_Register.Location = new System.Drawing.Point(10, 40);
             this.labelDAC9175_Register.Name = "labelDAC9175_Register";
             this.labelDAC9175_Register.Size = new System.Drawing.Size(165, 16);
             this.labelDAC9175_Register.TabIndex = 4;
@@ -476,7 +478,7 @@
             // labelFilePath9175
             // 
             this.labelFilePath9175.AutoSize = true;
-            this.labelFilePath9175.Location = new System.Drawing.Point(10, 31);
+            this.labelFilePath9175.Location = new System.Drawing.Point(10, 12);
             this.labelFilePath9175.Name = "labelFilePath9175";
             this.labelFilePath9175.Size = new System.Drawing.Size(107, 16);
             this.labelFilePath9175.TabIndex = 3;
@@ -595,7 +597,7 @@
             // 
             // Cmd_Read_ADC
             // 
-            this.Cmd_Read_ADC.Location = new System.Drawing.Point(440, 357);
+            this.Cmd_Read_ADC.Location = new System.Drawing.Point(13, 357);
             this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
             this.Cmd_Read_ADC.Size = new System.Drawing.Size(114, 51);
             this.Cmd_Read_ADC.TabIndex = 20;
@@ -632,7 +634,7 @@
             // 
             // Cmd_UpdateTX_Values
             // 
-            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 357);
+            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(613, 357);
             this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
             this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
             this.Cmd_UpdateTX_Values.TabIndex = 16;
@@ -1109,7 +1111,7 @@
             // Cmd_Init_All
             // 
             this.Cmd_Init_All.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cmd_Init_All.Location = new System.Drawing.Point(993, 606);
+            this.Cmd_Init_All.Location = new System.Drawing.Point(1019, 644);
             this.Cmd_Init_All.Name = "Cmd_Init_All";
             this.Cmd_Init_All.Size = new System.Drawing.Size(129, 46);
             this.Cmd_Init_All.TabIndex = 16;
@@ -1145,7 +1147,7 @@
             this.textLog.Name = "textLog";
             this.textLog.ReadOnly = true;
             this.textLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textLog.Size = new System.Drawing.Size(274, 424);
+            this.textLog.Size = new System.Drawing.Size(274, 453);
             this.textLog.TabIndex = 19;
             // 
             // label20
@@ -1157,6 +1159,15 @@
             this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(10, 88);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(89, 16);
+            this.label25.TabIndex = 14;
+            this.label25.Text = "values ????";
             // 
             // MainForm
             // 
@@ -1304,6 +1315,7 @@
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Button Cmd_I2C_Read;
+        private System.Windows.Forms.Label label25;
     }
 }
 
