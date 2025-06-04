@@ -1474,6 +1474,11 @@ namespace BringUp_Control
                 IO_Exp.SetPinsFromValue(255, true);
             }
         }
+
+        private void Cmd_FPGA_Export_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
