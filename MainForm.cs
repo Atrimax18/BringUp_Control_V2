@@ -271,29 +271,22 @@ namespace BringUp_Control
                     gpio_control?.Dispose();
                     ad7091?.Dispose();
                     hmc1119?.Dispose();
+                    tmp100?.Dispose();
                                         
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);                    
                     gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface
 
-                    /*
-                    if (selectedTab == tabAD4368)
-                    {
-                        Control_Init(true); // Set controls enabled/disabled
-                        ad4368 = new AD4368_PLL();
-
-                        ftDev = InterfaceManager.GetSpi();
-                        ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
-                    }                                            
-                    else
-                        Control_Init(false);*/
+                    
 
                     
 
                     // ************************** SPI INIT DRIVER 3 **************************************************                     
                     //ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
 
-                    //i2cBus = new i2cDriver(_spiLocId, 400); // open second bridge for GPIO and I2C
+                    //i2cBus = InterfaceManager.GetI2c();
+                    //IO_Exp.Init(i2cBus);
+
                     // flag status change 
                     usbflag = true;
                     driverflag = true;
@@ -950,46 +943,47 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD9175)
             {
-
-                
-
-                ad9175 = new AD9175_DAC();
-                ad9175.Init(ftDev); // Initialize AD4368 with the current FTDI device
-
-
-                DT9175 = ad9175.InitDataTableDAC();
-                dataGridViewAD4368.DataSource = DT9175;
-                comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
-                LogStatus("AD9175 reinitialized on SPI CS1");
-                Cmd_ReadDAC9175.Enabled = true;
-
-                // Iinit of the DAC
-                ad9175.PowerUp();
-                ad9175.DAC_PLL_Config();
-
-                if (ad9175.GetBit(ad9175.DelayLockLoop(), 0))
+                if (ad9175 == null)
                 {
-                    // TODO : Add a message box or log to indicate that the DLL is locked
-                    // True - DAC DLL is locked
+                    ad9175 = new AD9175_DAC();
+                    ad9175.Init(ftDev); // Initialize DAC9175 with the current FTDI device
+
+
+                    DT9175 = ad9175.InitDataTableDAC();
+                    dataGridViewAD4368.DataSource = DT9175;
+                    comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
+                    LogStatus("AD9175 reinitialized on SPI CS1");
+                    Cmd_ReadDAC9175.Enabled = true;
+
+                    // Iinit of the DAC
+                    ad9175.PowerUp();
+                    ad9175.DAC_PLL_Config();
+
+                    if (ad9175.GetBit(ad9175.DelayLockLoop(), 0))
+                    {
+                        // TODO : Add a message box or log to indicate that the DLL is locked
+                        // True - DAC DLL is locked
+                    }
+                    else
+                    {
+                        // TODO : Add a message box or log to indicate that the DLL is not locked
+                        // False - DAC DLL is not locked
+                    }
+                    ad9175.Calibration();
+
+                    ad9175.JESD204B_Setup();
+
+                    //TODO : TEST IT 
+                    DAC0 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC0_freq));   //2 GHz
+                    DAC1 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC1_freq));   //3 Ghz
+                    ad9175.MainDAC_Datapath_Setup(DAC0, DAC1);
+
+                    ad9175.JESD204B_SERDES_Setup();
+                    ad9175.TransportLayer_Setup();
+                    ad9175.CleanUpRegisterList();
                 }
-                else
-                {
-                    // TODO : Add a message box or log to indicate that the DLL is not locked
-                    // False - DAC DLL is not locked
-                }
-                ad9175.Calibration();
-
-                ad9175.JESD204B_Setup();
-
-                //TODO : TEST IT 
-                DAC0 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC0_freq));   //2 GHz
-                DAC1 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC1_freq));   //3 Ghz
-                ad9175.MainDAC_Datapath_Setup(DAC0, DAC1);
-
-                ad9175.JESD204B_SERDES_Setup();
-                ad9175.TransportLayer_Setup();
-                ad9175.CleanUpRegisterList();
             }
+                       
             
         }
 
