@@ -275,14 +275,7 @@ namespace BringUp_Control
                                         
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);                    
-                    gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface
-
-                    
-
-                    
-
-                    // ************************** SPI INIT DRIVER 3 **************************************************                     
-                    //ftDev = new SpiDriver(_spiLocId, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01);    // open second bridge for GPIO and I2C
+                    gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface                    
 
                     //i2cBus = InterfaceManager.GetI2c();
                     //IO_Exp.Init(i2cBus);
