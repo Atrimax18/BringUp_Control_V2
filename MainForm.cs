@@ -277,8 +277,9 @@ namespace BringUp_Control
                     gpio_control = new GpioDriver(_gpioLocId);                    
                     gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface                    
 
-                    //i2cBus = InterfaceManager.GetI2c();
-                    //IO_Exp.Init(i2cBus);
+                    i2cBus = InterfaceManager.GetI2c();
+                    MUX = new PCA9547A();
+                    MUX.Init(i2cBus);
 
                     // flag status change 
                     usbflag = true;
@@ -1493,7 +1494,6 @@ namespace BringUp_Control
                 att1_value = ToByte((float)numericATT1.Value);
                 att2_value = ToByte((float)numericATT2.Value);
                 att3_value = ToByte((float)numericATT3.Value);
-
                 
 
             }
@@ -1542,6 +1542,71 @@ namespace BringUp_Control
                     att1_value = ToByte((float)numericATT3.Value);
                 }
             }
+        }
+
+        private void checkAmp1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
+                
+                if (IO_Exp == null)
+                { 
+                    IO_Exp = new PCAL6416A();
+                    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+                    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                }
+
+                
+                if (checkAmp1.CheckState == CheckState.Checked)
+                {
+                    txLineData.bypass1 = true; // BYPASS ON
+                    checkAmp1.Text = "BYPASS MODE";
+                    IO_Exp.SetPinState(6, false); 
+                }
+                else
+                {
+                    txLineData.bypass1 = false; // BYPASS OFF (AMP ON)
+                    checkAmp1.Text = "AMP ON";
+                    IO_Exp.SetPinState(6, true);
+                }
+
+                LogStatus($"Amplifier 1 Status: {checkAmp1.Text}");
+            }
+            
+        }
+
+        private void checkAmp2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabRFLine)
+            {
+                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                MUX.Set_Mux_Channel(0, 7);
+                
+                if (IO_Exp == null)
+                {
+                    IO_Exp = new PCAL6416A();
+                    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+                    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                }
+
+                if (checkAmp2.CheckState == CheckState.Checked)
+                {
+                    txLineData.bypass2 = true; // BYPASS ON
+                    checkAmp2.Text = "BYPASS MODE";
+                    IO_Exp.SetPinState(7, false);
+                }
+                else
+                {
+                    txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
+                    checkAmp2.Text = "AMP ON";
+                    IO_Exp.SetPinState(7, true);
+                }
+
+                LogStatus($"Amplifier 2 Status: { checkAmp2.Text}");
+            }
+            
         }
     }
 }

@@ -68,6 +68,10 @@
             this.Cmd_Export9175_file = new System.Windows.Forms.Button();
             this.Cmd_Import9175_file = new System.Windows.Forms.Button();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
+            this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
+            this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
             this.tabRFLine = new System.Windows.Forms.TabPage();
             this.numericATT3 = new System.Windows.Forms.NumericUpDown();
             this.numericATT2 = new System.Windows.Forms.NumericUpDown();
@@ -130,10 +134,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
-            this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
-            this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -583,6 +583,42 @@
             this.tabSi5518.Text = "Si55XX";
             this.tabSi5518.UseVisualStyleBackColor = true;
             // 
+            // Cmd_Export_SkyWorks
+            // 
+            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(717, 122);
+            this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
+            this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Export_SkyWorks.TabIndex = 3;
+            this.Cmd_Export_SkyWorks.Text = "Export File";
+            this.Cmd_Export_SkyWorks.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_Import_SkyWorks
+            // 
+            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 71);
+            this.Cmd_Import_SkyWorks.Name = "Cmd_Import_SkyWorks";
+            this.Cmd_Import_SkyWorks.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Import_SkyWorks.TabIndex = 2;
+            this.Cmd_Import_SkyWorks.Text = "Import File";
+            this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(140, 21);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(66, 16);
+            this.label28.TabIndex = 1;
+            this.label28.Text = "filename";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(12, 21);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(122, 16);
+            this.label27.TabIndex = 0;
+            this.label27.Text = "User Config File:";
+            // 
             // tabRFLine
             // 
             this.tabRFLine.Controls.Add(this.numericATT3);
@@ -659,22 +695,22 @@
             this.checkAmp2.AutoSize = true;
             this.checkAmp2.Location = new System.Drawing.Point(525, 55);
             this.checkAmp2.Name = "checkAmp2";
-            this.checkAmp2.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp2.Size = new System.Drawing.Size(134, 20);
             this.checkAmp2.TabIndex = 22;
-            this.checkAmp2.Text = "BYPASS ON";
+            this.checkAmp2.Text = "BYPASS MODE";
             this.checkAmp2.UseVisualStyleBackColor = true;
-            this.checkAmp2.CheckStateChanged += new System.EventHandler(this.checkAmp2_CheckStateChanged);
+            this.checkAmp2.CheckedChanged += new System.EventHandler(this.checkAmp2_CheckedChanged);
             // 
             // checkAmp1
             // 
             this.checkAmp1.AutoSize = true;
             this.checkAmp1.Location = new System.Drawing.Point(287, 55);
             this.checkAmp1.Name = "checkAmp1";
-            this.checkAmp1.Size = new System.Drawing.Size(112, 20);
+            this.checkAmp1.Size = new System.Drawing.Size(134, 20);
             this.checkAmp1.TabIndex = 21;
-            this.checkAmp1.Text = "BYPASS ON";
+            this.checkAmp1.Text = "BYPASS MODE";
             this.checkAmp1.UseVisualStyleBackColor = true;
-            this.checkAmp1.CheckStateChanged += new System.EventHandler(this.checkAmp1_CheckStateChanged);
+            this.checkAmp1.CheckedChanged += new System.EventHandler(this.checkAmp1_CheckedChanged);
             // 
             // Cmd_Read_ADC
             // 
@@ -1236,42 +1272,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(12, 21);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(122, 16);
-            this.label27.TabIndex = 0;
-            this.label27.Text = "User Config File:";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(140, 21);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(66, 16);
-            this.label28.TabIndex = 1;
-            this.label28.Text = "filename";
-            // 
-            // Cmd_Import_SkyWorks
-            // 
-            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 71);
-            this.Cmd_Import_SkyWorks.Name = "Cmd_Import_SkyWorks";
-            this.Cmd_Import_SkyWorks.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Import_SkyWorks.TabIndex = 2;
-            this.Cmd_Import_SkyWorks.Text = "Import File";
-            this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
-            // 
-            // Cmd_Export_SkyWorks
-            // 
-            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(717, 122);
-            this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
-            this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Export_SkyWorks.TabIndex = 3;
-            this.Cmd_Export_SkyWorks.Text = "Export File";
-            this.Cmd_Export_SkyWorks.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
