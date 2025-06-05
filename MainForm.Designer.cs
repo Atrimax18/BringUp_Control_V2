@@ -130,6 +130,10 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
+            this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -139,6 +143,7 @@
             this.tabAD9175.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).BeginInit();
+            this.tabSi5518.SuspendLayout();
             this.tabRFLine.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).BeginInit();
@@ -567,6 +572,10 @@
             // 
             // tabSi5518
             // 
+            this.tabSi5518.Controls.Add(this.Cmd_Export_SkyWorks);
+            this.tabSi5518.Controls.Add(this.Cmd_Import_SkyWorks);
+            this.tabSi5518.Controls.Add(this.label28);
+            this.tabSi5518.Controls.Add(this.label27);
             this.tabSi5518.Location = new System.Drawing.Point(4, 25);
             this.tabSi5518.Name = "tabSi5518";
             this.tabSi5518.Size = new System.Drawing.Size(844, 655);
@@ -1228,6 +1237,42 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(12, 21);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(122, 16);
+            this.label27.TabIndex = 0;
+            this.label27.Text = "User Config File:";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(140, 21);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(66, 16);
+            this.label28.TabIndex = 1;
+            this.label28.Text = "filename";
+            // 
+            // Cmd_Import_SkyWorks
+            // 
+            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 71);
+            this.Cmd_Import_SkyWorks.Name = "Cmd_Import_SkyWorks";
+            this.Cmd_Import_SkyWorks.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Import_SkyWorks.TabIndex = 2;
+            this.Cmd_Import_SkyWorks.Text = "Import File";
+            this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_Export_SkyWorks
+            // 
+            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(717, 122);
+            this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
+            this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Export_SkyWorks.TabIndex = 3;
+            this.Cmd_Export_SkyWorks.Text = "Export File";
+            this.Cmd_Export_SkyWorks.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1264,6 +1309,8 @@
             this.tabAD9175.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).EndInit();
+            this.tabSi5518.ResumeLayout(false);
+            this.tabSi5518.PerformLayout();
             this.tabRFLine.ResumeLayout(false);
             this.tabRFLine.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).EndInit();
@@ -1384,6 +1431,10 @@
         private System.Windows.Forms.NumericUpDown numericATT1;
         private System.Windows.Forms.NumericUpDown numericATT3;
         private System.Windows.Forms.NumericUpDown numericATT2;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Button Cmd_Export_SkyWorks;
+        private System.Windows.Forms.Button Cmd_Import_SkyWorks;
     }
 }
 
