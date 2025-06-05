@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BringUp_Control
 {
-    internal class TMP100
+    internal class TMP100 : IDisposable
     {
         private static readonly byte[] TMP100_I2C_ADDRESSES = { 0x4F, 0x4B };//{ 0x48, 0x49 };
         private const byte TMP100_TEMP_REGISTER = 0x00; // Temperature register address
@@ -122,6 +122,13 @@ namespace BringUp_Control
             _ft.Read(deviceAddress, buff_rd);
             // Combine the two bytes into a single value
             data = (ushort)(((buff_rd[0] << 8) & 0xFF00) | (buff_rd[1] & 0x00FF));
+        }
+
+        public void Dispose()
+        {
+            
+                _ft = null; // Release the I2C driver reference
+            
         }
     }
 }

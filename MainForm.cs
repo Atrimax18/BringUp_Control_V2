@@ -1020,28 +1020,49 @@ namespace BringUp_Control
         {
             if (i2cBus == null)
             {
-                MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            
+                //MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //return;
+                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                if (tmp100 == null)
+                {
+                    tmp100 = new TMP100();
+                    tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+                    tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+                }
 
-            if (tmp100 == null)
-            {
-                tmp100 = new TMP100();
-                tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
-                tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+                try
+                {
+                    double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
+                    label3.Text = $"{tempval:F1} °C"; // Format the temperature
+                    LogStatus("Temp FT: " + label3.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+            else
+            {
+                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                if (tmp100 == null)
+                {
+                    tmp100 = new TMP100();
+                    tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+                    tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+                }
 
-            try
-            {
-                double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
-                label3.Text = $"{tempval:F1} °C"; // Format the temperature
-                LogStatus("Temp FT: "+label3.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                try
+                {
+                    double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
+                    label3.Text = $"{tempval:F1} °C"; // Format the temperature
+                    LogStatus("Temp FT: " + label3.Text);
+                    
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }           
 
         }
 

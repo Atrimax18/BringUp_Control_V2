@@ -34,6 +34,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabWelcome = new System.Windows.Forms.TabPage();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label26 = new System.Windows.Forms.Label();
             this.tabAD4368 = new System.Windows.Forms.TabPage();
             this.checkRFLOCK = new System.Windows.Forms.CheckBox();
@@ -68,10 +69,15 @@
             this.Cmd_Import9175_file = new System.Windows.Forms.Button();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.tabRFLine = new System.Windows.Forms.TabPage();
+            this.numericATT3 = new System.Windows.Forms.NumericUpDown();
+            this.numericATT2 = new System.Windows.Forms.NumericUpDown();
+            this.numericATT1 = new System.Windows.Forms.NumericUpDown();
             this.checkAmp2 = new System.Windows.Forms.CheckBox();
             this.checkAmp1 = new System.Windows.Forms.CheckBox();
             this.Cmd_Read_ADC = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.Cmd_UpdateTX_Values = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -81,6 +87,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
@@ -117,21 +124,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.Cmd_Init_All = new System.Windows.Forms.Button();
             this.Cmd_FT_Temp_Read = new System.Windows.Forms.Button();
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.numericATT1 = new System.Windows.Forms.NumericUpDown();
-            this.numericATT2 = new System.Windows.Forms.NumericUpDown();
-            this.numericATT3 = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tabAD4368.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD4368)).BeginInit();
@@ -139,15 +140,14 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).BeginInit();
             this.tabRFLine.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabFPGA.SuspendLayout();
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -198,6 +198,15 @@
             this.tabWelcome.TabIndex = 8;
             this.tabWelcome.Text = "Welcome";
             this.tabWelcome.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::BringUp_Control.Properties.Resources.TX_FEM;
+            this.pictureBox3.Location = new System.Drawing.Point(47, 30);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(714, 271);
+            this.pictureBox3.TabIndex = 2;
+            this.pictureBox3.TabStop = false;
             // 
             // label26
             // 
@@ -593,6 +602,49 @@
             this.tabRFLine.Text = "TX RF LINEUP";
             this.tabRFLine.UseVisualStyleBackColor = true;
             // 
+            // numericATT3
+            // 
+            this.numericATT3.DecimalPlaces = 2;
+            this.numericATT3.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT3.Location = new System.Drawing.Point(613, 199);
+            this.numericATT3.Name = "numericATT3";
+            this.numericATT3.Size = new System.Drawing.Size(56, 22);
+            this.numericATT3.TabIndex = 25;
+            this.numericATT3.ValueChanged += new System.EventHandler(this.numericATT3_ValueChanged);
+            // 
+            // numericATT2
+            // 
+            this.numericATT2.DecimalPlaces = 2;
+            this.numericATT2.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT2.Location = new System.Drawing.Point(454, 199);
+            this.numericATT2.Name = "numericATT2";
+            this.numericATT2.Size = new System.Drawing.Size(56, 22);
+            this.numericATT2.TabIndex = 24;
+            this.numericATT2.ValueChanged += new System.EventHandler(this.numericATT2_ValueChanged);
+            // 
+            // numericATT1
+            // 
+            this.numericATT1.DecimalPlaces = 2;
+            this.numericATT1.Increment = new decimal(new int[] {
+            25,
+            0,
+            0,
+            131072});
+            this.numericATT1.Location = new System.Drawing.Point(233, 199);
+            this.numericATT1.Name = "numericATT1";
+            this.numericATT1.Size = new System.Drawing.Size(56, 22);
+            this.numericATT1.TabIndex = 23;
+            this.numericATT1.TabStop = false;
+            this.numericATT1.ValueChanged += new System.EventHandler(this.numericATT1_ValueChanged);
+            // 
             // checkAmp2
             // 
             this.checkAmp2.AutoSize = true;
@@ -625,6 +677,16 @@
             this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
             this.Cmd_Read_ADC.Click += new System.EventHandler(this.Cmd_Read_ADC_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(158, 374);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(49, 16);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "0xFFF";
+            // 
             // Cmd_UpdateTX_Values
             // 
             this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 412);
@@ -634,6 +696,16 @@
             this.Cmd_UpdateTX_Values.Text = "UPDATE RF VALUES";
             this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
             this.Cmd_UpdateTX_Values.Click += new System.EventHandler(this.Cmd_UpdateTX_Values_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(10, 374);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(142, 16);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "RF ADC7091 Value:";
             // 
             // label19
             // 
@@ -716,6 +788,16 @@
             this.label10.Size = new System.Drawing.Size(65, 18);
             this.label10.TabIndex = 2;
             this.label10.Text = "RF OUT";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(13, 86);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(816, 235);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // tabFPGA
             // 
@@ -1084,26 +1166,6 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "N/A °C";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(10, 374);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(142, 16);
-            this.label6.TabIndex = 13;
-            this.label6.Text = "RF ADC7091 Value:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(158, 374);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 16);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "0xFFF";
-            // 
             // Cmd_Init_All
             // 
             this.Cmd_Init_All.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1166,68 +1228,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::BringUp_Control.Properties.Resources.TX_FEM;
-            this.pictureBox3.Location = new System.Drawing.Point(47, 30);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(714, 271);
-            this.pictureBox3.TabIndex = 2;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(13, 86);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(816, 235);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
-            // numericATT1
-            // 
-            this.numericATT1.DecimalPlaces = 2;
-            this.numericATT1.Increment = new decimal(new int[] {
-            25,
-            0,
-            0,
-            131072});
-            this.numericATT1.Location = new System.Drawing.Point(233, 199);
-            this.numericATT1.Name = "numericATT1";
-            this.numericATT1.Size = new System.Drawing.Size(56, 22);
-            this.numericATT1.TabIndex = 23;
-            this.numericATT1.TabStop = false;
-            this.numericATT1.ValueChanged += new System.EventHandler(this.numericATT1_ValueChanged);
-            // 
-            // numericATT2
-            // 
-            this.numericATT2.DecimalPlaces = 2;
-            this.numericATT2.Increment = new decimal(new int[] {
-            25,
-            0,
-            0,
-            131072});
-            this.numericATT2.Location = new System.Drawing.Point(454, 199);
-            this.numericATT2.Name = "numericATT2";
-            this.numericATT2.Size = new System.Drawing.Size(56, 22);
-            this.numericATT2.TabIndex = 24;
-            this.numericATT2.ValueChanged += new System.EventHandler(this.numericATT2_ValueChanged);
-            // 
-            // numericATT3
-            // 
-            this.numericATT3.DecimalPlaces = 2;
-            this.numericATT3.Increment = new decimal(new int[] {
-            25,
-            0,
-            0,
-            131072});
-            this.numericATT3.Location = new System.Drawing.Point(613, 199);
-            this.numericATT3.Name = "numericATT3";
-            this.numericATT3.Size = new System.Drawing.Size(56, 22);
-            this.numericATT3.TabIndex = 25;
-            this.numericATT3.ValueChanged += new System.EventHandler(this.numericATT3_ValueChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1255,6 +1255,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabWelcome.ResumeLayout(false);
             this.tabWelcome.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tabAD4368.ResumeLayout(false);
             this.tabAD4368.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -1265,6 +1266,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).EndInit();
             this.tabRFLine.ResumeLayout(false);
             this.tabRFLine.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabFPGA.ResumeLayout(false);
             this.tabFPGA.PerformLayout();
             this.tabMux.ResumeLayout(false);
@@ -1272,11 +1277,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericATT3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
