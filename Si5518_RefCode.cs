@@ -1,6 +1,8 @@
 
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace BringUp_Control
 {
@@ -8,6 +10,8 @@ namespace BringUp_Control
     {
 
         private SpiDriver _spi;
+
+        byte[] fullRequest; //used to hold the full request to be sent over SPI/I2C
 
         public void Init(SpiDriver spi)
         {
@@ -20,7 +24,9 @@ namespace BringUp_Control
         {
             byte[] SPICommandHeader = { 0xC0 };
             fullRequest = SPICommandHeader.Concat(bytesToSend).ToArray();
-            byte[] dataRx; //this data buffer size should be at least numBytesToRead
+            byte[] dataRx;
+
+            //this data buffer size should be at least numBytesToRead
             //send the assembled byte stream over the serial bus to the Skyworks device.
             //The number of bytes read back should be a least 3 bytes to capture error codes if generated.
             // The reply is an error if FWERR, APIERR, or HWERR bits are set.
@@ -36,7 +42,8 @@ namespace BringUp_Control
                 //continue to clock the SCLK line for the number of bytes in dummyDataForReply
                 //and read from the Skyworks device while doing so. If all is well, the reply
                 //should start with 0x80 to indicate CTS (clear to send) and no errors.
-                dataRx = _spi.TransferFullDuplex(fullRequest, numBytesToRead);
+                dataRx = new byte [fullRequest.Length];
+                _spi.TransferFullDuplex(fullRequest, dataRx);
                 //check for any errors reported by the Skyworks device related to the command
                 //errors are indicated if the 2nd through 4th bits (from MSB side) contains a '1'
                 //recall that the code above enforces that the reply length is at least 3 bytes.
@@ -158,7 +165,7 @@ namespace BringUp_Control
                     thisChunkSize = file_contents.Length % chunkSize;
                 }
                 // Note: SubArray(startIndex, numBytes)
-                byte[] thisChunk = file_contents.SubArray(chunkNum * chunkSize, thisChunkSize);
+                byte[] thisChunk = file_contents.AsSpan(chunkNum * chunkSize, thisChunkSize).ToArray();
                 byte[] host_load_command = { 0x05 };
                 // The command size buffer limit should include the two bytes sent above.
                 // Example: buffer limit = 1024 bytes, the max HOST_LOAD chunk length
@@ -173,7 +180,7 @@ namespace BringUp_Control
             }
         }
 
-        private void void NVM_LOAD_DATA(string filepath, int CMD_BUFFER_SIZE)
+        private void NVM_LOAD_DATA(string filepath, int CMD_BUFFER_SIZE)
         {
             // Identical to HOST_LOAD except command number
             // open the file on the computer and put everything into a byte array.
@@ -197,7 +204,10 @@ namespace BringUp_Control
                     thisChunkSize = file_contents.Length % chunkSize;
                 }
                 // Note: SubArray(startIndex, numBytes)
-                byte[] thisChunk = file_contents.SubArray(chunkNum * chunkSize, thisChunkSize);
+                //byte[] thisChunk = file_contents.SubArray(chunkNum * chunkSize, thisChunkSize);
+
+                byte[] thisChunk = file_contents.AsSpan(chunkNum * chunkSize, thisChunkSize).ToArray();
+
                 byte[] nvm_load_data_command = { 0xF1 };
                 // The command size buffer limit should include the two bytes sent above.
                 // Example: buffer limit = 1024 bytes, the max NVM_LOAD_DATA chunk length
@@ -297,7 +307,7 @@ namespace BringUp_Control
             {
                 Console.WriteLine("Burn cannot proceed, there are no more directory entries remaining.");
             }
-            Console.WriteLine(SPACE_AVAILABLE + " bytes available, with ENTRIES_AVAILABLE + "directory entries available");
+            Console.WriteLine(SPACE_AVAILABLE + " bytes available, with ENTRIES_AVAILABLE + directory entries available");
         }
 
         private void NVM_FPLAN_CRC()
@@ -480,49 +490,6 @@ namespace BringUp_Control
             // Step 12
             Console.WriteLine("Follow instructions to complete patch file export within ClockBuilder Pro.");
         }
-
-        public void NvmPatchBurnExtractBaselinePlan()
-        {
-            // If RSTb was recently toggled from 0 -> 1, wait some time (check data sheet for minimums)
-            // to allow time for the API to be ready for commands after hardware reset
-            System.Threading.Thread.Sleep(1000);
-            // Thread.Sleep(1000); // ms
-            // Before starting, check for CTS.
-            check_for_CTS();
-            // NVM Patch Burn Extract
-            // Steps 1 and 2 should be completed prior to starting this procedure. NVM Burn Step 3 was skipped, step 4 is DEVICE_INFO.
-            if (!DEVICE_INFO())
-            {
-                Console.Write(@"Part number and device grade does not match the expected value, exiting.");
-                while (true) { };
-            }
-            else
-            {
-                Console.Write(@"Part number and device grade matches what is expected, continuing.");
-            }
-
-            // Step 5
-            RESTART();
-            //Thread.Sleep(5); //Step 5a, I2C only. Wait at least 5ms
-            // Step 6
-            var CMD_BUFFER_SIZE = SIO_INFO();
-            // Step 7
-            var nvm_burn_filepath = @".\nvm_burn_fw.boot.bin";
-            HOST_LOAD(nvm_burn_filepath, CMD_BUFFER_SIZE);
-            // Step 8
-            BOOT();
-            // Step 8A
-            CMD_BUFFER_SIZE = SIO_INFO();
-            // Step 9 - get REPLY (not COMMAND) buffer size
-            int bufSize = SIO_INFO_reply_buffer_size() - 3;
-            // Step 10
-            var extractsize = NVM_FPLAN_READ_INIT(bufSize);
-            // Step 11
-            string whereToSaveExtract = @"C:\Users\ngk\Downloads\Baseline_extracted.bin";
-            NVM_FPLAN_READ(extractsize, whereToSaveExtract, bufSize);
-            Console.WriteLine("NVM Extract complete, file saved to " + whereToSaveExtract);
-            // Step 12
-            Console.WriteLine("Follow instructions to complete patch file export within ClockBuilder Pro.");
-        }
+        
     }
 }

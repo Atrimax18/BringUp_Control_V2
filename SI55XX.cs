@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BringUp_Control
 {
-    internal class SI55XX
+    internal class SI55XX : IDisposable
     {
         // SPI Commands
         private const byte CMD_READ_REPLY = 0x00;
@@ -26,6 +26,12 @@ namespace BringUp_Control
             _spi = spi ?? throw new ArgumentNullException(nameof(spi), "SPI driver cannot be null.");
         }
 
+
+        public void Dispose()
+        {
+            _spi?.Dispose();
+            _spi = null;
+        }
         // Private Methods
 
         private void SendCommand(byte command, ReadOnlySpan<byte> data = default)
