@@ -207,9 +207,10 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = global::BringUp_Control.Properties.Resources.TX_FEM;
-            this.pictureBox3.Location = new System.Drawing.Point(47, 30);
+            this.pictureBox3.Location = new System.Drawing.Point(36, 27);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(714, 271);
+            this.pictureBox3.Size = new System.Drawing.Size(743, 291);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox3.TabIndex = 2;
             this.pictureBox3.TabStop = false;
             // 

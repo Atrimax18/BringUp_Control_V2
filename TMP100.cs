@@ -8,7 +8,7 @@ namespace BringUp_Control
 {
     internal class TMP100 : IDisposable
     {
-        private static readonly byte[] TMP100_I2C_ADDRESSES = { 0x4F, 0x4B };//{ 0x48, 0x49 };
+        private static readonly byte[] TMP100_I2C_ADDRESSES = { 0x48, 0x49 };//{ 0x48 - FT sensor, 0x49 - RF sensor };
         private const byte TMP100_TEMP_REGISTER = 0x00; // Temperature register address
         private const byte TMP100_CONFIG_REGISTER = 0x01; // Configuration register address
         private const byte TMP100_THIGH_REGISTER = 0x03; // T-high register address
