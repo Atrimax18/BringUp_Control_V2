@@ -621,66 +621,66 @@ namespace BringUp_Control
 
         private void Cmd_ReadAll_AD4368_Click(object sender, EventArgs e)
         {
-            int index = 1;
-
-            if (ftDev == null)
+            if (selectedTab == tabAD4368)
             {
-                MessageBox.Show("SPI interface not initialized. Please reconnect the FTDI device.", "No SPI", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                int index = 1;
 
-            if (!(usbflag && driverflag)) return; // USB or driver not ready – silently exit
-
-
-            if (dataGridViewAD4368.Rows.Count > 0)
-            {
-                dataGridViewAD4368.DataSource = null;
-                DT4368.Clear();
-                dataGridViewAD4368.DataSource = DT4368;
-            }
-            else
-            {
-                foreach (var item in comboRegAddress.Items)
+                if (ftDev == null)
                 {
-                    string raw = item?.ToString()?.Trim() ?? string.Empty;
+                    MessageBox.Show("SPI interface not initialized. Please reconnect the FTDI device.", "No SPI", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                    if (!TryParseHexU16(raw, out ushort regValue))
+                if (!(usbflag && driverflag)) return; // USB or driver not ready – silently exit
+
+
+                if (dataGridViewAD4368.Rows.Count > 0)
+                {
+                    dataGridViewAD4368.DataSource = null;
+                    DT4368.Clear();
+                    dataGridViewAD4368.DataSource = DT4368;
+                }
+                else
+                {
+                    foreach (var item in comboRegAddress.Items)
                     {
-                        MessageBox.Show($"Register '{raw}' is not in 0xXXXX format (e.g. 0x002B). " +
-                                        "Item skipped.", "Invalid address",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        continue;
-                    }
+                        string raw = item?.ToString()?.Trim() ?? string.Empty;
 
-                    byte dataByte;
-                    try
-                    {
-                        dataByte = ad4368.ReadRegister(regValue);
+                        if (!TryParseHexU16(raw, out ushort regValue))
+                        {
+                            MessageBox.Show($"Register '{raw}' is not in 0xXXXX format (e.g. 0x002B). " +
+                                            "Item skipped.", "Invalid address",
+                                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            continue;
+                        }
 
-                        // Add to DataTable
-                        DataRow row = DT4368.NewRow();
-                        row["Index"] = index++;
-                        row["Register"] = raw;                   // already validated
-                        row["Value"] = $"0x{dataByte:X2}";
-                        row["Value byte"] = dataByte;
-                        DT4368.Rows.Add(row);
+                        byte dataByte;
+                        try
+                        {
+                            dataByte = ad4368.ReadRegister(regValue);
 
-                        // Extra handling for power register (low byte 0x2B)
-                        if ((byte)regValue == 0x2B)
-                            CheckPowerRegister(0x2B);
+                            // Add to DataTable
+                            DataRow row = DT4368.NewRow();
+                            row["Index"] = index++;
+                            row["Register"] = raw;                   // already validated
+                            row["Value"] = $"0x{dataByte:X2}";
+                            row["Value byte"] = dataByte;
+                            DT4368.Rows.Add(row);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"ReadRegister(0x{regValue:X4}) failed:\n{ex.Message}",
-                                        "Read error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        continue;
+                            // Extra handling for power register (low byte 0x2B)
+                            if ((byte)regValue == 0x2B)
+                                CheckPowerRegister(0x2B);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"ReadRegister(0x{regValue:X4}) failed:\n{ex.Message}",
+                                            "Read error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            continue;
+                        }
                     }
                 }
-            }
-
-
-            
+            }            
         }
 
         private int RFLockSampling(byte address, int monitoredBitIndex)
@@ -830,7 +830,7 @@ namespace BringUp_Control
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                     ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
                 }
-                
+
 
                 /*
                 comboRegAddress.Focus();
@@ -838,22 +838,26 @@ namespace BringUp_Control
                 ad4368.Init(ftDev);*/
             }
             else if (selectedTab == tabMux)
-            {                
+            {
 
-                i2cBus = InterfaceManager.GetI2c();               
+                i2cBus = InterfaceManager.GetI2c();
 
                 IO_Exp = new PCAL6416A();
                 IO_Exp.Init(i2cBus);
-                
+
                 MUX = new PCA9547A();
                 MUX.Init(i2cBus); // Initialize MUX with the current I²C device
-                
+
                 MUX.Set_Mux_Channel(1, 5);
 
-            }            
+            }
+            else if (selectedTab == tabSi5518)
+            {
+                // Initialize Si5518 if needed
 
+            }
         }
-        
+
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
         private void textAD4368_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -878,40 +882,47 @@ namespace BringUp_Control
 
         private void Cmd_Import_AD4368_File_Click(object sender, EventArgs e)
         {
-            labelFilePathAD4368.Text = $"File Path: {ad4368.LoadDataTableToCsv()}";
-            Cmd_WriteAll_AD4368.Enabled = true;
-            Cmd_ReadAll_AD4368.Enabled = true;
+            if (selectedTab == tabAD4368)
+            {
+                labelFilePathAD4368.Text = $"File Path: {ad4368.LoadDataTableToCsv()}";
+                Cmd_WriteAll_AD4368.Enabled = true;
+                Cmd_ReadAll_AD4368.Enabled = true;
+            }            
         }
 
         private void Cmd_Export_AD4368_File_Click(object sender, EventArgs e)
         {
-            ad4368.SaveDataTableToCsv(DT4368);
+            if (selectedTab == tabAD4368)
+                ad4368.SaveDataTableToCsv(DT4368);
         }
 
         private void Cmd_WriteAll_AD4368_Click(object sender, EventArgs e)
         {
-            var filteredRows = DT4368.AsEnumerable().Where(row =>
+            if (selectedTab == tabAD4368)
             {
-                string hexStr = row["Register"].ToString();      // e.g. "0x0053"
-                ushort reg = Convert.ToUInt16(hexStr.Substring(2), 16); // Convert to int
-                return reg >= 0x10 && reg <= 0x53;
-            }).OrderByDescending(row => Convert.ToUInt16(row["Register"].ToString().Substring(2), 16) // Sort descending
-            );
-
-            foreach (var row in filteredRows)
-            {
-
-                byte paddress = Convert.ToByte(row["Register"].ToString().Replace("0x", ""), 16);
-                ushort regValue = Convert.ToUInt16(row["Register"].ToString().Replace("0x", ""), 16);
-                byte databyte = Convert.ToByte(row["Value"].ToString().Replace("0x", ""), 16);
-
-                ad4368.WriteRegister(regValue, databyte);
-
-                if (paddress == 0x2B)
+                var filteredRows = DT4368.AsEnumerable().Where(row =>
                 {
-                    CheckPowerRegister(paddress);
+                    string hexStr = row["Register"].ToString();      // e.g. "0x0053"
+                    ushort reg = Convert.ToUInt16(hexStr.Substring(2), 16); // Convert to int
+                    return reg >= 0x10 && reg <= 0x53;
+                }).OrderByDescending(row => Convert.ToUInt16(row["Register"].ToString().Substring(2), 16) // Sort descending
+                );
+
+                foreach (var row in filteredRows)
+                {
+
+                    byte paddress = Convert.ToByte(row["Register"].ToString().Replace("0x", ""), 16);
+                    ushort regValue = Convert.ToUInt16(row["Register"].ToString().Replace("0x", ""), 16);
+                    byte databyte = Convert.ToByte(row["Value"].ToString().Replace("0x", ""), 16);
+
+                    ad4368.WriteRegister(regValue, databyte);
+
+                    if (paddress == 0x2B)
+                    {
+                        CheckPowerRegister(paddress);
+                    }
                 }
-            }
+            }            
         }
 
         private void Cmd_Init_All_Click(object sender, EventArgs e)
@@ -1080,8 +1091,7 @@ namespace BringUp_Control
                 MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }       
-
-        
+             
 
         private void Cmd_Read_ADC_Click(object sender, EventArgs e)
         {
@@ -1132,37 +1142,14 @@ namespace BringUp_Control
             else if (valueDb > max) valueDb = max;
             // --------------------------------------------------------------------
 
-            // Convert dB → code units (¼-dB) and round to nearest
+            // Convert dB → code units byte and round to nearest
             int code = (int)Math.Round(valueDb / step, MidpointRounding.AwayFromZero);
 
             return (byte)(code & mask);
         }
         
         public static string ToHex(float valueDb) => $"0x{ToByte(valueDb):X2}";
-
-        private void checkAmp1_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (checkAmp1.CheckState == CheckState.Checked)
-            {
-                txLineData.bypass1 = true; // BYPASS ON
-            }
-            else
-                txLineData.bypass1 = false; // BYPASS OFF (AMP ON)
-
-        }
-
-        private void checkAmp2_CheckStateChanged(object sender, EventArgs e)
-        {
-            if (checkAmp2.CheckState == CheckState.Checked)
-            {
-                txLineData.bypass2 = true; // BYPASS ON
-            }
-            else
-                txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
-        }
-
         
-
         private void Cmd_FPGA_Write_Click(object sender, EventArgs e)
         {
             
@@ -1493,8 +1480,7 @@ namespace BringUp_Control
             {
                 att1_value = ToByte((float)numericATT1.Value);
                 att2_value = ToByte((float)numericATT2.Value);
-                att3_value = ToByte((float)numericATT3.Value);
-                
+                att3_value = ToByte((float)numericATT3.Value);               
 
             }
         }

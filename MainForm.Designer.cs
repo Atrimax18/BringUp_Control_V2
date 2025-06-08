@@ -485,9 +485,9 @@
             // Cmd_WriteReg9175
             // 
             this.Cmd_WriteReg9175.Enabled = false;
-            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(423, 27);
+            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(423, 17);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
-            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 43);
+            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 63);
             this.Cmd_WriteReg9175.TabIndex = 10;
             this.Cmd_WriteReg9175.Text = "Write Register";
             this.Cmd_WriteReg9175.UseVisualStyleBackColor = true;
