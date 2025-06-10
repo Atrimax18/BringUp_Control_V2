@@ -757,7 +757,7 @@ namespace BringUp_Control
             }
         }
 
-        public void Control_Init(bool initflag)
+        public void Control_Init_PLL(bool initflag)
         {
             if (!initflag)
             {
@@ -798,6 +798,9 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabAD9175)
             {
+                //todo: check if the DAC is initialized and if not - initialize it
+                //i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                //IO_Exp.SetPinState();
                 ad9175 = new AD9175_DAC();
                 ftDev = InterfaceManager.GetSpi();
                 ad9175.Init(ftDev);
@@ -812,7 +815,7 @@ namespace BringUp_Control
                 PLL_Init_Flag = true; //TODO test QA - set this flag to true if you want to reinitialize AD4368 on tab change
                 if (PLL_Init_Flag)
                 {
-                    Control_Init(PLL_Init_Flag);
+                    Control_Init_PLL(PLL_Init_Flag);
                     ad4368 = new AD4368_PLL();
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                     ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device

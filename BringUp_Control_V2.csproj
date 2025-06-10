@@ -177,7 +177,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Si5518_RefCode.cs" />
     <Compile Include="SI55XX.cs" />
     <Compile Include="SpiDriver.cs" />
     <Compile Include="TMP100.cs" />
