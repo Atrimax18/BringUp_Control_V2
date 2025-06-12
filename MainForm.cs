@@ -17,9 +17,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using FTD2XX_NET;
-using System.Data.SqlClient;
-using System.Net.Configuration;
-using System.Security.Cryptography.X509Certificates;
+
 
 // BringUp application contains full list of RF part to control them for R&D tests
 
@@ -76,6 +74,7 @@ namespace BringUp_Control
         private byte att1_value = 0x00;
         private byte att2_value = 0x00;
         private byte att3_value = 0x00;
+        
 
         private double DAC0_freq;
         private double DAC1_freq;
@@ -106,6 +105,8 @@ namespace BringUp_Control
 
         PCA9547A MUX; // I2C MUX SNOW EVB Board
         AD7091 ad7091; // ADC for RF Power measurement
+
+        string dac_ini = string.Empty; // DAC 9175 INI file path
 
         TX_Line txLineData = new TX_Line(); 
         public MainForm()
@@ -145,7 +146,7 @@ namespace BringUp_Control
                     var configuration = new ConfigurationBuilder().SetBasePath(AppDomain.CurrentDomain.BaseDirectory).AddIniFile(@"init_config.ini").Build();
 
 
-                    string testValue = configuration["PLL4368:CLOCKFREQ"];
+                    string testValue = configuration["PLL4368:POWER_SW"];
                     if (string.IsNullOrWhiteSpace(testValue))
                     {                        
                         LogStatus("INI file loaded but missing or invalid values.");
@@ -170,8 +171,20 @@ namespace BringUp_Control
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
-                        txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0_GHz"]);
-                        txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1_GHz"]);
+                        //txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0_GHz"]);
+                        //txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1_GHz"]);
+
+                        dac_ini = configuration["DAC9175:INIT_FILE"];
+
+                        if (File.Exists(dac_ini))
+                        {
+                            LogStatus($"DAC 9175 INI file loaded!");
+                        }
+                        else
+                        {
+                            LogStatus("DAC 9175 INI file not found or invalid path.");
+                            dac_ini = string.Empty; // Reset if not valid
+                        }
 
 
 
@@ -278,8 +291,7 @@ namespace BringUp_Control
                     gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface                    
 
                     i2cBus = InterfaceManager.GetI2c();
-                    MUX = new PCA9547A();
-                    MUX.Init(i2cBus);
+                    
 
                     // flag status change 
                     usbflag = true;
@@ -783,6 +795,8 @@ namespace BringUp_Control
             {
                 if (!TXline_flag)
                 {
+                    i2cBus = InterfaceManager.GetI2c();
+                    
                     checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
                     checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
                     numericATT1.Value = Convert.ToDecimal(txLineData.att1);
@@ -804,8 +818,8 @@ namespace BringUp_Control
                 ad9175 = new AD9175_DAC();
                 ftDev = InterfaceManager.GetSpi();
                 ad9175.Init(ftDev);
-                DAC0_freq = txLineData.nco_dac0 * 1e9;
-                DAC1_freq = txLineData.nco_dac1 * 1e9;
+                //DAC0_freq = txLineData.nco_dac0 * 1e9;
+                //DAC1_freq = txLineData.nco_dac1 * 1e9;
                 ad9175.Init(ftDev);
 
                 comboRegisters9175.Focus();
@@ -951,10 +965,10 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD9175)
             {
-                if (ad9175 == null)
+                if (ad9175 != null)
                 {
-                    ad9175 = new AD9175_DAC();
-                    ad9175.Init(ftDev); // Initialize DAC9175 with the current FTDI device
+                    //ad9175 = new AD9175_DAC();
+                    //ad9175.Init(ftDev); // Initialize DAC9175 with the current FTDI device
 
 
                     DT9175 = ad9175.InitDataTableDAC();
@@ -963,7 +977,27 @@ namespace BringUp_Control
                     LogStatus("AD9175 reinitialized on SPI CS1");
                     Cmd_ReadDAC9175.Enabled = true;
 
-                    // Iinit of the DAC
+
+                    // Fix for CS0815: Cannot assign void to an implicitly-typed variable
+                    // The method `DAC9175_InitEngine` returns void, so it cannot be assigned to a variable.
+                    // To fix this, simply call the method without attempting to assign its return value.
+
+                    ad9175.DAC9175_InitEngine(dac_ini);
+
+                    int code = -1;
+
+                    try
+                    {
+                        code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
+                    }
+                    catch (Exception ex)
+                    {
+                        code = ex.HResult; // Get the error code from the exception
+                        LogStatus($"DAC9175 initialization failed with error code: {code}");
+                        MessageBox.Show($"DAC9175 initialization failed with error code: {code}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    /* Iinit of the DAC
                     ad9175.PowerUp();
                     ad9175.DAC_PLL_Config();
 
@@ -988,11 +1022,11 @@ namespace BringUp_Control
 
                     ad9175.JESD204B_SERDES_Setup();
                     ad9175.TransportLayer_Setup();
+                    //when to implement it
                     ad9175.CleanUpRegisterList();
+                }*/
                 }
             }
-                       
-            
         }
 
         private void comboRegisters9175_SelectedIndexChanged(object sender, EventArgs e)
@@ -1580,8 +1614,8 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
-                MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
+                //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                //MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
                 
                 if (IO_Exp == null)
                 { 
@@ -1613,8 +1647,8 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
-                MUX.Set_Mux_Channel(0, 7);
+                //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
+                // MUX.Set_Mux_Channel(0, 7);
                 
                 if (IO_Exp == null)
                 {
@@ -1639,6 +1673,53 @@ namespace BringUp_Control
                 LogStatus($"Amplifier 2 Status: { checkAmp2.Text}");
             }
             
+        }
+
+        private void numericATT1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                decimal rounded = RoundToStep(numericATT1.Value, numericATT1.Increment);
+                if (rounded != numericATT1.Value)
+                {
+                    numericATT1.Value = rounded;
+
+                    att1_value = ToByte((float)numericATT1.Value);  //integer value example 11.75 dB = 10 1111
+                }
+            }
+        }
+
+        private decimal RoundToStep(decimal value, decimal step)
+        {
+            return Math.Round(value / step, MidpointRounding.AwayFromZero) * numericATT1.Increment;
+        }
+
+        private void numericATT2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                decimal rounded = RoundToStep(numericATT2.Value, numericATT2.Increment);
+                if (rounded != numericATT2.Value)
+                {
+                    numericATT2.Value = rounded;
+
+                    att2_value = ToByte((float)numericATT2.Value);  //integer value example 11.75 dB = 10 1111
+                }
+            }
+        }
+
+        private void numericATT3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                decimal rounded = RoundToStep(numericATT3.Value, numericATT3.Increment);
+                if (rounded != numericATT3.Value)
+                {
+                    numericATT3.Value = rounded;
+
+                    att3_value = ToByte((float)numericATT3.Value);  //integer value example 11.75 dB = 10 1111
+                }
+            }
         }
     }
 }

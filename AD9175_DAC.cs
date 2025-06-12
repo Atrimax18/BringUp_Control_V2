@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,26 +15,230 @@ using static BringUp_Control.PCAL6416A;
 
 namespace BringUp_Control
 {
+
+    
     internal sealed class AD9175_DAC : IDisposable
     {
         private SpiDriver _ft;
 
-        
+        public enum OperationType
+        {
+            Read,
+            Write,
+            Sleep,
+            Skip
+        }
+
+        public enum FunctionGroup
+        {
+            POWER_UP,
+            DAC_PLL,
+            DLL_CONFIG,
+            CALIBRATION,
+            JESD204,
+            CHANNEL_DATAPATH,
+            MAINDAC_DATAPATH_DAC0,
+            MAINDAC_DATAPATH_DDCM_DAC0,
+            MAINDAC_DATAPATH_DAC1,
+            MAINDAC_DATAPATH_DDCM_DAC1,
+            JESD204_SERDES,
+            TRANSPORT_LAYER,
+            CLEANUP
+            // … add any others you have
+        }
+
+        public class Command
+        {
+            public ushort Address { get; set; }
+            public byte Data { get; set; }
+            public OperationType OpType { get; set; }
+            public FunctionGroup Group { get; set; }
+        }
+
+
+
         //public double DAC0_freq { get; set; }
         //public double DAC1_freq { get; set; }
         public string message_log {  get; set; }
 
-        
+        private string _csvPath;
+        private const byte ErrorValue = 0xFF; // error value from readregister function ???? check it !!!!
 
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
 
         public void Init(SpiDriver ft)
         {
-            _ft = ft;
+            _ft = ft;            
+        }
 
-            
-        }        
+        public void DAC9175_InitEngine(string csvPath)
+        {
+            _csvPath = csvPath;
+        }
+
+
+        public int RUN_CSV()
+        {
+            if (!File.Exists(_csvPath))
+                throw new FileNotFoundException($"Initialization file not found: {_csvPath}");
+
+
+            var commands = LoadCommands(_csvPath);
+
+            foreach (var cmd in commands)
+            {
+                switch (cmd.Group)
+                {
+
+                    case FunctionGroup.POWER_UP:
+                        if (ProcessPowerUp(cmd) != 0) return -1; // If PowerUp fails, return -1
+                        break;
+                    case FunctionGroup.DAC_PLL:
+                        if (ProcessDacPll(cmd) != 0) return -1; // If DAC_PLL fails, return -1
+                        break;
+                    case FunctionGroup.DLL_CONFIG:
+                        if (ProcessDllConfig(cmd) != 0) return -1; // If DLL_CONFIG fails, return -1
+                        break;
+                    case FunctionGroup.CALIBRATION:
+                        if (ProcessCalibration(cmd) != 0) return -1; // If CALIBRATION fails, return -1 
+                        break;
+                    case FunctionGroup.JESD204:
+                        if (ProcessJESD204(cmd) != 0) return -1; // If JESD204 fails, return -1
+                        break;
+                    case FunctionGroup.CHANNEL_DATAPATH:
+                        break;
+                    case FunctionGroup.MAINDAC_DATAPATH_DAC0:
+                        if (ProcessMainDacDatapathDac0(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC0 fails, return -1
+                        break;
+                    case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC0:
+                        break;
+                    case FunctionGroup.MAINDAC_DATAPATH_DAC1:
+                        if (ProcessMainDacDatapathDac1(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC1 fails, return -1
+                        break;
+                    case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC1:
+                        break;
+                    case FunctionGroup.JESD204_SERDES:
+                        if (ProcessJESD204Serdes(cmd) != 0) return -1;
+                        break;
+                    case FunctionGroup.TRANSPORT_LAYER:
+                        if (ProcessTransportLayer(cmd) != 0) return -1; // If TRANSPORT_LAYER fails, return -1
+                        break;
+                    case FunctionGroup.CLEANUP:
+                        if (ProcessCleanup(cmd) != 0) return -1; // If CLEANUP fails, return -1
+                        break;
+                    default:
+                        //throw new InvalidOperationException($"Unknown function group: {cmd.Group}");
+                        return -99;
+
+                }
+            }
+            return 0; // Return 0 if all commands processed successfully
+
+        }
+
+        private List<Command> LoadCommands(string path)
+        {
+            var list = new List<Command>();
+            foreach (var line in File.ReadAllLines(path))
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var parts = line.Split(',');
+                if (parts.Length < 4) continue;
+
+                var addrHex = parts[0].Trim();
+                var dataHex = parts[1].Trim();
+                var opCode = parts[2].Trim().ToUpperInvariant();
+                var groupName = parts[3].Trim();
+
+                if (!Enum.TryParse<FunctionGroup>(groupName, out var group))
+                    throw new InvalidDataException($"Unknown function group '{groupName}'");
+
+                OperationType opType;
+                switch (opCode)
+                {
+                    case "W":
+                        opType = OperationType.Write;
+                        break;
+                    case "R":
+                        opType = OperationType.Read;
+                        break;
+                    case "SLEEP":
+                        opType = OperationType.Sleep;
+                        break;
+                    case "SKIP":
+                        opType = OperationType.Skip;
+                        break;
+                    default:
+                        throw new InvalidDataException($"Unknown operation '{opCode}'");
+                }
+
+                var cmd = new Command
+                {
+                    Address = HexStringToUshort(addrHex),
+                    Data = byte.Parse(dataHex.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? dataHex.Substring(2) : dataHex, NumberStyles.HexNumber),
+                    OpType = opType,
+                    Group = group
+                };
+                list.Add(cmd);
+            }
+            return list;
+        }
+
+        #region Group Processors
+
+        //POWER_UP
+        private int ProcessPowerUp(Command cmd) => ProcessGeneric(cmd);
+        //DAC_PLL
+        private int ProcessDacPll(Command cmd) => ProcessGeneric(cmd);
+        //DLL_CONFIG
+        private int ProcessDllConfig(Command cmd) => ProcessGeneric(cmd);
+        //CALLIBRATION
+        private int ProcessCalibration(Command cmd) => ProcessGeneric(cmd);
+        //JESD204
+        private int ProcessJESD204(Command cmd) => ProcessGeneric(cmd);
+        //MAINDATAPATH_DAC0
+        private int ProcessMainDacDatapathDac0(Command cmd) => ProcessGeneric(cmd);
+        //MAINDATAPATH_DAC1
+        private int ProcessMainDacDatapathDac1(Command cmd) => ProcessGeneric(cmd);
+        //TRANSPORT_LAYER
+        private int ProcessTransportLayer(Command cmd) => ProcessGeneric(cmd);
+        //JESD204_SERDES
+        private int ProcessJESD204Serdes(Command cmd) => ProcessGeneric(cmd);
+        //CLEANUP
+        private int ProcessCleanup(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessGeneric(Command cmd)
+        {
+            switch (cmd.OpType)
+            {
+                case OperationType.Write:
+                    WriteRegister(cmd.Address, cmd.Data);
+                    break;
+
+                case OperationType.Read:
+                    var result = ReadRegister(cmd.Address);
+                    if (result == ErrorValue)
+                    {
+                        Console.Error.WriteLine(
+                            $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
+                        return -1;
+                    }
+                    break;
+
+                case OperationType.Sleep:
+                    int timeval = cmd.Data;
+                    Console.WriteLine($"Sleeping for {timeval} milisecond(s)...");
+                    Thread.Sleep(timeval * 100);
+                    break;
+
+                case OperationType.Skip:
+                    // do nothing
+                    break;
+            }
+            return 0;
+        }
+
+        #endregion  
 
         //Table 50 : Power Up registee writing - DONE
         public void PowerUp()
@@ -718,6 +923,14 @@ namespace BringUp_Control
         {
             //_ft?.Dispose();
             _ft = null; // Release the FTDI device
+        }
+
+        public static ushort HexStringToUshort(string hex)
+        {
+            if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                hex = hex.Substring(2);
+
+            return Convert.ToUInt16(hex, 16);
         }
     }
 }

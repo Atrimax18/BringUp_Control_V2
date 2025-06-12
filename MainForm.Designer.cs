@@ -93,6 +93,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.Cmd_FPGA_Tests = new System.Windows.Forms.Button();
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.Cmd_Read_Registers = new System.Windows.Forms.Button();
@@ -457,11 +458,10 @@
             // 
             this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 400);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
-            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 53);
+            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 58);
             this.Cmd_DAC_Init.TabIndex = 13;
             this.Cmd_DAC_Init.Text = "DAC INIT";
             this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
-            this.Cmd_DAC_Init.Visible = false;
             this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
             // 
             // Cmd_WriteDAC9175
@@ -661,6 +661,7 @@
             this.numericATT3.Size = new System.Drawing.Size(56, 22);
             this.numericATT3.TabIndex = 25;
             this.numericATT3.ValueChanged += new System.EventHandler(this.numericATT3_ValueChanged);
+            this.numericATT3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT3_KeyPress);
             // 
             // numericATT2
             // 
@@ -675,6 +676,7 @@
             this.numericATT2.Size = new System.Drawing.Size(56, 22);
             this.numericATT2.TabIndex = 24;
             this.numericATT2.ValueChanged += new System.EventHandler(this.numericATT2_ValueChanged);
+            this.numericATT2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT2_KeyPress);
             // 
             // numericATT1
             // 
@@ -690,6 +692,7 @@
             this.numericATT1.TabIndex = 23;
             this.numericATT1.TabStop = false;
             this.numericATT1.ValueChanged += new System.EventHandler(this.numericATT1_ValueChanged);
+            this.numericATT1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT1_KeyPress);
             // 
             // checkAmp2
             // 
@@ -847,6 +850,7 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Tests);
             this.tabFPGA.Controls.Add(this.Cmd_WriteFPGA);
             this.tabFPGA.Controls.Add(this.label22);
             this.tabFPGA.Controls.Add(this.Cmd_Read_Registers);
@@ -866,6 +870,15 @@
             this.tabFPGA.TabIndex = 7;
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_FPGA_Tests
+            // 
+            this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(666, 350);
+            this.Cmd_FPGA_Tests.Name = "Cmd_FPGA_Tests";
+            this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(145, 55);
+            this.Cmd_FPGA_Tests.TabIndex = 13;
+            this.Cmd_FPGA_Tests.Text = "FPGA Tests";
+            this.Cmd_FPGA_Tests.UseVisualStyleBackColor = true;
             // 
             // Cmd_WriteFPGA
             // 
@@ -1436,6 +1449,7 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button Cmd_Export_SkyWorks;
         private System.Windows.Forms.Button Cmd_Import_SkyWorks;
+        private System.Windows.Forms.Button Cmd_FPGA_Tests;
     }
 }
 
