@@ -9,6 +9,13 @@ namespace BringUp_Control
 {
     internal class HMC1119 : IDisposable
     {
+        public enum ChipIndex
+        {
+            HMC1119_CHIP1 = 0,
+            HMC1119_CHIP2 = 1,
+            HMC1119_CHIP3 = 2
+        }
+
         private SpiDriver _ft;
 
         public void Init(SpiDriver ft)
@@ -16,27 +23,28 @@ namespace BringUp_Control
             _ft = ft ?? throw new ArgumentNullException(nameof(ft));
         }
 
-        /// <summary>
-        /// Writes the attenuation value to the specified channel.
-        /// </summary>        /// 
-        /// <param name="attenuationValue">The attenuation value to write.</param>
-        public void WriteAttenuation(byte attenuationValue)
+        public void SetAttenuation(ChipIndex idx, float atten)
+        {
+            if ((atten < 0) || (atten > 31.75f))
+            {
+                throw new ArgumentOutOfRangeException(nameof(atten));
+            }
+
+            byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
+            WriteByte(txdata);
+        }
+
+        public void WriteByte(byte data)
         {
             if (_ft == null)
             {
                 throw new InvalidOperationException("HMC1119 is not initialized. Call Init() before using this method.");
             }
 
-            // Example SPI write logic for HMC1119
-            byte[] command = BuildAttenuationCommand(attenuationValue);
-            _ft.Write(command);
-        }
 
-        private byte[] BuildAttenuationCommand(byte attenuationValue)
-        {
-            // Construct the SPI command based on the channel and attenuation value.
-            // This is a placeholder implementation. Replace with actual command logic.
-            return new byte[] { attenuationValue };
+            byte[] command = { data };
+
+            _ft.Write(command);
         }
 
         public void Dispose()
