@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BringUp_Control
 {
@@ -22,20 +23,27 @@ namespace BringUp_Control
         }
 
         private i2cDriver _ft;
+        private FtdiInterfaceManager _interfaceManager;
 
-        public void Init(i2cDriver ft)
+        public void Init(i2cDriver ft, FtdiInterfaceManager interfaceManager)
         {
-            _ft = ft;
+            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
         }
 
         public void Config(AddressIndex addressIndex)
         {
             byte configValue = 0x60; // 12-bit resolution, 1-shot mode
+
+            _ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Write the desired configuration value to the configuration register
             WriteByte(addressIndex, TMP100_CONFIG_REGISTER, configValue);
         }
         public bool BultInTest(AddressIndex addressIndex)
         {
+            _ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             //Read the current content of the T-high register address
             ReadByte(addressIndex, TMP100_THIGH_REGISTER, out byte restoreValue);
             // Write the magic number into the T-high register address of the device
@@ -59,6 +67,8 @@ namespace BringUp_Control
 
         public double ReadTemperature(AddressIndex addressIndex)
         {
+            _ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             ReadWord(addressIndex, TMP100_TEMP_REGISTER, out ushort rawTemperature);
             // TMP100 temperature is in the upper 12 bits, shift right by 4
             rawTemperature >>= 4;

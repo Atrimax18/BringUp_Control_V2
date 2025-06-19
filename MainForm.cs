@@ -71,10 +71,13 @@ namespace BringUp_Control
             public double nco_dac1;
         }
 
-        private byte att1_value = 0x00;
-        private byte att2_value = 0x00;
-        private byte att3_value = 0x00;
-        
+        //private byte att1_value = 0x00;
+        //private byte att2_value = 0x00;
+        //private byte att3_value = 0x00;
+        private float att1_value = 0.00f;
+        private float att2_value = 0.00f;
+        private float att3_value = 0.00f;
+
 
         private double DAC0_freq;
         private double DAC1_freq;
@@ -296,6 +299,20 @@ namespace BringUp_Control
                     // flag status change 
                     usbflag = true;
                     driverflag = true;
+
+                    tmp100 = new TMP100();
+                    tmp100.Init(i2cBus, InterfaceManager); // Initialize TMP100 with the current I²C device
+                    tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
+                    tmp100.Config(TMP100.AddressIndex.TMP100_RF_CHIP); // Configure the RF TMP100
+
+                    IO_Exp = new PCAL6416A();
+                    IO_Exp.Init(i2cBus);
+                    IO_Exp.ConfigurePort(PCAL6416A.CONFIG_PORT_0, 0x00); // 00000000b: pins 0-7 outputs
+                    IO_Exp.ConfigurePort(PCAL6416A.CONFIG_PORT_1, 0x78); // 01111000b: pins 0-2 outputs, pins 3-6 inputs, pin 7 output
+                    //IO_Exp.Init(i2cBus, InterfaceManager);
+
+                    hmc8414 = new HMC8414();
+                    hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                     // GUI elements enabled/disabled
                     SetControlsEnabled(true);                    
@@ -813,14 +830,15 @@ namespace BringUp_Control
             else if (selectedTab == tabAD9175)
             {
                 //todo: check if the DAC is initialized and if not - initialize it
-                //i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                
                 //IO_Exp.SetPinState();
                 ad9175 = new AD9175_DAC();
                 ftDev = InterfaceManager.GetSpi();
-                ad9175.Init(ftDev);
+                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                ad9175.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
                 //DAC0_freq = txLineData.nco_dac0 * 1e9;
                 //DAC1_freq = txLineData.nco_dac1 * 1e9;
-                ad9175.Init(ftDev);
+                //ad9175.Init(ftDev);
 
                 comboRegisters9175.Focus();
             }
@@ -831,8 +849,9 @@ namespace BringUp_Control
                 {
                     Control_Init_PLL(PLL_Init_Flag);
                     ad4368 = new AD4368_PLL();
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+                    ftDev = InterfaceManager.GetSpi();
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    ad4368.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize AD4368 with the current FTDI device
 
 
                     DT4368 = ad4368.InitDataTable();
@@ -844,8 +863,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    ad4368.Init(ftDev); // Initialize AD4368 with the current FTDI device
+                    //ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    ad4368.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize AD4368 with the current FTDI device
                 }
 
 
@@ -859,8 +878,8 @@ namespace BringUp_Control
 
                 i2cBus = InterfaceManager.GetI2c();
 
-                IO_Exp = new PCAL6416A();
-                IO_Exp.Init(i2cBus);
+                //IO_Exp = new PCAL6416A();
+                //IO_Exp.Init(i2cBus);
 
                 MUX = new PCA9547A();
                 MUX.Init(i2cBus); // Initialize MUX with the current I²C device
@@ -944,15 +963,15 @@ namespace BringUp_Control
 
         private void Cmd_Init_All_Click(object sender, EventArgs e)
         {
-            IO_Exp = new PCAL6416A();
-            IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+            //IO_Exp = new PCAL6416A();
+            //IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
             MUX = new PCA9547A();
             MUX.Init(i2cBus); // Initialize MUX with the current I²C device
             MUX.Set_Mux_Channel(1, 5);
 
 
-            tmp100 = new TMP100();
-            tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
+            //tmp100 = new TMP100();
+            //tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
             tmp100.BultInTest(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Self test the FTDI TMP100
             tmp100.BultInTest(TMP100.AddressIndex.TMP100_RF_CHIP); // Self test the RF TMP100
             tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
@@ -1054,74 +1073,27 @@ namespace BringUp_Control
 
         private void Cmd_FT_Temp_Read_Click(object sender, EventArgs e)
         {
-            if (i2cBus == null)
+            try
             {
-                //MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //return;
-                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
-                if (tmp100 == null)
-                {
-                    tmp100 = new TMP100();
-                    tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
-                    tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
-                }
+                double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
+                label3.Text = $"{tempval:F1} °C"; // Format the temperature
+                LogStatus("Temp FT: " + label3.Text);
 
-                try
-                {
-                    double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
-                    label3.Text = $"{tempval:F1} °C"; // Format the temperature
-                    LogStatus("Temp FT: " + label3.Text);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
             }
-            else
+            catch (Exception ex)
             {
-                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
-                if (tmp100 == null)
-                {
-                    tmp100 = new TMP100();
-                    tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
-                    tmp100.Config(TMP100.AddressIndex.TMP100_FTDI_CHIP); // Configure the FTDI TMP100
-                }
-
-                try
-                {
-                    double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_FTDI_CHIP);
-                    label3.Text = $"{tempval:F1} °C"; // Format the temperature
-                    LogStatus("Temp FT: " + label3.Text);
-                    
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }           
-
+                MessageBox.Show($"Failed to read temperature: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void Cmd_RF_Temp_Read_Click(object sender, EventArgs e)
         {
-            if (i2cBus == null)
-            {
-                MessageBox.Show("I2C bus is not initialized. Please check the FTDI connection.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (tmp100 == null)
-            {
-                tmp100 = new TMP100();
-                tmp100.Init(i2cBus); // Initialize TMP100 with the current I²C device
-                tmp100.Config(TMP100.AddressIndex.TMP100_RF_CHIP); // Configure the RF TMP100
-            }
-
             try
             {
                 double tempval = tmp100.ReadTemperature(TMP100.AddressIndex.TMP100_RF_CHIP);
                 label5.Text = $"{tempval:F1} °C"; // Format the temperature
-                LogStatus("Temp RF: "+ label5.Text);
+                LogStatus("Temp RF: " + label5.Text);
+
             }
             catch (Exception ex)
             {
@@ -1515,53 +1487,19 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                att1_value = ToByte((float)numericATT1.Value);
-                att2_value = ToByte((float)numericATT2.Value);
-                att3_value = ToByte((float)numericATT3.Value);         
-                
-                if (i2cBus != null)
+                att1_value = (float)numericATT1.Value;
+                att2_value = (float)numericATT2.Value;
+                att3_value = (float)numericATT3.Value;
+
+                if ((ftDev != null) && (i2cBus != null) && (IO_Exp != null) && (InterfaceManager != null))
                 {
-                    // CHIP select of HMC1119 LE1
-                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
-                    IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
-                    IO_Exp.SetPinState(0x04, false);
-
-                    // Write values to SERIN lines of HMC1119
+                    // Instantiate HMC1119 object for further operations
                     hmc1119 = new HMC1119();
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att1_value); 
-
-                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
-                    IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x04, true); // Disable chip select for HMC1119
-
-                    // CHIP select of HMC1119 LE2
-                    IO_Exp.SetPinState(0x08, false);
-
-                    // Write values to SERIN lines of HMC1119                    
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att2_value); 
-
-                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
-                    IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x08, true); // Disable chip select for HMC1119
-
-                    //CHIP select of HMC1119 LE3
-                    IO_Exp.SetPinState(0x10, false);
-
-                    // Write values to SERIN lines of HMC1119                    
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att3_value); 
-
-                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
-                    IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x10, true); // Disable chip select for HMC1119
-
+                    hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP1, att1_value);
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP2, att2_value);
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP3, att3_value);
                 }
-
             }
         }
 
@@ -1575,7 +1513,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att1_value = ToByte((float)numericATT1.Value);
+                    //att1_value = ToByte((float)numericATT1.Value);
+                    att1_value = (float)numericATT1.Value;
                 }
             }
         }
@@ -1590,7 +1529,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att2_value = ToByte((float)numericATT2.Value);
+                    //att2_value = ToByte((float)numericATT2.Value);
+                    att2_value = (float)numericATT2.Value;
                 }
             }
         }
@@ -1605,7 +1545,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att1_value = ToByte((float)numericATT3.Value);
+                    //att1_value = ToByte((float)numericATT3.Value);
+                    att3_value = (float)numericATT3.Value;
                 }
             }
         }
@@ -1617,26 +1558,29 @@ namespace BringUp_Control
                 //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
                 //MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
                 
-                if (IO_Exp == null)
-                { 
-                    IO_Exp = new PCAL6416A();
-                    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
-                    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
-                }
+                //if (IO_Exp == null)
+                //{ 
+                //    IO_Exp = new PCAL6416A();
+                //    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+                //    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                //}
 
                 
                 if (checkAmp1.CheckState == CheckState.Checked)
                 {
                     txLineData.bypass1 = true; // BYPASS ON
                     checkAmp1.Text = "BYPASS MODE";
-                    IO_Exp.SetPinState(6, false); 
+                    //IO_Exp.SetPinState(6, false);
+                    
                 }
                 else
                 {
                     txLineData.bypass1 = false; // BYPASS OFF (AMP ON)
                     checkAmp1.Text = "AMP ON";
-                    IO_Exp.SetPinState(6, true);
+                    //IO_Exp.SetPinState(6, true);
                 }
+
+                hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1); // Set HMC8414 Chip 1 to the desired Bypass mode
 
                 LogStatus($"Amplifier 1 Status: {checkAmp1.Text}");
             }
@@ -1650,25 +1594,27 @@ namespace BringUp_Control
                 //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
                 // MUX.Set_Mux_Channel(0, 7);
                 
-                if (IO_Exp == null)
-                {
-                    IO_Exp = new PCAL6416A();
-                    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
-                    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
-                }
+                //if (IO_Exp == null)
+                //{
+                //    IO_Exp = new PCAL6416A();
+                //    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
+                //    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
+                //}
 
                 if (checkAmp2.CheckState == CheckState.Checked)
                 {
                     txLineData.bypass2 = true; // BYPASS ON
                     checkAmp2.Text = "BYPASS MODE";
-                    IO_Exp.SetPinState(7, false);
+                    //IO_Exp.SetPinState(7, false);
                 }
                 else
                 {
                     txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
                     checkAmp2.Text = "AMP ON";
-                    IO_Exp.SetPinState(7, true);
+                    //IO_Exp.SetPinState(7, true);
                 }
+
+                hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2); // Set HMC8414 Chip 2 to the desired Bypass mode
 
                 LogStatus($"Amplifier 2 Status: { checkAmp2.Text}");
             }

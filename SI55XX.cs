@@ -20,10 +20,25 @@ namespace BringUp_Control
         private const byte CMD_TEMPERATURE_READOUT = 0x19;
 
         private SpiDriver _spi;
+        private i2cDriver _i2c;
+        private PCAL6416A _ioExp;
+        private FtdiInterfaceManager _interfaceManager;
 
-        public void Init(SpiDriver spi)
+        public void Init(SpiDriver spi, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
             _spi = spi ?? throw new ArgumentNullException(nameof(spi), "SPI driver cannot be null.");
+            _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
+            _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
+            // Set the IO Expander TMUX1104 address pins to 0x03 to allow the FTDI CS to reach the Si5518
+            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+            // Now direct CS from FTDI to the Si5518 is enabled and ready for SPI communication
+            _spi = _interfaceManager.GetSpi(); // Get current SPI interface
         }
 
 
