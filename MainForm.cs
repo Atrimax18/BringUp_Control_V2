@@ -76,11 +76,7 @@ namespace BringUp_Control
         private byte att3_value = 0x00;
         
 
-        private double DAC0_freq;
-        private double DAC1_freq;
-
-        byte[] DAC0;
-        byte[] DAC1;
+        
 
         private string fpga_address = string.Empty; // FPGA address for register access (string)
         private string fpga_data = string.Empty;    // FPGA data for register access (string)
@@ -185,9 +181,6 @@ namespace BringUp_Control
                             LogStatus("DAC 9175 INI file not found or invalid path.");
                             dac_ini = string.Empty; // Reset if not valid
                         }
-
-
-
                     }
                 }
                 catch (Exception ex)
@@ -196,8 +189,7 @@ namespace BringUp_Control
                     MessageBox.Show(ex.Message, "Info");
                 }
             }  
-        }        
-
+        }
 
         private void CheckFTDIConnection()
         {
