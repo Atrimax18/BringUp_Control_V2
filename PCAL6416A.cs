@@ -151,7 +151,7 @@ namespace BringUp_Control
 
             Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
         }
-
+        /*
         public void SetPinStateFromIndex(PinIndex idx, bool value)
         {
             byte outputRegister = idx < PinIndex.CTRL_DAC_RSTn ? OUTPUT_PORT_0 : OUTPUT_PORT_1;
@@ -175,7 +175,7 @@ namespace BringUp_Control
             WriteByte(outputRegister, outputValue);
 
             Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
-        }
+        }*/
 
         public void SetPinsFromValue(byte value, bool status)
         {

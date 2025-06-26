@@ -10,6 +10,10 @@ namespace BringUp_Control
 {
     internal class HMC1119 : IDisposable
     {
+        private SpiDriver _spi;
+        private i2cDriver _i2c;
+        private PCAL6416A _ioExp;
+        private FtdiInterfaceManager _interfaceManager;
         public enum ChipIndex
         {
             HMC1119_CHIP1 = 0,
@@ -17,7 +21,7 @@ namespace BringUp_Control
             HMC1119_CHIP3 = 2
         }
 
-        private SpiDriver _ft;
+        
 
         public void Init(SpiDriver spi, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
@@ -35,23 +39,39 @@ namespace BringUp_Control
             }
             else
             {
-                throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
+                _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+                _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+                                   // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
+                _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+
+                if (idx == ChipIndex.HMC1119_CHIP1)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+                }
+                else if (idx == ChipIndex.HMC1119_CHIP2)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, false);
+                }
+                else if (idx == ChipIndex.HMC1119_CHIP3)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, false);
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
+                }
+                
+
+                byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
+                WriteByte(txdata);
+                
             }
-
-            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
-            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
-            // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
-            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
-            // Select the chip to communicate with
-            _ioExp.SetPinStateFromIndex(_chipSelectPin, false);
-
-            byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
-            WriteByte(txdata);
+            
         }
 
         public void WriteByte(byte data)
         {
-            if (_ft == null)
+            if (_spi == null)
             {
                 throw new InvalidOperationException("HMC1119 is not initialized. Call Init() before using this method.");
             }
@@ -59,7 +79,7 @@ namespace BringUp_Control
 
             byte[] command = { data };
 
-            _ft.Write(command);
+            _spi.Write(command);
         }
 
         public void Dispose()

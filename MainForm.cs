@@ -67,8 +67,7 @@ namespace BringUp_Control
             public float att1;
             public float att2;
             public float att3;
-            public double nco_dac0;
-            public double nco_dac1;
+            
         }
 
         //private byte att1_value = 0x00;
@@ -1489,17 +1488,17 @@ namespace BringUp_Control
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
                     IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
                     // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
-                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+                    //IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
                     //IO_Exp.SetPinState(0x04, false);
                     // Enable chip select of HMC1119 chip 1
-                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+                    //IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
 
                     // Instantiate HMC1119 object for further operations
                     hmc1119 = new HMC1119();
 
                     // Write values to SERIN lines of HMC1119
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
+                    hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP1, att1_value);
 
                     i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
@@ -1512,7 +1511,7 @@ namespace BringUp_Control
 
                     // Write values to SERIN lines of HMC1119                    
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
+                    hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP2, att2_value);
 
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
@@ -1525,7 +1524,7 @@ namespace BringUp_Control
 
                     // Write values to SERIN lines of HMC1119                    
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
+                    hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP3, att3_value);
 
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
