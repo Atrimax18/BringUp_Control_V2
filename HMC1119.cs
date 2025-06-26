@@ -60,9 +60,10 @@ namespace BringUp_Control
                 {
                     throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
                 }
-                
 
-                byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
+                int code = (int)Math.Round(atten / 0.25, MidpointRounding.AwayFromZero);
+                
+                byte txdata = (byte)(code & 0x7F); // Ensure we only use the lower 6 bits                
                 WriteByte(txdata);
                 
             }
