@@ -24,6 +24,12 @@ namespace BringUp_Control
         private PCAL6416A _ioExp;
         private FtdiInterfaceManager _interfaceManager;
 
+        private double DAC_freq;
+        
+
+        byte[] DAC_Data;
+        
+
         public enum OperationType
         {
             Read,
@@ -211,11 +217,13 @@ namespace BringUp_Control
                         if (ProcessMainDacDatapathDac0(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC0 fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC0:
+                        if (ProcessMainDac_DDCM_DAC0(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DDCM_DAC0  fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DAC1:
                         if (ProcessMainDacDatapathDac1(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC1 fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC1:
+                        if (ProcessMainDac_DDCM_DAC1(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DDCM_DAC1  fails, return -1
                         break;
                     case FunctionGroup.JESD204_SERDES:
                         if (ProcessJESD204Serdes(cmd) != 0) return -1;
@@ -300,6 +308,10 @@ namespace BringUp_Control
         private int ProcessMainDacDatapathDac0(Command cmd) => ProcessGeneric(cmd);
         //MAINDATAPATH_DAC1 
         private int ProcessMainDacDatapathDac1(Command cmd) => ProcessGeneric(cmd);
+        //MAINDAC_DATAPATH_DDCM_DAC0
+        private int ProcessMainDac_DDCM_DAC0(Command cmd) => ProcessSpecific(cmd);
+        //MAINDAC_DATAPATH_DDCM_DAC1
+        private int ProcessMainDac_DDCM_DAC1(Command cmd) => ProcessSpecific(cmd);
         //TRANSPORT_LAYER
         private int ProcessTransportLayer(Command cmd) => ProcessGeneric(cmd);
         //JESD204_SERDES
@@ -327,7 +339,7 @@ namespace BringUp_Control
                 case OperationType.Sleep:
                     int timeval = cmd.Data;
                     Console.WriteLine($"Sleeping for {timeval} milisecond(s)...");
-                    Thread.Sleep(timeval * 100);
+                    Thread.Sleep(timeval); //miliseconds
                     break;
 
                 case OperationType.Skip:
@@ -335,6 +347,26 @@ namespace BringUp_Control
                     break;
             }
             return 0;
+        }
+
+        private int ProcessSpecific(Command cmd)
+        {
+            if ((int)cmd.Data == 0) return -1;
+
+            DAC_freq = (int)cmd.Data * 1e9; 
+            DAC_Data = GetBytes48BitBigEndian(CalculateDdsmFtw(DAC_freq));   //2  or 3 GHz
+            
+            switch (cmd.OpType)
+            {
+                case OperationType.Write:
+                    MainDAC_DDCM_Setup(DAC_Data);
+                    break;
+
+                case OperationType.Skip:
+                    // do nothing
+                    break;
+            }
+            return 0;            
         }
 
         #endregion  
@@ -426,78 +458,13 @@ namespace BringUp_Control
         }
 
         // Table 56: Main datapath and Main NCO configuration sequence - TEST IT!!!
-        public void MainDAC_Datapath_Setup(byte[] DDCM_DAC0, byte[] DDCM_DAC1)
+        public void MainDAC_DDCM_Setup(byte[] DDCM_DAC0)
         {
-
-            //DAC 0
-            WriteRegister(0x0008, 0x40); // SELECT DAC0
-            WriteRegister(0x0112, 0x38); // Enable NCO for selected channels in paging Register 0x008
-
-            //WriteRegister(0x0114, 0xBC); // Write DDSM_FTW[7:0]                     2B C2 BC 2B C2 BC 
-            //WriteRegister(0x0115, 0xC2); // Write DDSM_FTW[15:8]                    41 A4 1A 41 A4 1A
-            //WriteRegister(0x0116, ); // Write DDSM_FTW[23:16]
-            //WriteRegister(0x0117, 0xBC); // Write DDSM_FTW[31:24]
-            //WriteRegister(0x0118, 0xC2); // Write DDSM_FTW[39:32]
-            //WriteRegister(0x0119, 0x2B); // Write DDSM_FTW[47:40]
-
             for (ushort i = 0x0114; i <= 0x0119; i++)
             {
-                WriteRegister(i, DDCM_DAC0[0x0119-i]);
-                //MainForm.Instance?.LogStatus($"DDCM DAC0 register 0x{i:X4} received value 0x{DDCM_DAC0[0x0119 - i]:X2}");
+                WriteRegister(i, DDCM_DAC0[0x0119-i]);               
                 
-            }
-            
-            WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]
-            WriteRegister(0x011D, 0x00); // Write DDSM_NCO_PHASE_OFFSET[15:8]
-            
-            WriteRegister(0x0124, 0x00); // Write DDSM_ACC_MODULUS[7:0]
-            WriteRegister(0x0125, 0x00); // Write DDSM_ACC_MODULUS[15:8]
-            WriteRegister(0x0126, 0x00); // Write DDSM_ACC_MODULUS[23:16]
-            WriteRegister(0x0127, 0x00); // Write DDSM_ACC_MODULUS[31:24]
-            WriteRegister(0x0128, 0x00); // Write DDSM_ACC_MODULUS[39:32]
-            WriteRegister(0x0129, 0x00); // Write DDSM_ACC_MODULUS[47:40]
-            
-            WriteRegister(0x012A, 0x00); // Write DDSM_ACC_DELTA[7:0]
-            WriteRegister(0x012B, 0x00); // Write DDSM_ACC_DELTA[15:8]
-            WriteRegister(0x012C, 0x00); // Write DDSM_ACC_DELTA[23:16]
-            WriteRegister(0x012D, 0x00); // Write DDSM_ACC_DELTA[31:24]
-            WriteRegister(0x012E, 0x00); // Write DDSM_ACC_DELTA[39:32]
-            WriteRegister(0x012F, 0x00); // Write DDSM_ACC_DELTA[47:40]
-            WriteRegister(0x0113, 0x01); // Update all NCO phase and FTW words
-
-            //DAC 1
-            WriteRegister(0x0008, 0x80); // SELECT DAC1
-            WriteRegister(0x0112, 0x38); // Enable NCO for selected channels in paging Register 0x008
-            //WriteRegister(0x0114, 0x1A); // Write DDSM_FTW[7:0]
-            //WriteRegister(0x0115, 0xA4); // Write DDSM_FTW[15:8]
-            //WriteRegister(0x0116, 0x41); // Write DDSM_FTW[23:16]
-            //WriteRegister(0x0117, 0x1A); // Write DDSM_FTW[31:24]
-            //WriteRegister(0x0118, 0xA4); // Write DDSM_FTW[39:32]
-            //WriteRegister(0x0119, 0x41); // Write DDSM_FTW[47:40]
-
-            for (ushort i = 0x0114; i <= 0x0119; i++)
-            {
-                WriteRegister(i, DDCM_DAC1[0x0119 - i]);
-                //MainForm.Instance?.LogStatus($"DDCM DAC1 register 0x{i:X4} received value 0x{DDCM_DAC1[0x0119 - i]:X2}");
-            }
-
-            WriteRegister(0x011C, 0x00); // Write DDSM_NCO_PHASE_OFFSET[7:0]
-            WriteRegister(0x011D, 0x00); // Write DDSM_NCO_PHASE_OFFSET[15:8]
-
-            WriteRegister(0x0124, 0x00); // Write DDSM_ACC_MODULUS[7:0]
-            WriteRegister(0x0125, 0x00); // Write DDSM_ACC_MODULUS[15:8]
-            WriteRegister(0x0126, 0x00); // Write DDSM_ACC_MODULUS[23:16]
-            WriteRegister(0x0127, 0x00); // Write DDSM_ACC_MODULUS[31:24]
-            WriteRegister(0x0128, 0x00); // Write DDSM_ACC_MODULUS[39:32]
-            WriteRegister(0x0129, 0x00); // Write DDSM_ACC_MODULUS[47:40]
-
-            WriteRegister(0x012A, 0x00); // Write DDSM_ACC_DELTA[7:0]
-            WriteRegister(0x012B, 0x00); // Write DDSM_ACC_DELTA[15:8]
-            WriteRegister(0x012C, 0x00); // Write DDSM_ACC_DELTA[23:16]
-            WriteRegister(0x012D, 0x00); // Write DDSM_ACC_DELTA[31:24]
-            WriteRegister(0x012E, 0x00); // Write DDSM_ACC_DELTA[39:32]
-            WriteRegister(0x012F, 0x00); // Write DDSM_ACC_DELTA[47:40]
-            WriteRegister(0x0113, 0x01); // Update all NCO phase and FTW words
+            }           
         }
 
         // Table 57 : JESD204B SERDES configuration sequence

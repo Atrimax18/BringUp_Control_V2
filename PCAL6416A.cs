@@ -152,6 +152,31 @@ namespace BringUp_Control
             Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
         }
 
+        public void SetPinStateFromIndex(PinIndex idx, bool value)
+        {
+            byte outputRegister = idx < PinIndex.CTRL_DAC_RSTn ? OUTPUT_PORT_0 : OUTPUT_PORT_1;
+            byte pin = (byte)idx; // Convert enum to byte
+            byte pinMask = (byte)(1 << (pin % 8));
+
+            // Read the current output state
+            ReadByte(outputRegister, out byte outputValue);
+
+            // Update the output state for the specified pin
+            if (value)
+            {
+                outputValue |= pinMask; // Set pin high
+            }
+            else
+            {
+                outputValue &= (byte)~pinMask; // Set pin low
+            }
+
+            // Write the updated output state back to the register
+            WriteByte(outputRegister, outputValue);
+
+            Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
+        }
+
         public void SetPinsFromValue(byte value, bool status)
         {
             byte outputRegister = OUTPUT_PORT_0;

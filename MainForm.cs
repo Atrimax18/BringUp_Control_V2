@@ -79,11 +79,7 @@ namespace BringUp_Control
         private float att3_value = 0.00f;
 
 
-        private double DAC0_freq;
-        private double DAC1_freq;
-
-        byte[] DAC0;
-        byte[] DAC1;
+        
 
         private string fpga_address = string.Empty; // FPGA address for register access (string)
         private string fpga_data = string.Empty;    // FPGA data for register access (string)
@@ -188,9 +184,6 @@ namespace BringUp_Control
                             LogStatus("DAC 9175 INI file not found or invalid path.");
                             dac_ini = string.Empty; // Reset if not valid
                         }
-
-
-
                     }
                 }
                 catch (Exception ex)
@@ -199,8 +192,7 @@ namespace BringUp_Control
                     MessageBox.Show(ex.Message, "Info");
                 }
             }  
-        }        
-
+        }
 
         private void CheckFTDIConnection()
         {
@@ -1491,14 +1483,55 @@ namespace BringUp_Control
                 att2_value = (float)numericATT2.Value;
                 att3_value = (float)numericATT3.Value;
 
-                if ((ftDev != null) && (i2cBus != null) && (IO_Exp != null) && (InterfaceManager != null))
+                if (i2cBus != null)
                 {
+                    // Initialize IO Expander if not already initialized
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
+                    IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
+                    // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+                    //IO_Exp.SetPinState(0x04, false);
+                    // Enable chip select of HMC1119 chip 1
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+
                     // Instantiate HMC1119 object for further operations
                     hmc1119 = new HMC1119();
-                    hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
+
+                    // Write values to SERIN lines of HMC1119
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP1, att1_value);
+
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    IO_Exp.Init(i2cBus);
+                    // Latch the attenuation value to the HMC1119 chip 1
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, true);
+
+                    // Enable chip select of HMC1119 chip 2
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, false);
+
+                    // Write values to SERIN lines of HMC1119                    
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP2, att2_value);
+
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
+                    IO_Exp.Init(i2cBus);
+                    // Latch the attenuation value to the HMC1119 chip 2
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, true);
+
+                    // Enable chip select of HMC1119 chip 3
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, false);
+
+                    // Write values to SERIN lines of HMC1119                    
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP3, att3_value);
+
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
+                    IO_Exp.Init(i2cBus);
+                    // Latch the attenuation value to the HMC1119 chip 3
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, true);
                 }
             }
         }

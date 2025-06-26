@@ -17,11 +17,7 @@ namespace BringUp_Control
             HMC1119_CHIP3 = 2
         }
 
-        private SpiDriver _spi;
-        private i2cDriver _i2c;
-        private PCAL6416A _ioExp;
-        private FtdiInterfaceManager _interfaceManager;
-        private PCAL6416A.PinIndex _chipSelectPin;
+        private SpiDriver _ft;
 
         public void Init(SpiDriver spi, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
@@ -37,19 +33,6 @@ namespace BringUp_Control
             {
                 throw new ArgumentOutOfRangeException(nameof(atten));
             }
-
-            if(idx == ChipIndex.HMC1119_CHIP1)
-            {
-                _chipSelectPin = PCAL6416A.PinIndex.CTRL_HMC1119_LE1;
-            }
-            else if (idx == ChipIndex.HMC1119_CHIP2)
-            {
-                _chipSelectPin = PCAL6416A.PinIndex.CTRL_HMC1119_LE2;
-            }
-            else if (idx == ChipIndex.HMC1119_CHIP3)
-            {
-                _chipSelectPin = PCAL6416A.PinIndex.CTRL_HMC1119_LE3;
-            }
             else
             {
                 throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
@@ -62,21 +45,13 @@ namespace BringUp_Control
             // Select the chip to communicate with
             _ioExp.SetPinStateFromIndex(_chipSelectPin, false);
 
-            _spi = _interfaceManager.GetSpi(); // Get current SPI interface
-            // Write values to SERIN lines of HMC1119
-
             byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
             WriteByte(txdata);
-
-            _i2c = _interfaceManager.GetI2c(); // Get back again the current I2C interface
-            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
-            // Latch the attenuation value to the HMC1119
-            _ioExp.SetPinStateFromIndex(_chipSelectPin, true);
         }
 
         public void WriteByte(byte data)
         {
-            if (_spi == null)
+            if (_ft == null)
             {
                 throw new InvalidOperationException("HMC1119 is not initialized. Call Init() before using this method.");
             }
@@ -84,7 +59,7 @@ namespace BringUp_Control
 
             byte[] command = { data };
 
-            _spi.Write(command);
+            _ft.Write(command);
         }
 
         public void Dispose()
