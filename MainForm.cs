@@ -71,10 +71,13 @@ namespace BringUp_Control
             public double nco_dac1;
         }
 
-        private byte att1_value = 0x00;
-        private byte att2_value = 0x00;
-        private byte att3_value = 0x00;
-        
+        //private byte att1_value = 0x00;
+        //private byte att2_value = 0x00;
+        //private byte att3_value = 0x00;
+        private float att1_value = 0.00f;
+        private float att2_value = 0.00f;
+        private float att3_value = 0.00f;
+
 
         
 
@@ -1507,51 +1510,59 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                att1_value = ToByte((float)numericATT1.Value);
-                att2_value = ToByte((float)numericATT2.Value);
-                att3_value = ToByte((float)numericATT3.Value);         
-                
+                att1_value = (float)numericATT1.Value;
+                att2_value = (float)numericATT2.Value;
+                att3_value = (float)numericATT3.Value;
+
                 if (i2cBus != null)
                 {
-                    // CHIP select of HMC1119 LE1
+                    // Initialize IO Expander if not already initialized
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
                     IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
-                    IO_Exp.SetPinState(0x04, false);
+                    // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+                    //IO_Exp.SetPinState(0x04, false);
+                    // Enable chip select of HMC1119 chip 1
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+
+                    // Instantiate HMC1119 object for further operations
+                    hmc1119 = new HMC1119();
 
                     // Write values to SERIN lines of HMC1119
-                    hmc1119 = new HMC1119();
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                     hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att1_value); 
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP1, att1_value);
 
                     i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                     IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x04, true); // Disable chip select for HMC1119
+                    // Latch the attenuation value to the HMC1119 chip 1
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, true);
 
-                    // CHIP select of HMC1119 LE2
-                    IO_Exp.SetPinState(0x08, false);
-
-                    // Write values to SERIN lines of HMC1119                    
-                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
-                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att2_value); 
-
-                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
-                    IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x08, true); // Disable chip select for HMC1119
-
-                    //CHIP select of HMC1119 LE3
-                    IO_Exp.SetPinState(0x10, false);
+                    // Enable chip select of HMC1119 chip 2
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, false);
 
                     // Write values to SERIN lines of HMC1119                    
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                     hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
-                    hmc1119.WriteAttenuation(att3_value); 
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP2, att2_value);
 
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
                     IO_Exp.Init(i2cBus);
-                    IO_Exp.SetPinState(0x10, true); // Disable chip select for HMC1119
+                    // Latch the attenuation value to the HMC1119 chip 2
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, true);
 
+                    // Enable chip select of HMC1119 chip 3
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, false);
+
+                    // Write values to SERIN lines of HMC1119                    
+                    ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
+                    hmc1119.Init(ftDev); // Initialize HMC1119 with the current I2C device
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP3, att3_value);
+
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
+                    IO_Exp.Init(i2cBus);
+                    // Latch the attenuation value to the HMC1119 chip 3
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, true);
                 }
 
             }
@@ -1567,7 +1578,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att1_value = ToByte((float)numericATT1.Value);
+                    //att1_value = ToByte((float)numericATT1.Value);
+                    att1_value = (float)numericATT1.Value;
                 }
             }
         }
@@ -1582,7 +1594,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att2_value = ToByte((float)numericATT2.Value);
+                    //att2_value = ToByte((float)numericATT2.Value);
+                    att2_value = (float)numericATT2.Value;
                 }
             }
         }
@@ -1597,7 +1610,8 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    att1_value = ToByte((float)numericATT3.Value);
+                    //att1_value = ToByte((float)numericATT3.Value);
+                    att3_value = (float)numericATT3.Value;
                 }
             }
         }
