@@ -11,12 +11,12 @@ namespace BringUp_Control
     {
         //private const byte PCAL6416A_I2C_ADDRESS0 = 0x20; // Fixed I2C address
         private const byte PCAL6416A_I2C_ADDRESS = 0x21;
-        private const byte INPUT_PORT_0 = 0x00; // Input port 0 register
-        private const byte INPUT_PORT_1 = 0x01; // Input port 1 register
-        private const byte OUTPUT_PORT_0 = 0x02; // Output port 0 register
-        private const byte OUTPUT_PORT_1 = 0x03; // Output port 1 register
-        private const byte CONFIG_PORT_0 = 0x06; // Configuration port 0 register
-        private const byte CONFIG_PORT_1 = 0x07; // Configuration port 1 register
+        public const byte INPUT_PORT_0 = 0x00; // Input port 0 register
+        public const byte INPUT_PORT_1 = 0x01; // Input port 1 register
+        public const byte OUTPUT_PORT_0 = 0x02; // Output port 0 register
+        public const byte OUTPUT_PORT_1 = 0x03; // Output port 1 register
+        public const byte CONFIG_PORT_0 = 0x06; // Configuration port 0 register
+        public const byte CONFIG_PORT_1 = 0x07; // Configuration port 1 register
 
         
 
@@ -50,16 +50,20 @@ namespace BringUp_Control
         }
 
         private i2cDriver _ft;
+        //private FtdiInterfaceManager _interfaceManager;
 
         public void Init(i2cDriver ft)
         {
-            _ft = ft;
+            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            //_interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
         }
 
         public void ConfigurePin(byte pin, bool isOutput)
         {
             byte configRegister = pin < 8 ? CONFIG_PORT_0 : CONFIG_PORT_1;
             byte pinMask = (byte)(1 << (pin % 8));
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             // Read the current configuration
             ReadByte(configRegister, out byte configValue);
@@ -86,6 +90,8 @@ namespace BringUp_Control
                 throw new ArgumentOutOfRangeException(nameof(port), "Port must be 0 or 1.");
             }
 
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Write the port configuration to the register
             WriteByte(port, stateMask);
 
@@ -97,6 +103,35 @@ namespace BringUp_Control
         {
             byte outputRegister = pin < 8 ? OUTPUT_PORT_0 : OUTPUT_PORT_1;
             byte pinMask = (byte)(1 << (pin % 8));
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
+            // Read the current output state
+            ReadByte(outputRegister, out byte outputValue);
+
+            // Update the output state for the specified pin
+            if (value)
+            {
+                outputValue |= pinMask; // Set pin high
+            }
+            else
+            {
+                outputValue &= (byte)~pinMask; // Set pin low
+            }
+
+            // Write the updated output state back to the register
+            WriteByte(outputRegister, outputValue);
+
+            Console.WriteLine($"Pin {pin} set to {(value ? "High" : "Low")}.");
+        }
+
+        public void SetPinStateFromIndex(PinIndex idx, bool value)
+        {
+            byte outputRegister = idx < PinIndex.CTRL_DAC_RSTn ? OUTPUT_PORT_0 : OUTPUT_PORT_1;
+            byte pin = (byte)idx; // Convert enum to byte
+            byte pinMask = (byte)(1 << (pin % 8));
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             // Read the current output state
             ReadByte(outputRegister, out byte outputValue);
@@ -158,6 +193,8 @@ namespace BringUp_Control
                 writeValue = (byte)~value;
             }
 
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Write in one I2C command
             WriteByte(outputRegister, writeValue);
             
@@ -167,6 +204,25 @@ namespace BringUp_Control
         {
             byte inputRegister = pin < 8 ? INPUT_PORT_0 : INPUT_PORT_1;
             byte pinMask = (byte)(1 << (pin % 8));
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
+            // Read the current input state
+            ReadByte(inputRegister, out byte inputValue);
+
+            // Return the state of the specified pin
+            bool pinState = (inputValue & pinMask) != 0;
+            Console.WriteLine($"Pin {pin} is {(pinState ? "High" : "Low")}.");
+            return pinState;
+        }
+
+        public bool GetPinStateFromIndex(PinIndex idx)
+        {
+            byte inputRegister = idx < PinIndex.CTRL_DAC_RSTn ? INPUT_PORT_0 : INPUT_PORT_1;
+            byte pin = (byte)idx; // Convert enum to byte
+            byte pinMask = (byte)(1 << (pin % 8));
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             // Read the current input state
             ReadByte(inputRegister, out byte inputValue);
@@ -183,6 +239,9 @@ namespace BringUp_Control
             {
                 throw new ArgumentOutOfRangeException(nameof(port), "Port must be 0 or 1.");
             }
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Write the port state to the register
             WriteByte(port, stateMask);
             // Output the state mask as a HEX number
@@ -195,6 +254,9 @@ namespace BringUp_Control
             {
                 throw new ArgumentOutOfRangeException(nameof(port), "Port must be 0 or 1.");
             }
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Read the current input state
             ReadByte(port, out byte portValue);
             // Output the state mask as a HEX number
@@ -202,13 +264,15 @@ namespace BringUp_Control
             return portValue;
         }
 
-        public void SetMuxSpiPin(MuxSpiIndex muxSpiIndex, bool value)
+        public void SetMuxSpiPin(MuxSpiIndex muxSpiIndex)
         {
             // Ensure the index is within the valid range (0-3)
             if ((byte)muxSpiIndex > 3)
             {
                 throw new ArgumentOutOfRangeException(nameof(muxSpiIndex), "MuxSpiIndex must be between 0 and 3.");
             }
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             //First, enable the SPI mux
             SetPinState((byte)PinIndex.CTRL_SPI_EN, true);
@@ -274,6 +338,8 @@ namespace BringUp_Control
                 throw new Exception("IO CONFIG REGISTER must be 6 or 7");
             else
             {
+                //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
                 ReadByte((byte)IO_Register, out value);
 
                 if (value == 255)
@@ -285,6 +351,7 @@ namespace BringUp_Control
         // Run a simple LED chase test
         public void RunLedChase(int delayMs = 500)
         {
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
             // Turn ON LEDs one by one (active LOW: write 0 to turn ON)
             for (int i = 0; i < 8; i++)
             {
@@ -320,6 +387,9 @@ namespace BringUp_Control
             {
                 throw new ArgumentOutOfRangeException(nameof(chipselect), "Chip select must be between 0 and 7.");
             }
+
+            //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
+
             // Set the pin state for the specified chip select
             SetPinState(chipselect, OnOff);
         }

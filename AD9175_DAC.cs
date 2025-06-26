@@ -20,6 +20,9 @@ namespace BringUp_Control
     internal sealed class AD9175_DAC : IDisposable
     {
         private SpiDriver _ft;
+        private i2cDriver _i2c;
+        private PCAL6416A _ioExp;
+        private FtdiInterfaceManager _interfaceManager;
 
         private double DAC_freq;
         
@@ -73,9 +76,105 @@ namespace BringUp_Control
         List<string> regaddresslist9175 = new List<string>();
         DataTable dtAD9175 = new DataTable();
 
-        public void Init(SpiDriver ft)
+        public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
-            _ft = ft;            
+            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
+            _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
+
+            // Move this code below to any DAC usage method as needed
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
+            // Set the IO Expander TMUX1104 address pins to 0x00 to allow the FTDI CS to reach the AD9175
+            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_DAC);
+            // Now direct CS from FTDI to the AD9175 is enabled and ready for SPI communication
+
+            _ft = _interfaceManager.GetSpi(); // Get current SPI interface
+            //... do some SPI communication with the AD7091
+        }
+
+        public void SetHwResetState(bool state)
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the DAC reset pin state
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, state);
+        }
+
+        public void SetTxEnable0(bool tx0State)
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the DAC TX enable pin state
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN0, tx0State);
+        }
+
+        public void SetTxEnable1(bool tx1State)
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the DAC TX enable pin state
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN1, tx1State);
+        }
+
+        public void SetTxEnableBoth(bool tx0State, bool tx1State)
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set both DAC TX enable pins state
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN0, tx0State);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN1, tx1State);
+        }
+
+        public bool GetIrq0State()
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            bool irq0 = _ioExp.GetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_IRQn0);
+
+            return irq0; // Return the state of the IRQ0 pin
+        }
+
+        public bool GetIrq1State()
+        {
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            bool irq1 = _ioExp.GetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_IRQn1);
+
+            return irq1; // Return the state of the IRQ1 pin
         }
 
         public void DAC9175_InitEngine(string csvPath)

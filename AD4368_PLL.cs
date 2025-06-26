@@ -17,6 +17,9 @@ namespace BringUp_Control
     {
 
         private SpiDriver _ft;
+        private i2cDriver _i2c;
+        private PCAL6416A _ioExp;
+        private FtdiInterfaceManager _interfaceManager;
         //private readonly byte _cs;   // CS pin on FT4222H (0‑3)
 
         List<string> regaddresslist = new List<string>();
@@ -24,10 +27,40 @@ namespace BringUp_Control
 
         
 
-        public void Init(SpiDriver ft)
+        public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
-            _ft = ft;
+            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
+            _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
+            // Set the IO Expander TMUX1104 address pins to 0x01 to allow the FTDI CS to reach the AD4368
+            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+            // Now direct CS from FTDI to the AD4368 is enabled and ready for SPI communication
+            _ft = _interfaceManager.GetSpi(); // Get current SPI interface
             WriteRegister(0x0000, 0x18); // 4-wire SPI mode
+        }
+
+        public bool GetLockDetectState()
+        {
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            bool ldetect = _ioExp.GetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_PLL_LKDET);
+
+            return ldetect; // Return the state of the lock detect pin
+        }
+
+        public bool GetMuxoutState()
+        {
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            bool muxout = _ioExp.GetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_PLL_MUXOUT);
+
+            return muxout; // Return the state of the MUXOUT pin
         }
 
         public void WriteRegister(ushort reg, byte data)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FTD2XX_NET;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
@@ -18,9 +19,12 @@ namespace BringUp_Control
 
         private SpiDriver _ft;
 
-        public void Init(SpiDriver ft)
+        public void Init(SpiDriver spi, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
-            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            _spi = spi ?? throw new ArgumentNullException(nameof(spi));
+            _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
+            _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
         }
 
         public void SetAttenuation(ChipIndex idx, float atten)
@@ -29,6 +33,17 @@ namespace BringUp_Control
             {
                 throw new ArgumentOutOfRangeException(nameof(atten));
             }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+            // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+            // Select the chip to communicate with
+            _ioExp.SetPinStateFromIndex(_chipSelectPin, false);
 
             byte txdata = (byte)Math.Floor(atten * 4 + 0.5);
             WriteByte(txdata);
