@@ -100,7 +100,7 @@ namespace BringUp_Control
         PCAL6416A IO_Exp;
         HMC1119 hmc1119; // RF TX Line Up Attenuators
         HMC8414 hmc8414; // RF TX Line Up Amplifiers
-
+        SI55XX si5518; // Si5518 PLL
         PCA9547A MUX; // I2C MUX SNOW EVB Board
         AD7091 ad7091; // ADC for RF Power measurement
 
@@ -279,7 +279,8 @@ namespace BringUp_Control
                     ad7091?.Dispose();
                     hmc1119?.Dispose();
                     tmp100?.Dispose();
-                                        
+                    si5518?.Dispose();
+
                     //  *************************** GPIO INIT DRIVER 2 ***********************************************
                     gpio_control = new GpioDriver(_gpioLocId);                    
                     gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface                    
@@ -373,6 +374,7 @@ namespace BringUp_Control
             fpga?.Dispose();
             IO_Exp?.Dispose(); 
             MUX?.Dispose(); //snow evb
+            si5518?.Dispose();
 
             // 4) dispose the transports
             ftDev?.Dispose();          // SPI (interface-A)
@@ -852,6 +854,14 @@ namespace BringUp_Control
                     Cmd_ReadAll_AD4368.Enabled = true;
                     PLL_Init_Flag = false; // Reset the flag after initialization
                 }
+                else if (selectedTab == tabSi5518)
+                {
+                    si5518 = new SI55XX();
+                    ftDev = InterfaceManager.GetSpi();
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
+
+                }
                 else
                 {
                     //ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
@@ -881,6 +891,10 @@ namespace BringUp_Control
             else if (selectedTab == tabSi5518)
             {
                 // Initialize Si5518 if needed
+                si5518 = new SI55XX();
+                ftDev = InterfaceManager.GetSpi();
+                i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
 
             }
         }
@@ -1698,6 +1712,21 @@ namespace BringUp_Control
                     att3_value = ToByte((float)numericATT3.Value);  //integer value example 11.75 dB = 10 1111
                 }
             }
+        }
+
+        private void Cmd_Load_SI_FW_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Cmd_Import_SkyWorks_Click(object sender, EventArgs e)
+        {
+            string fullpath = si5518.LoadConfigFile();
+            string path = Path.GetDirectoryName(fullpath);
+            label27.Text = "User Conig: " + fullpath;
+            
+            label29.Text = "NVM FW: " + Path.GetFullPath(path) + "\\nvm_burn_fw.boot.bin";
+            label30.Text = "PROD FW: " + Path.GetFullPath(path) + "\\prod_fw.boot.bin"; ;
         }
     }
 }

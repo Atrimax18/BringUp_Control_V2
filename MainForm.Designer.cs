@@ -70,7 +70,6 @@
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
             this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
-            this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.tabRFLine = new System.Windows.Forms.TabPage();
             this.numericATT3 = new System.Windows.Forms.NumericUpDown();
@@ -135,6 +134,9 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Cmd_Load_SI_FW = new System.Windows.Forms.Button();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label30 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -573,9 +575,11 @@
             // 
             // tabSi5518
             // 
+            this.tabSi5518.Controls.Add(this.label30);
+            this.tabSi5518.Controls.Add(this.label29);
+            this.tabSi5518.Controls.Add(this.Cmd_Load_SI_FW);
             this.tabSi5518.Controls.Add(this.Cmd_Export_SkyWorks);
             this.tabSi5518.Controls.Add(this.Cmd_Import_SkyWorks);
-            this.tabSi5518.Controls.Add(this.label28);
             this.tabSi5518.Controls.Add(this.label27);
             this.tabSi5518.Location = new System.Drawing.Point(4, 25);
             this.tabSi5518.Name = "tabSi5518";
@@ -586,6 +590,7 @@
             // 
             // Cmd_Export_SkyWorks
             // 
+            this.Cmd_Export_SkyWorks.Enabled = false;
             this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(717, 122);
             this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
             this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
@@ -601,24 +606,16 @@
             this.Cmd_Import_SkyWorks.TabIndex = 2;
             this.Cmd_Import_SkyWorks.Text = "Import File";
             this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(140, 21);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(66, 16);
-            this.label28.TabIndex = 1;
-            this.label28.Text = "filename";
+            this.Cmd_Import_SkyWorks.Click += new System.EventHandler(this.Cmd_Import_SkyWorks_Click);
             // 
             // label27
             // 
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(12, 21);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(122, 16);
+            this.label27.Size = new System.Drawing.Size(92, 16);
             this.label27.TabIndex = 0;
-            this.label27.Text = "User Config File:";
+            this.label27.Text = "User Config:";
             // 
             // tabRFLine
             // 
@@ -1287,6 +1284,34 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // Cmd_Load_SI_FW
+            // 
+            this.Cmd_Load_SI_FW.Location = new System.Drawing.Point(717, 198);
+            this.Cmd_Load_SI_FW.Name = "Cmd_Load_SI_FW";
+            this.Cmd_Load_SI_FW.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Load_SI_FW.TabIndex = 4;
+            this.Cmd_Load_SI_FW.Text = "Load FW";
+            this.Cmd_Load_SI_FW.UseVisualStyleBackColor = true;
+            this.Cmd_Load_SI_FW.Click += new System.EventHandler(this.Cmd_Load_SI_FW_Click);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(12, 72);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(71, 16);
+            this.label29.TabIndex = 5;
+            this.label29.Text = "NVM FW:";
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(12, 122);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(81, 16);
+            this.label30.TabIndex = 6;
+            this.label30.Text = "PROD FW:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1445,11 +1470,13 @@
         private System.Windows.Forms.NumericUpDown numericATT1;
         private System.Windows.Forms.NumericUpDown numericATT3;
         private System.Windows.Forms.NumericUpDown numericATT2;
-        private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Button Cmd_Export_SkyWorks;
         private System.Windows.Forms.Button Cmd_Import_SkyWorks;
         private System.Windows.Forms.Button Cmd_FPGA_Tests;
+        private System.Windows.Forms.Button Cmd_Load_SI_FW;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
     }
 }
 

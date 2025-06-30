@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BringUp_Control
 {
@@ -238,6 +239,34 @@ namespace BringUp_Control
                 }
 
                 return memoryStream.ToArray();
+            }
+        }
+
+
+        public string LoadConfigFile()
+        {
+            string filepath = string.Empty;
+            using (OpenFileDialog ftfile = new OpenFileDialog())
+            {
+                try
+                {
+                    ftfile.InitialDirectory = Directory.GetCurrentDirectory();
+                    ftfile.Filter = "Hex Files (*.hex)|*.hex|Bin Files (*.bin)|*.bin|All files (*.*)|*.*";
+                    ftfile.FilterIndex = 0;
+
+                    if (ftfile.ShowDialog() == DialogResult.OK)
+                    {                      
+
+                        filepath = ftfile.FileName;                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Warning");
+
+                }
+
+                return filepath;
             }
         }
     }
