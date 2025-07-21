@@ -58,7 +58,7 @@ namespace BringUp_Control
 
         private void SwitchToSpi()
         {
-            Dispose(); // Dispose previous resources if any
+            Dispose(); // Dispose previous resources if any            
             
             var status = Ft4222Native.FT_OpenEx(_locId, Ft4222Native.FtOpenType.OpenByLocation, out _ftHandle);
 
@@ -78,7 +78,7 @@ namespace BringUp_Control
         private void SwitchToI2c()
         {
             Dispose(); // Dispose previous resources if any
-            
+
             var status = Ft4222Native.FT_OpenEx(_locId, Ft4222Native.FtOpenType.OpenByLocation, out _ftHandle);
             if (status != FTDI.FT_STATUS.FT_OK || _ftHandle == IntPtr.Zero)
                 throw new IOException($"FT_OpenEx failed: {status}, Handle: {_ftHandle}");

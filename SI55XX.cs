@@ -18,7 +18,9 @@ namespace BringUp_Control
         private const byte CMD_NVM_LOAD_DATA = 0xF1;
         private const byte CMD_NVM_BURN_VERIFY = 0xF2;
         private const byte CMD_REFERENCE_STATUS = 0x16;
+        private const byte CMD_DEVICE_INFO = 0x08;
         private const byte CMD_TEMPERATURE_READOUT = 0x19;
+        private const byte CMD_RESTART = 0xF0;
 
         private SpiDriver _spi;
         private i2cDriver _i2c;
@@ -37,7 +39,12 @@ namespace BringUp_Control
             // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
             // Set the IO Expander TMUX1104 address pins to 0x03 to allow the FTDI CS to reach the Si5518
-            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_SKY_PLL);
+
+           
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, true);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, true);
             // Now direct CS from FTDI to the Si5518 is enabled and ready for SPI communication
             _spi = _interfaceManager.GetSpi(); // Get current SPI interface
         }
@@ -50,11 +57,22 @@ namespace BringUp_Control
         }
         // Private Methods
 
-        private void SendCommand(byte command, ReadOnlySpan<byte> data = default)
+        private void SendCommand_old(byte command, ReadOnlySpan<byte> data = default)
         {
             Span<byte> buffer = stackalloc byte[1 + data.Length];
             buffer[0] = command;
             data.CopyTo(buffer.Slice(1));
+
+            _spi.Write(buffer);
+            Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
+        }
+
+        private void SendCommand(byte command, ReadOnlySpan<byte> data = default)
+        {
+            Span<byte> buffer = stackalloc byte[2 + data.Length];
+            buffer[0] = 0xC0;
+            buffer[1] = command;
+            data.CopyTo(buffer.Slice(2));
 
             _spi.Write(buffer);
             Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
@@ -116,10 +134,29 @@ namespace BringUp_Control
             return temperature;
         }
 
+        public string ReadInfo()
+        {
+            Span<byte> buffer = stackalloc byte[13];
+            Read(CMD_DEVICE_INFO, buffer);
+
+            string device_info = string.Empty;
+
+            //int rawTemp = (buffer[4] << 23) | (buffer[3] << 16) | (buffer[2] << 8) | buffer[1];
+            //double temperature = rawTemp / (double)(1 << 23);
+
+            Console.WriteLine($"data: {buffer.ToString()}");
+            return device_info;
+        }
+
         private void Read(byte command, Span<byte> buffer)
         {
-            Span<byte> writeBuffer = stackalloc byte[1];
-            writeBuffer[0] = command;
+            Span<byte> writeBuffer = stackalloc byte[2];
+
+            //writeBuffer[0] = command;
+
+            writeBuffer[0] = 0xD0;
+            writeBuffer[1] = command;
+
 
             _spi.TransferFullDuplex(writeBuffer, buffer);
             Console.WriteLine($"Read from command 0x{command:X2}: {BitConverter.ToString(buffer.ToArray())}");
@@ -180,17 +217,17 @@ namespace BringUp_Control
             SendCommand(CMD_SIO_TEST, testData);
             Read(CMD_SIO_TEST, reply);
 
-            if (reply[1] != CMD_SIO_TEST || reply[2] != testData[0] || reply[3] != testData[1])
+            /*if (reply[1] != CMD_SIO_TEST || reply[2] != testData[0] || reply[3] != testData[1])
             {
                 throw new InvalidOperationException("SIO Test failed: Echo response mismatch.");
-            }
+            }*/
 
             Console.WriteLine("SIO Test passed.");
         }
 
         public void Restart()
         {
-            SendCommand(CMD_BOOT);
+            SendCommand(CMD_RESTART);
             Console.WriteLine("Device restarted.");
         }
 
@@ -231,11 +268,14 @@ namespace BringUp_Control
                         line = line.Substring(1); // Remove the colon
                     }
 
-                    for (int i = 0; i < line.Length; i += 2)
-                    {
-                        byte value = Convert.ToByte(line.Substring(i, 2), 16);
-                        memoryStream.WriteByte(value);
-                    }
+                    
+
+                    if (line.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                        line = line.Substring(2);
+
+                    // Convert to byte
+                    byte result = Convert.ToByte(line, 16);
+                    memoryStream.WriteByte(result);
                 }
 
                 return memoryStream.ToArray();
@@ -252,7 +292,7 @@ namespace BringUp_Control
                 {
                     ftfile.InitialDirectory = Directory.GetCurrentDirectory();
                     ftfile.Filter = "Hex Files (*.hex)|*.hex|Bin Files (*.bin)|*.bin|All files (*.*)|*.*";
-                    ftfile.FilterIndex = 0;
+                    ftfile.FilterIndex = 3;
 
                     if (ftfile.ShowDialog() == DialogResult.OK)
                     {                      

@@ -39,7 +39,12 @@ namespace BringUp_Control
             // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
             // Set the IO Expander TMUX1104 address pins to 0x01 to allow the FTDI CS to reach the AD4368
-            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+
+
+            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, true);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
             // Now direct CS from FTDI to the AD4368 is enabled and ready for SPI communication
             _ft = _interfaceManager.GetSpi(); // Get current SPI interface
             WriteRegister(0x0000, 0x18); // 4-wire SPI mode

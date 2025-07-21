@@ -89,7 +89,16 @@ namespace BringUp_Control
             // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
             // Set the IO Expander TMUX1104 address pins to 0x00 to allow the FTDI CS to reach the AD9175
-            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_DAC);
+            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_DAC);
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
+
+
+
+            //_ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
+
+
             // Now direct CS from FTDI to the AD9175 is enabled and ready for SPI communication
 
             _ft = _interfaceManager.GetSpi(); // Get current SPI interface
@@ -107,6 +116,33 @@ namespace BringUp_Control
             _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
             // Set the DAC reset pin state
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, state);
+            
+
+        }
+
+        public void IO_DAC_IO_Reset()
+        {
+
+            if (_ioExp == null || _i2c == null || _interfaceManager == null)
+            {
+                throw new InvalidOperationException("AD9175_DAC not initialized. Call Init() first.");
+            }
+
+            _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+            _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
+            Thread.Sleep(10);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, true);
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN0, true);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN1, true);
+
+            //return to ftdi handle
+            _ft = _interfaceManager.GetSpi(); // Get current SPI interface
+
         }
 
         public void SetTxEnable0(bool tx0State)
@@ -956,13 +992,15 @@ namespace BringUp_Control
         }
 
         // TODO - QA tests
-        public void Calibration_NCO(int dac_index, int NCO_Freq, int ToneAmp_PR)
+        public void Calibration_NCO(int dac_index, float NCO_Freq, int ToneAmp_PR)
         {
 
             // MAIN DAC PAGE for DAC0 or DAC1
             WriteRegister(0x0008, (byte)(1<<(6+dac_index))); // Optimized calibration setting register
 
             int DDSM_CAL_FTW = (int)(1.0*(NCO_Freq / 11.7) * Math.Pow(2, 32)); // Enabling Calibration NCO accumulator by setting Bit 2 to 1
+
+            
             WriteRegister(0x01E6, 1 << 2); // 
 
             for(int i = 0; i < 4; i++)
@@ -983,6 +1021,8 @@ namespace BringUp_Control
             {
                 WriteRegister((ushort)(0x0148 + i), (byte)((ToneValue >> (8 * i)) & 0xFF)); // Write Tone Value to DDSM_ACC_DELTA[7:0] to DDSM_ACC_DELTA[15:8]
             }
+
+            MainForm.Instance?.LogStatus($"NCO Calib DDSM_CAL:{DDSM_CAL_FTW}, Tone Value: {ToneValue} ");
         }
 
         public void Dispose()

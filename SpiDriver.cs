@@ -40,8 +40,8 @@ namespace BringUp_Control
             if (ftStatus != FTDI.FT_STATUS.FT_OK) // Updated to compare with FTDI.FT_STATUS.FT_OK
                 throw new InvalidOperationException($"FT_OpenEx failed: {ftStatus}");
 
-            
-            byte csPol = csActiveHigh;// (byte)(csActiveHigh ? 1 : 0);
+
+            byte csPol = 0x00; //   csActiveHigh;// (byte)(csActiveHigh ? 1 : 0);
 
             Check(Ft4222Native.FT4222_SPIMaster_Init(_ftHandle, _spiMode, _clkDiv, _cpol, _cpha, csPol));
         }

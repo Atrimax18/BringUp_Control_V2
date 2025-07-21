@@ -42,6 +42,8 @@ namespace BringUp_Control
         public System.Timers.Timer _usbDebounceTimer;
 
 
+        string linevaluetx3 = string.Empty;
+
         Ft4222Native FTDriver = new Ft4222Native(); 
         FtdiInterfaceManager InterfaceManager; // FTDI SPI interface manager
 
@@ -104,6 +106,11 @@ namespace BringUp_Control
         PCA9547A MUX; // I2C MUX SNOW EVB Board
         AD7091 ad7091; // ADC for RF Power measurement
 
+
+        string nvm_file_pll = string.Empty;
+        string config_file_pll = string.Empty;
+        string Prod_file_pll = string.Empty;
+
         string dac_ini = string.Empty; // DAC 9175 INI file path
 
         TX_Line txLineData = new TX_Line(); 
@@ -155,10 +162,10 @@ namespace BringUp_Control
 
                         // Read the INI file and set the values
 
-                        if (configuration["HMC8414:BYPASS_MODE1"] == "0")   //Bypass ON = false -> (AMP ON)
+                        if (configuration["HMC8414:BYPASS_MODE1"] == "0")   //Bypass ON = 0 | AMP ON = 1
                             txLineData.bypass1 = false;                        
                         else
-                            txLineData.bypass1 = true;                      //Bypass ON = true  -> (AMP OFF) 
+                            txLineData.bypass1 = true;                      //Bypass ON = 0 | AMP ON = 1 
 
                         if (configuration["HMC8414:BYPASS_MODE2"] == "0")
                             txLineData.bypass2 = false;
@@ -285,6 +292,8 @@ namespace BringUp_Control
                     gpio_control = new GpioDriver(_gpioLocId);                    
                     gpio_control.Write(GPIO3, false);  // GPIO3 is false by default for EVB AD4368 it must be True to enable SPI interface                    
 
+
+                    
                     i2cBus = InterfaceManager.GetI2c();
                     
 
@@ -301,10 +310,28 @@ namespace BringUp_Control
                     IO_Exp.Init(i2cBus);
                     IO_Exp.ConfigurePort(PCAL6416A.CONFIG_PORT_0, 0x00); // 00000000b: pins 0-7 outputs
                     IO_Exp.ConfigurePort(PCAL6416A.CONFIG_PORT_1, 0x78); // 01111000b: pins 0-2 outputs, pins 3-6 inputs, pin 7 output
-                    //IO_Exp.Init(i2cBus, InterfaceManager);
+                    
+                                        
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+                                            
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
 
+
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, false);
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, false);
+
+
+                    // Instantiate HMC1119 object for further operations
+                    hmc1119 = new HMC1119();
+                    // // Instantiate HMC8414 object for further operations
                     hmc8414 = new HMC8414();
                     hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+
 
                     // GUI elements enabled/disabled
                     SetControlsEnabled(true);                    
@@ -590,6 +617,35 @@ namespace BringUp_Control
                 case 5:
                     data = 0b01010000;
                     break;
+
+                case 6:
+                    data = 0b01100000;
+                    break;
+                case 7:
+                    data = 0b01110000;
+                    break;
+                case 8:
+                    data = 0b10000000;
+                    break;
+
+                case 9:
+                    data = 0b10010000;
+                    break;
+
+                case 10:
+                    data = 0b10100000;
+                    break;
+                case 11:
+                    data = 0b10110000;
+                    break;
+                case 12:
+                    data = 0b11000000;
+                    break;
+                case 13:
+                    data = 0b11010000;
+                    break;
+
+
             }
 
             ad4368.WriteRegister((ushort)registerval, data);
@@ -805,13 +861,24 @@ namespace BringUp_Control
             {
                 if (!TXline_flag)
                 {
-                    i2cBus = InterfaceManager.GetI2c();
+                    
                     
                     checkAmp1.Checked = txLineData.bypass1; //bypass mode - false,   AMP mode - true
                     checkAmp2.Checked = txLineData.bypass2; //bypass mode - false,   AMP mode - true
                     numericATT1.Value = Convert.ToDecimal(txLineData.att1);
                     numericATT2.Value = Convert.ToDecimal(txLineData.att2);
                     numericATT3.Value = Convert.ToDecimal(txLineData.att3);
+
+                    // Instantiate HMC1119 object for further operations
+                    hmc1119 = new HMC1119();
+                    // // Instantiate HMC8414 object for further operations
+                    hmc8414 = new HMC8414();
+                    hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+
                 }
             }
             else if (selectedTab == tabFPGA)
@@ -877,15 +944,15 @@ namespace BringUp_Control
             else if (selectedTab == tabMux)
             {
 
-                i2cBus = InterfaceManager.GetI2c();
+                //i2cBus = InterfaceManager.GetI2c();
 
                 //IO_Exp = new PCAL6416A();
                 //IO_Exp.Init(i2cBus);
 
-                MUX = new PCA9547A();
-                MUX.Init(i2cBus); // Initialize MUX with the current I²C device
+                //MUX = new PCA9547A();
+                //MUX.Init(i2cBus); // Initialize MUX with the current I²C device
 
-                MUX.Set_Mux_Channel(1, 5);
+                //MUX.Set_Mux_Channel(1, 5);
 
             }
             else if (selectedTab == tabSi5518)
@@ -994,7 +1061,10 @@ namespace BringUp_Control
                     //ad9175 = new AD9175_DAC();
                     //ad9175.Init(ftDev); // Initialize DAC9175 with the current FTDI device
 
+                    //must be tested
+                    ad9175.IO_DAC_IO_Reset();
 
+                    
                     DT9175 = ad9175.InitDataTableDAC();
                     dataGridViewAD4368.DataSource = DT9175;
                     comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
@@ -1021,34 +1091,7 @@ namespace BringUp_Control
                         MessageBox.Show($"DAC9175 initialization failed with error code: {code}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    /* Iinit of the DAC
-                    ad9175.PowerUp();
-                    ad9175.DAC_PLL_Config();
-
-                    if (ad9175.GetBit(ad9175.DelayLockLoop(), 0))
-                    {
-                        // TODO : Add a message box or log to indicate that the DLL is locked
-                        // True - DAC DLL is locked
-                    }
-                    else
-                    {
-                        // TODO : Add a message box or log to indicate that the DLL is not locked
-                        // False - DAC DLL is not locked
-                    }
-                    ad9175.Calibration();
-
-                    ad9175.JESD204B_Setup();
-
-                    //TODO : TEST IT 
-                    DAC0 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC0_freq));   //2 GHz
-                    DAC1 = ad9175.GetBytes48BitBigEndian(ad9175.CalculateDdsmFtw(DAC1_freq));   //3 Ghz
-                    ad9175.MainDAC_Datapath_Setup(DAC0, DAC1);
-
-                    ad9175.JESD204B_SERDES_Setup();
-                    ad9175.TransportLayer_Setup();
-                    //when to implement it
-                    ad9175.CleanUpRegisterList();
-                }*/
+                    
                 }
             }
         }
@@ -1118,6 +1161,17 @@ namespace BringUp_Control
                 }
                 else
                 {
+                    double voltdata = 0.0f;
+                    ad7091 = new AD7091();
+                    ftDev = InterfaceManager.GetSpi();
+                    i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
+
+                    label7.Text = $"Decimal Voltage value: {voltdata.ToString("F2")} V";
+
+
+
+                    /*
                     i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                     if (IO_Exp == null)
                     {
@@ -1130,14 +1184,15 @@ namespace BringUp_Control
                         IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
                         //IO_Exp.ChipSelect_IO(3, false); // Enable chip select for PCAL6416A
                         IO_Exp.SetPinsFromValue(3, false);
-                        
-                        string hexval = string.Empty;
-                        string voltage = string.Empty;
+
+                        string hexval = string.Empty;// ConvertAdcCodeToVoltage(ushort rawAdcCode)
+                        //double voltage = ad7091.ConvertAdcCodeToVoltage();
 
                         label7.Text = $"Hex value: 0x{hexval:X3} Decimal Voltage value: {voltage} V";
 
                         
-                    }
+                    }*/
+                
                 }
 
             }
@@ -1309,6 +1364,39 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD9175)
             {
+                if (!string.IsNullOrWhiteSpace(textDAC9175_Value.Text))
+                {
+                    string regaddress = comboRegisters9175.SelectedItem?.ToString()?.Trim(); // Get selected value as string
+
+                    string dataRaw = textDAC9175_Value.Text.Trim();
+
+                    if (!TryParseHexU16(regaddress, out ushort regValue))
+                    {
+                        MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
+                                        "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        comboRegAddress.Focus();
+                        return;
+                    }
+
+                    if (!TryParseHexByte(dataRaw, out byte dataByte))
+                    {
+                        MessageBox.Show("Data value must be in 0xXX format (00 - FF).",
+                                        "Invalid data", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        textDAC9175_Value.Focus();
+                        textDAC9175_Value.Clear();
+                        return;
+                    }
+
+                    ad9175.WriteRegister(regValue, dataByte);
+
+                    
+                }
+                else
+                {
+                    MessageBox.Show("The textbox value is empty or wrong!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    textDAC9175_Value.Focus();
+                    textDAC9175_Value.Clear();
+                }
 
             }
 
@@ -1498,25 +1586,38 @@ namespace BringUp_Control
 
                 if (i2cBus != null)
                 {
+
+                    
                     // Initialize IO Expander if not already initialized
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
-                    IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
+                    
+                    //IO_Exp.Init(i2cBus); // Re-initialize IO Expander with the current I2C device
+                    
                     // First, make sure the IO Expander CTRL_SPI_EN_1V8 is low to enable SPI communication to the HMC1119!
                     //IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
                     //IO_Exp.SetPinState(0x04, false);
                     // Enable chip select of HMC1119 chip 1
                     //IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
 
-                    // Instantiate HMC1119 object for further operations
-                    hmc1119 = new HMC1119();
+                    
 
                     // Write values to SERIN lines of HMC1119
                     ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                     hmc1119.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize HMC1119 with the current I2C device
+                    
                     hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP1, att1_value);
+                    Thread.Sleep(10);
 
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP2, att2_value);
+                    Thread.Sleep(10);
+
+                    hmc1119.SetAttenuation(HMC1119.ChipIndex.HMC1119_CHIP3, att3_value);
+                    Thread.Sleep(10);
+
+
+                    /*
                     i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
-                    IO_Exp.Init(i2cBus);
+                    //IO_Exp.Init(i2cBus);
                     // Latch the attenuation value to the HMC1119 chip 1
                     IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, true);
 
@@ -1544,7 +1645,7 @@ namespace BringUp_Control
                     i2cBus = InterfaceManager.GetI2c(); // Get current I2C interface
                     IO_Exp.Init(i2cBus);
                     // Latch the attenuation value to the HMC1119 chip 3
-                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, true);
+                    IO_Exp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, true);*/
                 }
             }
         }
@@ -1601,32 +1702,28 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
-                //MUX.Set_Mux_Channel(0, 7); // Set MUX channel 0 to 7 (for example, you can change this as needed)
-                
-                //if (IO_Exp == null)
-                //{ 
-                //    IO_Exp = new PCAL6416A();
-                //    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
-                //    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
-                //}
 
-                
+                hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
+
                 if (checkAmp1.CheckState == CheckState.Checked)
                 {
-                    txLineData.bypass1 = true; // BYPASS ON
-                    checkAmp1.Text = "BYPASS MODE";
+                    txLineData.bypass1 = true; // AMP ON
+                    checkAmp1.Text = "AMP ON";
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
                     //IO_Exp.SetPinState(6, false);
-                    
+
                 }
                 else
                 {
                     txLineData.bypass1 = false; // BYPASS OFF (AMP ON)
-                    checkAmp1.Text = "AMP ON";
-                    //IO_Exp.SetPinState(6, true);
+                    checkAmp1.Text = "BYPASS ON";
+                    
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
+                    
                 }
 
-                hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1); // Set HMC8414 Chip 1 to the desired Bypass mode
+                //hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1); // Set HMC8414 Chip 1 to the desired Bypass mode
 
                 LogStatus($"Amplifier 1 Status: {checkAmp1.Text}");
             }
@@ -1637,30 +1734,23 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                //MUX.Set_Mux_Channel(1, 7); // Set MUX channel 1 to 7 (for example, you can change this as needed)
-                // MUX.Set_Mux_Channel(0, 7);
-                
-                //if (IO_Exp == null)
-                //{
-                //    IO_Exp = new PCAL6416A();
-                //    IO_Exp.Init(i2cBus); // Initialize IO Expander with the current I²C device
-                //    IO_Exp.PCAL6416A_CONFIG_IO_EXP(6, 0);
-                //}
+                hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                 if (checkAmp2.CheckState == CheckState.Checked)
                 {
-                    txLineData.bypass2 = true; // BYPASS ON
-                    checkAmp2.Text = "BYPASS MODE";
-                    //IO_Exp.SetPinState(7, false);
+                    txLineData.bypass2 = true; // AMP ON
+                    checkAmp2.Text = "AMP ON";
+
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
                 }
                 else
                 {
-                    txLineData.bypass2 = false; // BYPASS OFF (AMP ON)
-                    checkAmp2.Text = "AMP ON";
-                    //IO_Exp.SetPinState(7, true);
+                    txLineData.bypass2 = false; // BYP
+                    checkAmp2.Text = "BUPASS ON";
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
                 }
 
-                hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2); // Set HMC8414 Chip 2 to the desired Bypass mode
+                //hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2); // Set HMC8414 Chip 2 to the desired Bypass mode
 
                 LogStatus($"Amplifier 2 Status: { checkAmp2.Text}");
             }
@@ -1713,20 +1803,132 @@ namespace BringUp_Control
                 }
             }
         }
-
+        //
         private void Cmd_Load_SI_FW_Click(object sender, EventArgs e)
+        {
+            string fullpath = si5518.LoadConfigFile();
+            string path = Path.GetDirectoryName(fullpath);
+
+            label30.Text = "PROD FW: " + fullpath; // Path.GetFullPath(path) + "\\prod_fw.boot.bin";
+
+            Prod_file_pll = fullpath;// label30.Text;
+        }
+        // user config 
+        private void Cmd_Import_SkyWorks_Click(object sender, EventArgs e)
+        {
+            string fullpath = si5518.LoadConfigFile();
+            string path = Path.GetDirectoryName(fullpath);            
+
+            label29.Text = "NVM FW: " + fullpath;// + Path.GetFullPath(path) + "\\nvm_burn_fw.boot.bin";
+            nvm_file_pll = fullpath;// label29.Text;
+            
+        }
+
+        //test temperature button test readinfo , serial communcation 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //si5518.Boot();
+            si5518.SioTest();
+
+            string gt = si5518.ReadInfo();
+            double temp_skyworks = 0.0; // si5518.GetTemperature();
+            //label28.Text = $"Temp: {temp_skyworks.ToString()}";
+
+            label28.Text = gt;
+
+        }
+
+        private void Cmd_Config_Click(object sender, EventArgs e)
+        {
+            string fullpath = si5518.LoadConfigFile();
+            string path = Path.GetDirectoryName(fullpath);
+            label27.Text = "User Conig: " + fullpath;// + "\\user_config.burn.hex";
+
+            
+
+            config_file_pll = fullpath;// label27.Text;
+            Prod_file_pll = path + "\\prod_fw.burn.hex.txt";
+            label30.Text = Prod_file_pll;
+
+            nvm_file_pll = path + "\\nvm_burn_fw.boot.hex.txt";
+            label29.Text = nvm_file_pll;
+
+        }
+
+        private void Cmd_Export_SkyWorks_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void Cmd_Import_SkyWorks_Click(object sender, EventArgs e)
+        private void Cmd_Burn_SkyPLL_Click(object sender, EventArgs e)
         {
-            string fullpath = si5518.LoadConfigFile();
-            string path = Path.GetDirectoryName(fullpath);
-            label27.Text = "User Conig: " + fullpath;
+            si5518.BurnNvmPllSynth(nvm_file_pll,Prod_file_pll,config_file_pll);
+        }
+
+        private void Cmd_NCO_Click(object sender, EventArgs e)
+        {
             
-            label29.Text = "NVM FW: " + Path.GetFullPath(path) + "\\nvm_burn_fw.boot.bin";
-            label30.Text = "PROD FW: " + Path.GetFullPath(path) + "\\prod_fw.boot.bin"; ;
+            try
+            {
+                float[] numbers = linevaluetx3
+                    .Split(',')
+                    .Select(n => float.Parse(n.Trim()))
+                    .ToArray();
+
+                if (numbers.Length != 3)
+                {
+                    LogStatus("Please enter exactly 3 numbers.");
+                    return;
+                }
+
+                ad9175.Calibration_NCO((int)numbers[0], numbers[1], (int)numbers[2]);
+                //($"Function result: DONE");
+                /*
+                for (float s =0; s <= 3.75; s +=0.05f)
+                {
+                    ad9175.Calibration_NCO((int)numbers[0], numbers[1], (int)numbers[2]);
+
+                    numbers[1] = 1.25f + s;
+
+                    Thread.Sleep(3000);
+
+                }*/
+                
+            }
+            catch (Exception ex)
+            {
+                LogStatus($"Error: {ex.Message}");
+                //lblResult.Text = $"Error: {ex.Message}";
+            }
+
+        }
+
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                linevaluetx3 = textBox3.Text;
+                Cmd_NCO.Focus();
+            }
+        }
+
+        private void Cmd_PRBS_Click(object sender, EventArgs e)
+        {
+            //PRBS7 - PRBS15
+
+            string prmbs_value = comboBox1.SelectedItem?.ToString();
+
+            ad9175.PRBS_Test(prmbs_value);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

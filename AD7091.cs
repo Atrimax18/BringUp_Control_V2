@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BringUp_Control
@@ -13,11 +14,12 @@ namespace BringUp_Control
         private PCAL6416A _ioExp;
         private FtdiInterfaceManager _interfaceManager;
 
-        const double Vdd  = 3.3; // 2.5 ????Supply voltage
+        const double Vdd  = 2.5; // 3.3 ????Supply voltage
 
 
-        public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
+        public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager, out double voltvalue)
         {
+            voltvalue = 0.0f;
             _ft = ft ?? throw new ArgumentNullException(nameof(ft));
             _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
             _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
@@ -29,20 +31,50 @@ namespace BringUp_Control
             _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
             // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
-            // Set the IO Expander TMUX1104 address pins to 0x02 to allow the FTDI CS to reach the AD7091
-            _ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_ADC);
-            // Now direct CS from FTDI to the AD7091 is enabled and ready for SPI communication
 
+            // Now direct CS from FTDI to the AD7091 is enabled and ready for SPI communication
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_ADC_CONVST, true); // Set high to end conversion
             //Example of toggling the ADC_CONVST pin
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_ADC_CONVST, false); // Set low to start conversion
+            Thread.Sleep(10);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_ADC_CONVST, true); // Set high to end conversion
 
-            _ft = _interfaceManager.GetSpi(); // Get current SPI interface
-            //... do some SPI communication with the AD7091
+            // Set the IO Expander TMUX1104 address pins to 0x02 to allow the FTDI CS to reach the AD7091
+            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_ADC);
+
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, true);
+
+            //Thread.Sleep(1);
+
+            _ft = _interfaceManager.GetSpi();
+            byte[] buffer = new byte[2];
+            _ft.Read(buffer);  // or Read(buffer.AsSpan())
+            byte lsb = buffer[1];  // don't touch this is correct byte statement
+            byte msb = buffer[0];  // don't touch this is correct byte statement
+
+            ushort lsb1 = (ushort)(lsb & 0xF0);  // remove 4 lsb bits from calculation
+
+            ushort raw = (ushort)((msb << 8) | lsb1);
+            ushort adcValue = (ushort)(raw >> 4);  // Shift right 4 bits to drop lower 4 padding bits
+
+            // Optional: Convert to voltage (assuming 3.3V reference)
+            voltvalue = adcValue * (Vdd / 4095.0);
+            
+
+            //test without removing cs to adc7091
+            /*
+            _i2c = _interfaceManager.GetI2c();
+            _ioExp.Init(_i2c);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
+            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);         
+            */
+
         }
 
         public void Dispose()
         {
+            _ft.Dispose();
             _ft = null;
         }
 
@@ -67,7 +99,7 @@ namespace BringUp_Control
             return adcCode;
         }
 
-        public static double ConvertAdcCodeToVoltage(ushort rawAdcCode)
+        public double ConvertAdcCodeToVoltage(ushort rawAdcCode)
         {
             // Sanity check: raw code must be 0 .. 4095
             if (rawAdcCode > 0x0FFF)
@@ -78,5 +110,22 @@ namespace BringUp_Control
 
             return voltage;
         }
+
+        /*
+        public double ConvertThis()
+        {
+
+
+            // Example SPI response from AD7091 (2 bytes)
+            byte msb = rxBuffer[0]; // Most significant byte
+            byte lsb = rxBuffer[1]; // Least significant byte
+
+            // Combine and extract 12-bit result (MSB-first, data in upper 12 bits)
+            ushort raw = (ushort)((msb << 8) | lsb);
+            ushort adcValue = (ushort)(raw >> 4);  // Shift right 4 bits to drop lower 4 padding bits
+
+            // Optional: Convert to voltage (assuming 3.3V reference)
+            double voltage = adcValue * (Vdd / 4095.0);
+        }*/
     }
 }

@@ -54,6 +54,7 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.Cmd_NCO = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
             this.Cmd_DAC_Init = new System.Windows.Forms.Button();
             this.Cmd_WriteDAC9175 = new System.Windows.Forms.Button();
@@ -68,6 +69,13 @@
             this.Cmd_Export9175_file = new System.Windows.Forms.Button();
             this.Cmd_Import9175_file = new System.Windows.Forms.Button();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
+            this.Cmd_Burn_SkyPLL = new System.Windows.Forms.Button();
+            this.Cmd_Config = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.Cmd_Load_SI_FW = new System.Windows.Forms.Button();
             this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
             this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
             this.label27 = new System.Windows.Forms.Label();
@@ -134,9 +142,10 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.Cmd_Load_SI_FW = new System.Windows.Forms.Button();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label30 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.Cmd_PRBS = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -381,7 +390,16 @@
             "0010: Low",
             "0011: Low",
             "0100: DivRCLK/2",
-            "0101: DivNCLK/2"});
+            "0101: DivNCLK/2",
+            "0110: Reserved",
+            "0111: low",
+            "1000: high",
+            "1001: reserved",
+            "1010: reserved",
+            "1011: low",
+            "1100: low",
+            "1101: low",
+            ""});
             this.comboMUXOUT.Location = new System.Drawing.Point(181, 115);
             this.comboMUXOUT.Name = "comboMUXOUT";
             this.comboMUXOUT.Size = new System.Drawing.Size(129, 24);
@@ -426,6 +444,10 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.comboBox1);
+            this.tabAD9175.Controls.Add(this.Cmd_PRBS);
+            this.tabAD9175.Controls.Add(this.textBox3);
+            this.tabAD9175.Controls.Add(this.Cmd_NCO);
             this.tabAD9175.Controls.Add(this.label25);
             this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
             this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
@@ -446,6 +468,16 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_NCO
+            // 
+            this.Cmd_NCO.Location = new System.Drawing.Point(725, 570);
+            this.Cmd_NCO.Name = "Cmd_NCO";
+            this.Cmd_NCO.Size = new System.Drawing.Size(113, 53);
+            this.Cmd_NCO.TabIndex = 15;
+            this.Cmd_NCO.Text = "Calib NCO";
+            this.Cmd_NCO.UseVisualStyleBackColor = true;
+            this.Cmd_NCO.Click += new System.EventHandler(this.Cmd_NCO_Click);
             // 
             // label25
             // 
@@ -486,7 +518,6 @@
             // 
             // Cmd_WriteReg9175
             // 
-            this.Cmd_WriteReg9175.Enabled = false;
             this.Cmd_WriteReg9175.Location = new System.Drawing.Point(423, 17);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
             this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 63);
@@ -575,6 +606,10 @@
             // 
             // tabSi5518
             // 
+            this.tabSi5518.Controls.Add(this.Cmd_Burn_SkyPLL);
+            this.tabSi5518.Controls.Add(this.Cmd_Config);
+            this.tabSi5518.Controls.Add(this.label28);
+            this.tabSi5518.Controls.Add(this.button1);
             this.tabSi5518.Controls.Add(this.label30);
             this.tabSi5518.Controls.Add(this.label29);
             this.tabSi5518.Controls.Add(this.Cmd_Load_SI_FW);
@@ -588,23 +623,91 @@
             this.tabSi5518.Text = "Si55XX";
             this.tabSi5518.UseVisualStyleBackColor = true;
             // 
+            // Cmd_Burn_SkyPLL
+            // 
+            this.Cmd_Burn_SkyPLL.Location = new System.Drawing.Point(717, 368);
+            this.Cmd_Burn_SkyPLL.Name = "Cmd_Burn_SkyPLL";
+            this.Cmd_Burn_SkyPLL.Size = new System.Drawing.Size(114, 46);
+            this.Cmd_Burn_SkyPLL.TabIndex = 10;
+            this.Cmd_Burn_SkyPLL.Text = "Burn Files";
+            this.Cmd_Burn_SkyPLL.UseVisualStyleBackColor = true;
+            this.Cmd_Burn_SkyPLL.Click += new System.EventHandler(this.Cmd_Burn_SkyPLL_Click);
+            // 
+            // Cmd_Config
+            // 
+            this.Cmd_Config.Location = new System.Drawing.Point(717, 203);
+            this.Cmd_Config.Name = "Cmd_Config";
+            this.Cmd_Config.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Config.TabIndex = 9;
+            this.Cmd_Config.Text = "Import User Config";
+            this.Cmd_Config.UseVisualStyleBackColor = true;
+            this.Cmd_Config.Click += new System.EventHandler(this.Cmd_Config_Click);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(603, 476);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(75, 16);
+            this.label28.TabIndex = 8;
+            this.label28.Text = "Temp: 0.0";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(717, 461);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(114, 47);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "Get Temp";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(12, 122);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(81, 16);
+            this.label30.TabIndex = 6;
+            this.label30.Text = "PROD FW:";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(12, 72);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(71, 16);
+            this.label29.TabIndex = 5;
+            this.label29.Text = "NVM FW:";
+            // 
+            // Cmd_Load_SI_FW
+            // 
+            this.Cmd_Load_SI_FW.Location = new System.Drawing.Point(717, 317);
+            this.Cmd_Load_SI_FW.Name = "Cmd_Load_SI_FW";
+            this.Cmd_Load_SI_FW.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_Load_SI_FW.TabIndex = 4;
+            this.Cmd_Load_SI_FW.Text = "Import Prod FW";
+            this.Cmd_Load_SI_FW.UseVisualStyleBackColor = true;
+            this.Cmd_Load_SI_FW.Click += new System.EventHandler(this.Cmd_Load_SI_FW_Click);
+            // 
             // Cmd_Export_SkyWorks
             // 
             this.Cmd_Export_SkyWorks.Enabled = false;
-            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(717, 122);
+            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(15, 419);
             this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
             this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
             this.Cmd_Export_SkyWorks.TabIndex = 3;
             this.Cmd_Export_SkyWorks.Text = "Export File";
             this.Cmd_Export_SkyWorks.UseVisualStyleBackColor = true;
+            this.Cmd_Export_SkyWorks.Click += new System.EventHandler(this.Cmd_Export_SkyWorks_Click);
             // 
             // Cmd_Import_SkyWorks
             // 
-            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 71);
+            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 266);
             this.Cmd_Import_SkyWorks.Name = "Cmd_Import_SkyWorks";
             this.Cmd_Import_SkyWorks.Size = new System.Drawing.Size(114, 45);
             this.Cmd_Import_SkyWorks.TabIndex = 2;
-            this.Cmd_Import_SkyWorks.Text = "Import File";
+            this.Cmd_Import_SkyWorks.Text = "Import  NVM File";
             this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
             this.Cmd_Import_SkyWorks.Click += new System.EventHandler(this.Cmd_Import_SkyWorks_Click);
             // 
@@ -1284,39 +1387,52 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // Cmd_Load_SI_FW
+            // textBox3
             // 
-            this.Cmd_Load_SI_FW.Location = new System.Drawing.Point(717, 198);
-            this.Cmd_Load_SI_FW.Name = "Cmd_Load_SI_FW";
-            this.Cmd_Load_SI_FW.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Load_SI_FW.TabIndex = 4;
-            this.Cmd_Load_SI_FW.Text = "Load FW";
-            this.Cmd_Load_SI_FW.UseVisualStyleBackColor = true;
-            this.Cmd_Load_SI_FW.Click += new System.EventHandler(this.Cmd_Load_SI_FW_Click);
+            this.textBox3.Location = new System.Drawing.Point(725, 540);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(113, 22);
+            this.textBox3.TabIndex = 16;
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
             // 
-            // label29
+            // label31
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(12, 72);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(71, 16);
-            this.label29.TabIndex = 5;
-            this.label29.Text = "NVM FW:";
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(873, 644);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(135, 13);
+            this.label31.TabIndex = 17;
+            this.label31.Text = "dac indx, freq Ghz, Tone %";
             // 
-            // label30
+            // Cmd_PRBS
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(12, 122);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(81, 16);
-            this.label30.TabIndex = 6;
-            this.label30.Text = "PROD FW:";
+            this.Cmd_PRBS.Location = new System.Drawing.Point(296, 87);
+            this.Cmd_PRBS.Name = "Cmd_PRBS";
+            this.Cmd_PRBS.Size = new System.Drawing.Size(112, 47);
+            this.Cmd_PRBS.TabIndex = 17;
+            this.Cmd_PRBS.Text = "PRBS Test";
+            this.Cmd_PRBS.UseVisualStyleBackColor = true;
+            this.Cmd_PRBS.Click += new System.EventHandler(this.Cmd_PRBS_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "PRBS7",
+            "PRBS15"});
+            this.comboBox1.Location = new System.Drawing.Point(181, 88);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(88, 24);
+            this.comboBox1.TabIndex = 18;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1160, 774);
+            this.Controls.Add(this.label31);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.textLog);
             this.Controls.Add(this.pictureBox2);
@@ -1477,6 +1593,15 @@
         private System.Windows.Forms.Button Cmd_Load_SI_FW;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Button Cmd_Config;
+        private System.Windows.Forms.Button Cmd_Burn_SkyPLL;
+        private System.Windows.Forms.Button Cmd_NCO;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Button Cmd_PRBS;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
 

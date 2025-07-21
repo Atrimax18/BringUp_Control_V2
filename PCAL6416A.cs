@@ -10,7 +10,7 @@ namespace BringUp_Control
     internal class PCAL6416A : IDisposable
     {
         //private const byte PCAL6416A_I2C_ADDRESS0 = 0x20; // Fixed I2C address
-        private const byte PCAL6416A_I2C_ADDRESS = 0x21;
+        private const byte PCAL6416A_I2C_ADDRESS = 0x20;
         public const byte INPUT_PORT_0 = 0x00; // Input port 0 register
         public const byte INPUT_PORT_1 = 0x01; // Input port 1 register
         public const byte OUTPUT_PORT_0 = 0x02; // Output port 0 register
@@ -44,9 +44,9 @@ namespace BringUp_Control
         public enum MuxSpiIndex
         {
             MUX_SPI_CSn_DAC = 0,
-            MUX_SPI_CSn_PLL,
-            MUX_SPI_CSn_ADC,
-            MUX_SPI_CSn_SKY_PLL
+            MUX_SPI_CSn_PLL = 1,
+            MUX_SPI_CSn_ADC = 2,
+            MUX_SPI_CSn_SKY_PLL = 3
         }
 
         private i2cDriver _ft;
@@ -94,6 +94,9 @@ namespace BringUp_Control
 
             // Write the port configuration to the register
             WriteByte(port, stateMask);
+
+            //***
+            
 
             // Output the state mask as a HEX number
             Console.WriteLine($"Port {port} config mask: 0x{stateMask:X2}.");
@@ -275,7 +278,7 @@ namespace BringUp_Control
             //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             //First, enable the SPI mux
-            SetPinState((byte)PinIndex.CTRL_SPI_EN, true);
+            ///////SetPinState((byte)PinIndex.CTRL_SPI_EN, true);
 
             // Extract the 2-bit mask from the MuxSpiIndex
             byte muxMask = (byte)muxSpiIndex;

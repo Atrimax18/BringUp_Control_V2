@@ -29,6 +29,9 @@ namespace BringUp_Control
             _i2c = i2c ?? throw new ArgumentNullException(nameof(i2c));
             _ioExp = ioExp ?? throw new ArgumentNullException(nameof(ioExp));
             _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
+
+            //_ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, false);
+
         }
 
         public void SetAttenuation(ChipIndex idx, float atten)
@@ -61,11 +64,37 @@ namespace BringUp_Control
                     throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
                 }
 
+
+                _spi = _interfaceManager.GetSpi();
                 int code = (int)Math.Round(atten / 0.25, MidpointRounding.AwayFromZero);
                 
                 byte txdata = (byte)(code & 0x7F); // Ensure we only use the lower 6 bits                
                 WriteByte(txdata);
-                
+
+
+                _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
+                _ioExp.Init(_i2c);
+
+                if (idx == ChipIndex.HMC1119_CHIP1)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, true);
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE1, false);
+                }
+                else if (idx == ChipIndex.HMC1119_CHIP2)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, true);
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE2, false);
+                }
+                else if (idx == ChipIndex.HMC1119_CHIP3)
+                {
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, true);
+                    _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_HMC1119_LE3, false);
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(nameof(idx), "Invalid chip index.");
+                }
+
             }
             
         }
