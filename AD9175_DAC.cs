@@ -949,7 +949,7 @@ namespace BringUp_Control
 
 
             double PRBS_LaneRate = 14.625e9;
-            int PRBS_TestTime = 1; //1 second
+            float PRBS_TestTime = 1.0f; //1 second
             byte PRBS_Lanes_Bits = 0xFF; // All lanes enabled
 
             WriteRegister(0x0315, PRBS_Lanes_Bits); // select all lines to be tested  (each bit = lane (0 to 7))
@@ -970,7 +970,7 @@ namespace BringUp_Control
 
             WriteRegister(0x0316, (byte)(val_0x316 | 0x2)); // Start PRBS test
 
-            Thread.Sleep(PRBS_TestTime * 1000); // Wait for the test duration 1 seconf
+            Thread.Sleep((int)(PRBS_TestTime * 1000)); // Wait for the test duration 1 seconf
 
             WriteRegister(0x0316, (byte)(val_0x316 | 0x0)); // Stop PRBS test Bit 1 must 0.
 

@@ -1743,13 +1743,13 @@ namespace BringUp_Control
                     txLineData.bypass2 = true; // AMP ON
                     checkAmp2.Text = "AMP ON";
 
-                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2);
                 }
                 else
                 {
                     txLineData.bypass2 = false; // BYP
                     checkAmp2.Text = "BUPASS ON";
-                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2);
                 }
 
                 //hmc8414.SetBypass(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2); // Set HMC8414 Chip 2 to the desired Bypass mode
