@@ -1065,10 +1065,10 @@ namespace BringUp_Control
                     //must be tested
                     ad9175.IO_DAC_IO_Reset();
 
-                    ad9175.DAC_DT_Clear();
+                    //ad9175.DAC_DT_Clear();
                     
-                    DT9175 = ad9175.InitDataTableDAC();
-                    dataGridViewAD4368.DataSource = DT9175;
+                    //DT9175 = ad9175.InitDataTableDAC();
+                    //dataGridViewAD4368.DataSource = DT9175;
                     comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
                     LogStatus("AD9175 reinitialized on SPI CS1");
                     Cmd_ReadDAC9175.Enabled = true;
