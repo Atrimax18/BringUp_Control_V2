@@ -72,15 +72,10 @@ namespace BringUp_Control
             
         }
 
-        //private byte att1_value = 0x00;
-        //private byte att2_value = 0x00;
-        //private byte att3_value = 0x00;
+        
         private float att1_value = 0.00f;
         private float att2_value = 0.00f;
-        private float att3_value = 0.00f;
-
-
-        
+        private float att3_value = 0.00f;        
 
         private string fpga_address = string.Empty; // FPGA address for register access (string)
         private string fpga_data = string.Empty;    // FPGA data for register access (string)
@@ -93,16 +88,16 @@ namespace BringUp_Control
         private uint _gpioLocId = UInt32.MaxValue;   // interface-B  (GPIO / future I²C)
 
         SpiDriver ftDev;
-        AD4368_PLL ad4368;
-        AD9175_DAC ad9175;
+        AD4368_PLL ad4368; // Analog Devices 4368 RF PLL
+        AD9175_DAC ad9175; // Analog Devices 9175 DAC
         FPGA fpga;
         GpioDriver gpio_control;
         i2cDriver i2cBus;
-        TMP100 tmp100;
-        PCAL6416A IO_Exp;
+        TMP100 tmp100;   // temperature sensors
+        PCAL6416A IO_Exp; // IO expander PCAL6416A
         HMC1119 hmc1119; // RF TX Line Up Attenuators
         HMC8414 hmc8414; // RF TX Line Up Amplifiers
-        SI55XX si5518; // Si5518 PLL
+        SI55XX si5518; // Si5518 SkyWorks PLL
         PCA9547A MUX; // I2C MUX SNOW EVB Board
         AD7091 ad7091; // ADC for RF Power measurement
 
@@ -112,6 +107,8 @@ namespace BringUp_Control
         string Prod_file_pll = string.Empty;
 
         string dac_ini = string.Empty; // DAC 9175 INI file path
+
+        string rf_pll_ini = string.Empty; // RF PLL 4368 INI file path
 
         TX_Line txLineData = new TX_Line(); 
         public MainForm()

@@ -89,15 +89,10 @@ namespace BringUp_Control
             // Set the IO Expander CTRL_SPI_EN_1V8 to high to enable the FTDI CS
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_EN, true);
             // Set the IO Expander TMUX1104 address pins to 0x00 to allow the FTDI CS to reach the AD9175
-            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_DAC);
+            
 
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
-
-
-
-            //_ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
-
 
             // Now direct CS from FTDI to the AD9175 is enabled and ready for SPI communication
 
