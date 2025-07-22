@@ -751,6 +751,11 @@ namespace BringUp_Control
             return FSC_Ctrl;
         }
         
+        public void DAC_DT_Clear()
+        {
+            
+            dtAD9175.Clear();
+        }
 
         public DataTable InitDataTableDAC()
         {

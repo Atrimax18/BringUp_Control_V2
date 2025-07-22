@@ -176,10 +176,11 @@ namespace BringUp_Control
                         txLineData.att2 = float.Parse(configuration["HMC1119:ATT2"]);
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
-                        //txLineData.nco_dac0 = double.Parse(configuration["DAC9175:NCO_DAC0_GHz"]);
-                        //txLineData.nco_dac1 = double.Parse(configuration["DAC9175:NCO_DAC1_GHz"]);
+                        
 
                         dac_ini = configuration["DAC9175:INIT_FILE"];
+
+                        string dac_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dac_ini);
 
                         if (File.Exists(dac_ini))
                         {
@@ -823,7 +824,7 @@ namespace BringUp_Control
             else
             {
                 tabControl1.Enabled = true;
-                Cmd_Init_All.Enabled = true;
+                
                 Cmd_FT_Temp_Read.Enabled = true;
                 Cmd_RF_Temp_Read.Enabled = true;
                 comboMUXOUT.Enabled = false;
@@ -1064,6 +1065,7 @@ namespace BringUp_Control
                     //must be tested
                     ad9175.IO_DAC_IO_Reset();
 
+                    ad9175.DAC_DT_Clear();
                     
                     DT9175 = ad9175.InitDataTableDAC();
                     dataGridViewAD4368.DataSource = DT9175;

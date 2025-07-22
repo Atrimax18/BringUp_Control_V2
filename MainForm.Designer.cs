@@ -121,9 +121,6 @@
             this.label23 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.Cmd_Led_OFF = new System.Windows.Forms.Button();
-            this.Cmd_Led_ON = new System.Windows.Forms.Button();
-            this.Cmd_Led_Test = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -136,7 +133,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.Cmd_Init_All = new System.Windows.Forms.Button();
             this.Cmd_FT_Temp_Read = new System.Windows.Forms.Button();
             this.Cmd_RF_Temp_Read = new System.Windows.Forms.Button();
             this.textLog = new System.Windows.Forms.TextBox();
@@ -427,7 +423,7 @@
             // labelRegAddress
             // 
             this.labelRegAddress.AutoSize = true;
-            this.labelRegAddress.Location = new System.Drawing.Point(10, 75);
+            this.labelRegAddress.Location = new System.Drawing.Point(6, 29);
             this.labelRegAddress.Name = "labelRegAddress";
             this.labelRegAddress.Size = new System.Drawing.Size(165, 16);
             this.labelRegAddress.TabIndex = 1;
@@ -436,7 +432,7 @@
             // labelFilePathAD4368
             // 
             this.labelFilePathAD4368.AutoSize = true;
-            this.labelFilePathAD4368.Location = new System.Drawing.Point(10, 31);
+            this.labelFilePathAD4368.Location = new System.Drawing.Point(6, 3);
             this.labelFilePathAD4368.Name = "labelFilePathAD4368";
             this.labelFilePathAD4368.Size = new System.Drawing.Size(72, 16);
             this.labelFilePathAD4368.TabIndex = 0;
@@ -1110,9 +1106,6 @@
             this.tabMux.Controls.Add(this.label23);
             this.tabMux.Controls.Add(this.textBox2);
             this.tabMux.Controls.Add(this.textBox1);
-            this.tabMux.Controls.Add(this.Cmd_Led_OFF);
-            this.tabMux.Controls.Add(this.Cmd_Led_ON);
-            this.tabMux.Controls.Add(this.Cmd_Led_Test);
             this.tabMux.Controls.Add(this.groupBox4);
             this.tabMux.Controls.Add(this.label13);
             this.tabMux.Controls.Add(this.label8);
@@ -1174,36 +1167,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(107, 22);
             this.textBox1.TabIndex = 8;
-            // 
-            // Cmd_Led_OFF
-            // 
-            this.Cmd_Led_OFF.Location = new System.Drawing.Point(635, 218);
-            this.Cmd_Led_OFF.Name = "Cmd_Led_OFF";
-            this.Cmd_Led_OFF.Size = new System.Drawing.Size(107, 54);
-            this.Cmd_Led_OFF.TabIndex = 7;
-            this.Cmd_Led_OFF.Text = "LED OFF";
-            this.Cmd_Led_OFF.UseVisualStyleBackColor = true;
-            this.Cmd_Led_OFF.Click += new System.EventHandler(this.Cmd_Led_OFF_Click);
-            // 
-            // Cmd_Led_ON
-            // 
-            this.Cmd_Led_ON.Location = new System.Drawing.Point(634, 141);
-            this.Cmd_Led_ON.Name = "Cmd_Led_ON";
-            this.Cmd_Led_ON.Size = new System.Drawing.Size(109, 52);
-            this.Cmd_Led_ON.TabIndex = 6;
-            this.Cmd_Led_ON.Text = "LED ON";
-            this.Cmd_Led_ON.UseVisualStyleBackColor = true;
-            this.Cmd_Led_ON.Click += new System.EventHandler(this.Cmd_Led_ON_Click);
-            // 
-            // Cmd_Led_Test
-            // 
-            this.Cmd_Led_Test.Location = new System.Drawing.Point(632, 51);
-            this.Cmd_Led_Test.Name = "Cmd_Led_Test";
-            this.Cmd_Led_Test.Size = new System.Drawing.Size(112, 58);
-            this.Cmd_Led_Test.TabIndex = 5;
-            this.Cmd_Led_Test.Text = "SNOW TEST";
-            this.Cmd_Led_Test.UseVisualStyleBackColor = true;
-            this.Cmd_Led_Test.Click += new System.EventHandler(this.Cmd_Led_Test_Click);
             // 
             // groupBox4
             // 
@@ -1325,17 +1288,6 @@
             this.label5.TabIndex = 12;
             this.label5.Text = "N/A °C";
             // 
-            // Cmd_Init_All
-            // 
-            this.Cmd_Init_All.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Cmd_Init_All.Location = new System.Drawing.Point(1019, 644);
-            this.Cmd_Init_All.Name = "Cmd_Init_All";
-            this.Cmd_Init_All.Size = new System.Drawing.Size(129, 46);
-            this.Cmd_Init_All.TabIndex = 16;
-            this.Cmd_Init_All.Text = "Init ALL Devices";
-            this.Cmd_Init_All.UseVisualStyleBackColor = true;
-            this.Cmd_Init_All.Click += new System.EventHandler(this.Cmd_Init_All_Click);
-            // 
             // Cmd_FT_Temp_Read
             // 
             this.Cmd_FT_Temp_Read.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1438,7 +1390,6 @@
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.Cmd_RF_Temp_Read);
             this.Controls.Add(this.Cmd_FT_Temp_Read);
-            this.Controls.Add(this.Cmd_Init_All);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -1540,7 +1491,6 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button Cmd_Init_All;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
@@ -1568,9 +1518,6 @@
         private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.Button Cmd_Led_Test;
-        private System.Windows.Forms.Button Cmd_Led_OFF;
-        private System.Windows.Forms.Button Cmd_Led_ON;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button Cmd_I2C_Write;
