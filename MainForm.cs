@@ -1042,9 +1042,8 @@ namespace BringUp_Control
         {
             
             if (selectedTab == tabAD4368)
-            {
                 WriteToRFPLL();
-            }  
+             
         }
 
 
@@ -1178,12 +1177,13 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    //double voltdata;
+                    double voltdata;
                    
                     //ftDev = InterfaceManager.GetSpi();
                     //i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
-                    ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out double voltdata);
-
+                    ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
+                    Thread.Sleep(10);
+                    ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
                     // Read the ADC value and convert it to voltage
                     label7.Text = $"{voltdata:F2} V";
 
