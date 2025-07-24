@@ -66,9 +66,7 @@ namespace BringUp_Control
 
 
 
-        //public double DAC0_freq { get; set; }
-        //public double DAC1_freq { get; set; }
-        public string message_log {  get; set; }
+        
 
         private string _csvPath;
         private const byte ErrorValue = 0xFF; // error value from readregister function ???? check it !!!!
@@ -730,19 +728,25 @@ namespace BringUp_Control
         }
 
 
-        // DAC_FS measurement and output value calculation
-        public int DAC_FS(int dac_index, float IOUTFS_mA)
+        // DAC_Full scale measurement and output value calculation
+        public int DAC_FullScale(int dac_index, float IOUTFS_mA)
         {
-            uint DAC_FS_Value = 0;
-            if (IOUTFS_mA < 15.625 || IOUTFS_mA > 25.977)
-                DAC_FS_Value = 0;
+            int FSC_Ctrl = 0;
+            if (IOUTFS_mA > 15.625 && IOUTFS_mA < 25.977)
+            {
+                uint DAC_FS_Value = (uint)(1 << (6 + dac_index));
+                WriteRegister(0x0008, (byte)DAC_FS_Value);
 
+                FSC_Ctrl = Convert.ToInt16((IOUTFS_mA - 15.625) * 256 / 25);
 
-            DAC_FS_Value = (uint)(1 << (6 + dac_index));
-            WriteRegister(0x0008, (byte)DAC_FS_Value);
-
-            int FSC_Ctrl = Convert.ToInt16((IOUTFS_mA-15.625)*256/25);
-
+                WriteRegister(0x005A, (byte)FSC_Ctrl);
+            }
+            else
+            {                
+                
+                MainForm.Instance?.LogStatus("IOUTFS_mA must be between 15.625 and 25.977 mA");
+            }
+            
             return FSC_Ctrl;
         }
         
@@ -934,7 +938,7 @@ namespace BringUp_Control
         // TODO - QA tests
         public void PRBS_Test(string PRBS_Type)
         {
-            byte prbs_byte = 0x00;
+            byte prbs_byte;
             if (PRBS_Type.Equals("PRBS7"))
                 prbs_byte = 0x00;
             else if (PRBS_Type.Equals("PRBS15"))

@@ -27,6 +27,10 @@ namespace BringUp_Control
 
         
 
+        
+
+
+
         public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
             _ft = ft ?? throw new ArgumentNullException(nameof(ft));
@@ -41,7 +45,7 @@ namespace BringUp_Control
             // Set the IO Expander TMUX1104 address pins to 0x01 to allow the FTDI CS to reach the AD4368
 
 
-            //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_PLL);
+            
 
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, true);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
@@ -228,7 +232,9 @@ namespace BringUp_Control
                             dtAD4368.Rows.Add(index++.ToString(), $"0x{value:X4}", parts[1].Trim(), Convert.ToByte(parts[1].Trim(), 16));
                         }
                     }
-                    MessageBox.Show("AD4368 Register Memory Map Loaded!", "Info");
+
+                    MainForm.Instance?.LogStatus("AD4368 Register Memory Map Loaded!");
+                    //MessageBox.Show("AD4368 Register Memory Map Loaded!", "Info");
                 }
                 catch (Exception ex)
                 {

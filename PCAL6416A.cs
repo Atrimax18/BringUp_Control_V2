@@ -335,20 +335,19 @@ namespace BringUp_Control
         //GPIO_IN_OUT: 0 for output, 1 for input
         public void PCAL6416A_CONFIG_IO_EXP(int IO_Register, int GPIO_IN_OUT)
         {
-            byte value;
-            
+
             if (IO_Register < 6 || IO_Register > 7)
                 throw new Exception("IO CONFIG REGISTER must be 6 or 7");
             else
             {
                 //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
-                ReadByte((byte)IO_Register, out value);
+                ReadByte((byte)IO_Register, out byte value);
 
                 if (value == 255)
                     WriteByte((byte)IO_Register, 0x00);
-            }               
-                        
+            }
+
         }
 
         // Run a simple LED chase test

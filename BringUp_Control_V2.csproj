@@ -162,7 +162,6 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PCA9547A.cs" />
     <Compile Include="PCAL6416A.cs" />
     <Compile Include="PRBS_Form.cs">
       <SubType>Form</SubType>

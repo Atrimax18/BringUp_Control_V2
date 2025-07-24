@@ -45,30 +45,9 @@ namespace BringUp_Control
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, true);
 
-            //Thread.Sleep(1);
-
-            _ft = _interfaceManager.GetSpi();
-            byte[] buffer = new byte[2];
-            _ft.Read(buffer);  // or Read(buffer.AsSpan())
-            byte lsb = buffer[1];  // don't touch this is correct byte statement
-            byte msb = buffer[0];  // don't touch this is correct byte statement
-
-            ushort lsb1 = (ushort)(lsb & 0xF0);  // remove 4 lsb bits from calculation
-
-            ushort raw = (ushort)((msb << 8) | lsb1);
-            ushort adcValue = (ushort)(raw >> 4);  // Shift right 4 bits to drop lower 4 padding bits
-
-            // Optional: Convert to voltage (assuming 3.3V reference)
-            voltvalue = adcValue * (Vdd / 4095.0);
             
 
-            //test without removing cs to adc7091
-            /*
-            _i2c = _interfaceManager.GetI2c();
-            _ioExp.Init(_i2c);
-            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
-            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);         
-            */
+            voltvalue = ConvertToVoltage();
 
         }
 
@@ -99,33 +78,28 @@ namespace BringUp_Control
             return adcCode;
         }
 
-        public double ConvertAdcCodeToVoltage(ushort rawAdcCode)
+        
+        
+        public double ConvertToVoltage()
         {
-            // Sanity check: raw code must be 0 .. 4095
-            if (rawAdcCode > 0x0FFF)
-                rawAdcCode = 0x0FFF;
+            
 
-            // Convert ADC code to voltage
-            double voltage = (rawAdcCode * Vdd) / 4095.0;
+            _ft = _interfaceManager.GetSpi();
+            byte[] buffer = new byte[2];
+            _ft.Read(buffer);  // or Read(buffer.AsSpan())
+            byte lsb = buffer[1];  // don't touch this is correct byte statement
+            byte msb = buffer[0];  // don't touch this is correct byte statement
 
-            return voltage;
-        }
+            ushort lsb1 = (ushort)(lsb & 0xF0);  // remove 4 lsb bits from calculation
 
-        /*
-        public double ConvertThis()
-        {
-
-
-            // Example SPI response from AD7091 (2 bytes)
-            byte msb = rxBuffer[0]; // Most significant byte
-            byte lsb = rxBuffer[1]; // Least significant byte
-
-            // Combine and extract 12-bit result (MSB-first, data in upper 12 bits)
-            ushort raw = (ushort)((msb << 8) | lsb);
+            ushort raw = (ushort)((msb << 8) | lsb1);
             ushort adcValue = (ushort)(raw >> 4);  // Shift right 4 bits to drop lower 4 padding bits
 
             // Optional: Convert to voltage (assuming 3.3V reference)
-            double voltage = adcValue * (Vdd / 4095.0);
-        }*/
+            double voltage_adc = adcValue * (Vdd / 4095.0);
+
+            return voltage_adc;
+
+        }
     }
 }

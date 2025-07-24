@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.Cmd_Exit = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -37,13 +36,13 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label26 = new System.Windows.Forms.Label();
             this.tabAD4368 = new System.Windows.Forms.TabPage();
+            this.Cmd_RFPLL_Init = new System.Windows.Forms.Button();
             this.checkRFLOCK = new System.Windows.Forms.CheckBox();
             this.Cmd_PowerONOFF = new System.Windows.Forms.Button();
             this.radioRF_POWER_Status = new System.Windows.Forms.RadioButton();
             this.Cmd_WriteAll_AD4368 = new System.Windows.Forms.Button();
             this.Cmd_ReadAll_AD4368 = new System.Windows.Forms.Button();
             this.Cmd_Export_AD4368_File = new System.Windows.Forms.Button();
-            this.Cmd_Import_AD4368_File = new System.Windows.Forms.Button();
             this.Cmd_WriteReg_AD4368 = new System.Windows.Forms.Button();
             this.textAD4368_Value = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -54,6 +53,9 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.Cmd_PRBS = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.Cmd_NCO = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
             this.Cmd_DAC_Init = new System.Windows.Forms.Button();
@@ -119,8 +121,8 @@
             this.Cmd_I2C_Write = new System.Windows.Forms.Button();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textI2C_Val = new System.Windows.Forms.TextBox();
+            this.textI2C_Reg = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -128,7 +130,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.radioMUX = new System.Windows.Forms.RadioButton();
             this.radioFPGA = new System.Windows.Forms.RadioButton();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -138,10 +139,8 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
-            this.Cmd_PRBS = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label32 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -198,7 +197,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(852, 684);
             this.tabControl1.TabIndex = 2;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.TabControl1_SelectedIndexChanged);
             // 
             // tabWelcome
             // 
@@ -233,13 +232,14 @@
             // 
             // tabAD4368
             // 
+            this.tabAD4368.Controls.Add(this.label32);
+            this.tabAD4368.Controls.Add(this.Cmd_RFPLL_Init);
             this.tabAD4368.Controls.Add(this.checkRFLOCK);
             this.tabAD4368.Controls.Add(this.Cmd_PowerONOFF);
             this.tabAD4368.Controls.Add(this.radioRF_POWER_Status);
             this.tabAD4368.Controls.Add(this.Cmd_WriteAll_AD4368);
             this.tabAD4368.Controls.Add(this.Cmd_ReadAll_AD4368);
             this.tabAD4368.Controls.Add(this.Cmd_Export_AD4368_File);
-            this.tabAD4368.Controls.Add(this.Cmd_Import_AD4368_File);
             this.tabAD4368.Controls.Add(this.Cmd_WriteReg_AD4368);
             this.tabAD4368.Controls.Add(this.textAD4368_Value);
             this.tabAD4368.Controls.Add(this.groupBox1);
@@ -257,11 +257,21 @@
             this.tabAD4368.Text = "PLL 4368";
             this.tabAD4368.UseVisualStyleBackColor = true;
             // 
+            // Cmd_RFPLL_Init
+            // 
+            this.Cmd_RFPLL_Init.Location = new System.Drawing.Point(606, 159);
+            this.Cmd_RFPLL_Init.Name = "Cmd_RFPLL_Init";
+            this.Cmd_RFPLL_Init.Size = new System.Drawing.Size(114, 45);
+            this.Cmd_RFPLL_Init.TabIndex = 17;
+            this.Cmd_RFPLL_Init.Text = "RF PLL INIT";
+            this.Cmd_RFPLL_Init.UseVisualStyleBackColor = true;
+            this.Cmd_RFPLL_Init.Click += new System.EventHandler(this.Cmd_RFPLL_Init_Click);
+            // 
             // checkRFLOCK
             // 
             this.checkRFLOCK.AutoSize = true;
             this.checkRFLOCK.Enabled = false;
-            this.checkRFLOCK.Location = new System.Drawing.Point(606, 516);
+            this.checkRFLOCK.Location = new System.Drawing.Point(606, 465);
             this.checkRFLOCK.Name = "checkRFLOCK";
             this.checkRFLOCK.Size = new System.Drawing.Size(94, 20);
             this.checkRFLOCK.TabIndex = 16;
@@ -270,7 +280,6 @@
             // 
             // Cmd_PowerONOFF
             // 
-            this.Cmd_PowerONOFF.Enabled = false;
             this.Cmd_PowerONOFF.Location = new System.Drawing.Point(606, 585);
             this.Cmd_PowerONOFF.Name = "Cmd_PowerONOFF";
             this.Cmd_PowerONOFF.Size = new System.Drawing.Size(114, 58);
@@ -295,9 +304,9 @@
             // Cmd_WriteAll_AD4368
             // 
             this.Cmd_WriteAll_AD4368.Enabled = false;
-            this.Cmd_WriteAll_AD4368.Location = new System.Drawing.Point(606, 376);
+            this.Cmd_WriteAll_AD4368.Location = new System.Drawing.Point(606, 342);
             this.Cmd_WriteAll_AD4368.Name = "Cmd_WriteAll_AD4368";
-            this.Cmd_WriteAll_AD4368.Size = new System.Drawing.Size(114, 58);
+            this.Cmd_WriteAll_AD4368.Size = new System.Drawing.Size(114, 45);
             this.Cmd_WriteAll_AD4368.TabIndex = 12;
             this.Cmd_WriteAll_AD4368.Text = "Write To Device";
             this.Cmd_WriteAll_AD4368.UseVisualStyleBackColor = true;
@@ -306,9 +315,9 @@
             // Cmd_ReadAll_AD4368
             // 
             this.Cmd_ReadAll_AD4368.Enabled = false;
-            this.Cmd_ReadAll_AD4368.Location = new System.Drawing.Point(606, 312);
+            this.Cmd_ReadAll_AD4368.Location = new System.Drawing.Point(606, 291);
             this.Cmd_ReadAll_AD4368.Name = "Cmd_ReadAll_AD4368";
-            this.Cmd_ReadAll_AD4368.Size = new System.Drawing.Size(114, 58);
+            this.Cmd_ReadAll_AD4368.Size = new System.Drawing.Size(114, 45);
             this.Cmd_ReadAll_AD4368.TabIndex = 11;
             this.Cmd_ReadAll_AD4368.Text = "Read From Device";
             this.Cmd_ReadAll_AD4368.UseVisualStyleBackColor = true;
@@ -325,21 +334,11 @@
             this.Cmd_Export_AD4368_File.UseVisualStyleBackColor = true;
             this.Cmd_Export_AD4368_File.Click += new System.EventHandler(this.Cmd_Export_AD4368_File_Click);
             // 
-            // Cmd_Import_AD4368_File
-            // 
-            this.Cmd_Import_AD4368_File.Location = new System.Drawing.Point(606, 159);
-            this.Cmd_Import_AD4368_File.Name = "Cmd_Import_AD4368_File";
-            this.Cmd_Import_AD4368_File.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Import_AD4368_File.TabIndex = 9;
-            this.Cmd_Import_AD4368_File.Text = "Import File";
-            this.Cmd_Import_AD4368_File.UseVisualStyleBackColor = true;
-            this.Cmd_Import_AD4368_File.Click += new System.EventHandler(this.Cmd_Import_AD4368_File_Click);
-            // 
             // Cmd_WriteReg_AD4368
             // 
-            this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(462, 52);
+            this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(340, 29);
             this.Cmd_WriteReg_AD4368.Name = "Cmd_WriteReg_AD4368";
-            this.Cmd_WriteReg_AD4368.Size = new System.Drawing.Size(101, 63);
+            this.Cmd_WriteReg_AD4368.Size = new System.Drawing.Size(114, 45);
             this.Cmd_WriteReg_AD4368.TabIndex = 7;
             this.Cmd_WriteReg_AD4368.Text = "Write Register";
             this.Cmd_WriteReg_AD4368.UseVisualStyleBackColor = true;
@@ -347,11 +346,11 @@
             // 
             // textAD4368_Value
             // 
-            this.textAD4368_Value.Location = new System.Drawing.Point(334, 72);
+            this.textAD4368_Value.Location = new System.Drawing.Point(205, 48);
             this.textAD4368_Value.Name = "textAD4368_Value";
             this.textAD4368_Value.Size = new System.Drawing.Size(116, 22);
             this.textAD4368_Value.TabIndex = 6;
-            this.textAD4368_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textAD4368_Value_KeyPress);
+            this.textAD4368_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextAD4368_Value_KeyPress);
             // 
             // groupBox1
             // 
@@ -396,16 +395,16 @@
             "1100: low",
             "1101: low",
             ""});
-            this.comboMUXOUT.Location = new System.Drawing.Point(181, 115);
+            this.comboMUXOUT.Location = new System.Drawing.Point(9, 97);
             this.comboMUXOUT.Name = "comboMUXOUT";
             this.comboMUXOUT.Size = new System.Drawing.Size(129, 24);
             this.comboMUXOUT.TabIndex = 4;
-            this.comboMUXOUT.SelectedIndexChanged += new System.EventHandler(this.comboMUXOUT_SelectedIndexChanged);
+            this.comboMUXOUT.SelectedIndexChanged += new System.EventHandler(this.ComboMUXOUT_SelectedIndexChanged);
             // 
             // labelMUXOUT
             // 
             this.labelMUXOUT.AutoSize = true;
-            this.labelMUXOUT.Location = new System.Drawing.Point(100, 118);
+            this.labelMUXOUT.Location = new System.Drawing.Point(6, 78);
             this.labelMUXOUT.Name = "labelMUXOUT";
             this.labelMUXOUT.Size = new System.Drawing.Size(75, 16);
             this.labelMUXOUT.TabIndex = 3;
@@ -414,11 +413,11 @@
             // comboRegAddress
             // 
             this.comboRegAddress.FormattingEnabled = true;
-            this.comboRegAddress.Location = new System.Drawing.Point(181, 72);
+            this.comboRegAddress.Location = new System.Drawing.Point(9, 48);
             this.comboRegAddress.Name = "comboRegAddress";
             this.comboRegAddress.Size = new System.Drawing.Size(129, 24);
             this.comboRegAddress.TabIndex = 2;
-            this.comboRegAddress.SelectedIndexChanged += new System.EventHandler(this.comboRegAddress_SelectedIndexChanged);
+            this.comboRegAddress.SelectedIndexChanged += new System.EventHandler(this.ComboRegAddress_SelectedIndexChanged);
             // 
             // labelRegAddress
             // 
@@ -465,6 +464,37 @@
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "PRBS7",
+            "PRBS15"});
+            this.comboBox1.Location = new System.Drawing.Point(181, 88);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(88, 24);
+            this.comboBox1.TabIndex = 18;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
+            // 
+            // Cmd_PRBS
+            // 
+            this.Cmd_PRBS.Location = new System.Drawing.Point(296, 87);
+            this.Cmd_PRBS.Name = "Cmd_PRBS";
+            this.Cmd_PRBS.Size = new System.Drawing.Size(112, 47);
+            this.Cmd_PRBS.TabIndex = 17;
+            this.Cmd_PRBS.Text = "PRBS Test";
+            this.Cmd_PRBS.UseVisualStyleBackColor = true;
+            this.Cmd_PRBS.Click += new System.EventHandler(this.Cmd_PRBS_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(725, 540);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(113, 22);
+            this.textBox3.TabIndex = 16;
+            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
+            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
+            // 
             // Cmd_NCO
             // 
             this.Cmd_NCO.Location = new System.Drawing.Point(725, 570);
@@ -486,9 +516,9 @@
             // 
             // Cmd_DAC_Init
             // 
-            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 400);
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 140);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
-            this.Cmd_DAC_Init.Size = new System.Drawing.Size(114, 58);
+            this.Cmd_DAC_Init.Size = new System.Drawing.Size(113, 45);
             this.Cmd_DAC_Init.TabIndex = 13;
             this.Cmd_DAC_Init.Text = "DAC INIT";
             this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
@@ -511,6 +541,7 @@
             this.Cmd_ReadDAC9175.TabIndex = 11;
             this.Cmd_ReadDAC9175.Text = "Read From Device";
             this.Cmd_ReadDAC9175.UseVisualStyleBackColor = true;
+            this.Cmd_ReadDAC9175.Click += new System.EventHandler(this.Cmd_ReadDAC9175_Click);
             // 
             // Cmd_WriteReg9175
             // 
@@ -536,7 +567,7 @@
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
-            this.comboRegisters9175.SelectedIndexChanged += new System.EventHandler(this.comboRegisters9175_SelectedIndexChanged);
+            this.comboRegisters9175.SelectedIndexChanged += new System.EventHandler(this.ComboRegisters9175_SelectedIndexChanged);
             // 
             // labelDAC9175_Register
             // 
@@ -592,7 +623,7 @@
             // 
             // Cmd_Import9175_file
             // 
-            this.Cmd_Import9175_file.Location = new System.Drawing.Point(725, 140);
+            this.Cmd_Import9175_file.Location = new System.Drawing.Point(725, 465);
             this.Cmd_Import9175_file.Name = "Cmd_Import9175_file";
             this.Cmd_Import9175_file.Size = new System.Drawing.Size(114, 45);
             this.Cmd_Import9175_file.TabIndex = 0;
@@ -756,8 +787,8 @@
             this.numericATT3.Name = "numericATT3";
             this.numericATT3.Size = new System.Drawing.Size(56, 22);
             this.numericATT3.TabIndex = 25;
-            this.numericATT3.ValueChanged += new System.EventHandler(this.numericATT3_ValueChanged);
-            this.numericATT3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT3_KeyPress);
+            this.numericATT3.ValueChanged += new System.EventHandler(this.NumericATT3_ValueChanged);
+            this.numericATT3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericATT3_KeyPress);
             // 
             // numericATT2
             // 
@@ -771,8 +802,8 @@
             this.numericATT2.Name = "numericATT2";
             this.numericATT2.Size = new System.Drawing.Size(56, 22);
             this.numericATT2.TabIndex = 24;
-            this.numericATT2.ValueChanged += new System.EventHandler(this.numericATT2_ValueChanged);
-            this.numericATT2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT2_KeyPress);
+            this.numericATT2.ValueChanged += new System.EventHandler(this.NumericATT2_ValueChanged);
+            this.numericATT2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericATT2_KeyPress);
             // 
             // numericATT1
             // 
@@ -787,8 +818,8 @@
             this.numericATT1.Size = new System.Drawing.Size(56, 22);
             this.numericATT1.TabIndex = 23;
             this.numericATT1.TabStop = false;
-            this.numericATT1.ValueChanged += new System.EventHandler(this.numericATT1_ValueChanged);
-            this.numericATT1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.numericATT1_KeyPress);
+            this.numericATT1.ValueChanged += new System.EventHandler(this.NumericATT1_ValueChanged);
+            this.numericATT1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericATT1_KeyPress);
             // 
             // checkAmp2
             // 
@@ -799,7 +830,7 @@
             this.checkAmp2.TabIndex = 22;
             this.checkAmp2.Text = "BYPASS MODE";
             this.checkAmp2.UseVisualStyleBackColor = true;
-            this.checkAmp2.CheckedChanged += new System.EventHandler(this.checkAmp2_CheckedChanged);
+            this.checkAmp2.CheckedChanged += new System.EventHandler(this.CheckAmp2_CheckedChanged);
             // 
             // checkAmp1
             // 
@@ -810,13 +841,13 @@
             this.checkAmp1.TabIndex = 21;
             this.checkAmp1.Text = "BYPASS MODE";
             this.checkAmp1.UseVisualStyleBackColor = true;
-            this.checkAmp1.CheckedChanged += new System.EventHandler(this.checkAmp1_CheckedChanged);
+            this.checkAmp1.CheckedChanged += new System.EventHandler(this.CheckAmp1_CheckedChanged);
             // 
             // Cmd_Read_ADC
             // 
             this.Cmd_Read_ADC.Location = new System.Drawing.Point(13, 412);
             this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
-            this.Cmd_Read_ADC.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_Read_ADC.Size = new System.Drawing.Size(163, 51);
             this.Cmd_Read_ADC.TabIndex = 20;
             this.Cmd_Read_ADC.Text = "READ ADC VALUE";
             this.Cmd_Read_ADC.UseVisualStyleBackColor = true;
@@ -828,17 +859,17 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(158, 374);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 16);
+            this.label7.Size = new System.Drawing.Size(41, 16);
             this.label7.TabIndex = 14;
-            this.label7.Text = "0xFFF";
+            this.label7.Text = "0.0 V";
             // 
             // Cmd_UpdateTX_Values
             // 
-            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(715, 412);
+            this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(689, 412);
             this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
-            this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(114, 51);
+            this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(140, 51);
             this.Cmd_UpdateTX_Values.TabIndex = 16;
-            this.Cmd_UpdateTX_Values.Text = "UPDATE RF VALUES";
+            this.Cmd_UpdateTX_Values.Text = "UPDATE RF ATT VALUES";
             this.Cmd_UpdateTX_Values.UseVisualStyleBackColor = true;
             this.Cmd_UpdateTX_Values.Click += new System.EventHandler(this.Cmd_UpdateTX_Values_Click);
             // 
@@ -1030,7 +1061,7 @@
             this.textFPGA_Value.Name = "textFPGA_Value";
             this.textFPGA_Value.Size = new System.Drawing.Size(117, 22);
             this.textFPGA_Value.TabIndex = 7;
-            this.textFPGA_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textFPGA_Value_KeyPress);
+            this.textFPGA_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Value_KeyPress);
             // 
             // label21
             // 
@@ -1086,7 +1117,7 @@
             this.textFPGA_Address.Name = "textFPGA_Address";
             this.textFPGA_Address.Size = new System.Drawing.Size(172, 22);
             this.textFPGA_Address.TabIndex = 1;
-            this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textFPGA_Address_KeyPress);
+            this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Address_KeyPress);
             // 
             // Cmd_FPGA_Import
             // 
@@ -1104,8 +1135,8 @@
             this.tabMux.Controls.Add(this.Cmd_I2C_Write);
             this.tabMux.Controls.Add(this.label24);
             this.tabMux.Controls.Add(this.label23);
-            this.tabMux.Controls.Add(this.textBox2);
-            this.tabMux.Controls.Add(this.textBox1);
+            this.tabMux.Controls.Add(this.textI2C_Val);
+            this.tabMux.Controls.Add(this.textI2C_Reg);
             this.tabMux.Controls.Add(this.groupBox4);
             this.tabMux.Controls.Add(this.label13);
             this.tabMux.Controls.Add(this.label8);
@@ -1120,26 +1151,28 @@
             // 
             // Cmd_I2C_Read
             // 
-            this.Cmd_I2C_Read.Location = new System.Drawing.Point(248, 383);
+            this.Cmd_I2C_Read.Location = new System.Drawing.Point(135, 409);
             this.Cmd_I2C_Read.Name = "Cmd_I2C_Read";
             this.Cmd_I2C_Read.Size = new System.Drawing.Size(107, 54);
             this.Cmd_I2C_Read.TabIndex = 13;
             this.Cmd_I2C_Read.Text = "READ";
             this.Cmd_I2C_Read.UseVisualStyleBackColor = true;
+            this.Cmd_I2C_Read.Click += new System.EventHandler(this.Cmd_I2C_Read_Click);
             // 
             // Cmd_I2C_Write
             // 
-            this.Cmd_I2C_Write.Location = new System.Drawing.Point(135, 383);
+            this.Cmd_I2C_Write.Location = new System.Drawing.Point(135, 349);
             this.Cmd_I2C_Write.Name = "Cmd_I2C_Write";
             this.Cmd_I2C_Write.Size = new System.Drawing.Size(107, 54);
             this.Cmd_I2C_Write.TabIndex = 12;
             this.Cmd_I2C_Write.Text = "WRITE";
             this.Cmd_I2C_Write.UseVisualStyleBackColor = true;
+            this.Cmd_I2C_Write.Click += new System.EventHandler(this.Cmd_I2C_Write_Click);
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(6, 380);
+            this.label24.Location = new System.Drawing.Point(8, 412);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(78, 16);
             this.label24.TabIndex = 11;
@@ -1148,25 +1181,27 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(6, 336);
+            this.label23.Location = new System.Drawing.Point(8, 368);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(114, 16);
             this.label23.TabIndex = 10;
             this.label23.Text = "I2C REGISTER:";
             // 
-            // textBox2
+            // textI2C_Val
             // 
-            this.textBox2.Location = new System.Drawing.Point(9, 399);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(107, 22);
-            this.textBox2.TabIndex = 9;
+            this.textI2C_Val.Location = new System.Drawing.Point(9, 431);
+            this.textI2C_Val.Name = "textI2C_Val";
+            this.textI2C_Val.Size = new System.Drawing.Size(107, 22);
+            this.textI2C_Val.TabIndex = 9;
+            this.textI2C_Val.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextI2C_Val_KeyPress);
             // 
-            // textBox1
+            // textI2C_Reg
             // 
-            this.textBox1.Location = new System.Drawing.Point(9, 355);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(107, 22);
-            this.textBox1.TabIndex = 8;
+            this.textI2C_Reg.Location = new System.Drawing.Point(9, 387);
+            this.textI2C_Reg.Name = "textI2C_Reg";
+            this.textI2C_Reg.Size = new System.Drawing.Size(107, 22);
+            this.textI2C_Reg.TabIndex = 8;
+            this.textI2C_Reg.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextI2C_Reg_KeyPress);
             // 
             // groupBox4
             // 
@@ -1203,12 +1238,13 @@
             "PLL4368",
             "ADC7091",
             "Si5518",
-            "PCAL6416A"});
+            "PCAL6416A",
+            "FPGA"});
             this.comboDevice.Location = new System.Drawing.Point(9, 291);
             this.comboDevice.Name = "comboDevice";
             this.comboDevice.Size = new System.Drawing.Size(158, 24);
             this.comboDevice.TabIndex = 1;
-            this.comboDevice.SelectedIndexChanged += new System.EventHandler(this.comboDevice_SelectedIndexChanged);
+            this.comboDevice.SelectedIndexChanged += new System.EventHandler(this.ComboDevice_SelectedIndexChanged);
             // 
             // groupBox3
             // 
@@ -1242,11 +1278,6 @@
             this.radioFPGA.TabIndex = 1;
             this.radioFPGA.Text = "FPGA";
             this.radioFPGA.UseVisualStyleBackColor = true;
-            // 
-            // timer1
-            // 
-            this.timer1.Interval = 2000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // label2
             // 
@@ -1339,15 +1370,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(725, 540);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(113, 22);
-            this.textBox3.TabIndex = 16;
-            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
-            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
-            // 
             // label31
             // 
             this.label31.AutoSize = true;
@@ -1357,27 +1379,14 @@
             this.label31.TabIndex = 17;
             this.label31.Text = "dac indx, freq Ghz, Tone %";
             // 
-            // Cmd_PRBS
+            // label32
             // 
-            this.Cmd_PRBS.Location = new System.Drawing.Point(296, 87);
-            this.Cmd_PRBS.Name = "Cmd_PRBS";
-            this.Cmd_PRBS.Size = new System.Drawing.Size(112, 47);
-            this.Cmd_PRBS.TabIndex = 17;
-            this.Cmd_PRBS.Text = "PRBS Test";
-            this.Cmd_PRBS.UseVisualStyleBackColor = true;
-            this.Cmd_PRBS.Click += new System.EventHandler(this.Cmd_PRBS_Click);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "PRBS7",
-            "PRBS15"});
-            this.comboBox1.Location = new System.Drawing.Point(181, 88);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(88, 24);
-            this.comboBox1.TabIndex = 18;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(202, 29);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(96, 16);
+            this.label32.TabIndex = 18;
+            this.label32.Text = "REG VALUE:";
             // 
             // MainForm
             // 
@@ -1454,7 +1463,6 @@
         private System.Windows.Forms.Button Cmd_WriteAll_AD4368;
         private System.Windows.Forms.Button Cmd_ReadAll_AD4368;
         private System.Windows.Forms.Button Cmd_Export_AD4368_File;
-        private System.Windows.Forms.Button Cmd_Import_AD4368_File;
         private System.Windows.Forms.Button Cmd_PowerONOFF;
         private System.Windows.Forms.Label labelFilePath9175;
         private System.Windows.Forms.GroupBox groupBox2;
@@ -1462,7 +1470,6 @@
         private System.Windows.Forms.Button Cmd_Import9175_file;
         private System.Windows.Forms.CheckBox checkRFLOCK;
         private System.Windows.Forms.RadioButton radioRF_POWER_Status;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.DataGridView dataGridViewAD9175;
         private System.Windows.Forms.Button Cmd_WriteReg9175;
         private System.Windows.Forms.TextBox textDAC9175_Value;
@@ -1518,8 +1525,8 @@
         private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textI2C_Val;
+        private System.Windows.Forms.TextBox textI2C_Reg;
         private System.Windows.Forms.Button Cmd_I2C_Write;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;
@@ -1549,6 +1556,8 @@
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Button Cmd_PRBS;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Button Cmd_RFPLL_Init;
+        private System.Windows.Forms.Label label32;
     }
 }
 

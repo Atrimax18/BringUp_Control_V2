@@ -23,6 +23,8 @@ namespace BringUp_Control
         }
 
         private i2cDriver _ft;
+        
+
         private FtdiInterfaceManager _interfaceManager;
 
         public void Init(i2cDriver ft, FtdiInterfaceManager interfaceManager)
@@ -75,6 +77,7 @@ namespace BringUp_Control
             // Convert to Celsius (TMP100 uses 0.0625°C per LSB)
             double temperatureCelsius = rawTemperature * 0.0625;
             Console.WriteLine($"{TMP100_DEVICE_NAMES[(int)addressIndex]} temperature is {temperatureCelsius:F2} °C.");
+            
             return temperatureCelsius;
         }
 
