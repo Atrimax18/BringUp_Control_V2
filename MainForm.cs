@@ -758,59 +758,56 @@ namespace BringUp_Control
                 {
                     DT4368.Clear();
                 }
-                else
+
+                foreach (var item in comboRegAddress.Items)
                 {
-                    foreach (var item in comboRegAddress.Items)
+                    string raw = item?.ToString()?.Trim() ?? string.Empty;
+
+                    if (!TryParseHexU16(raw, out ushort regValue))
                     {
-                        string raw = item?.ToString()?.Trim() ?? string.Empty;
-
-                        if (!TryParseHexU16(raw, out ushort regValue))
-                        {
-                            MessageBox.Show($"Register '{raw}' is not in 0xXXXX format (e.g. 0x002B). " +
-                                            "Item skipped.", "Invalid address",
-                                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            continue;
-                        }
-
-                        byte dataByte;
-                        try
-                        {
-                            dataByte = ad4368.ReadRegister(regValue);
-
-                            // Add to DataTable
-                            DataRow row = DT4368.NewRow();
-                            row["Index"] = index++;
-                            row["Register"] = raw;                   // already validated
-                            row["Value"] = $"0x{dataByte:X2}";
-                            row["Value byte"] = dataByte;
-                            DT4368.Rows.Add(row);
-
-                            if ((byte)regValue == RF_PLL_POWER_REG)
-                            {
-                                // if the register is the power register, check its status
-                                CheckPowerRegister(RF_PLL_POWER_REG);
-                                //RFLockSampling(RF_PLL_LKDET_REG, 0);
-                            }
-
-                            if ((byte)regValue == RF_PLL_LKDET_REG)
-                            {
-                                // if the register is the Lock Detect bit[0] register, check its status
-                                RFLockSampling(RF_PLL_LKDET_REG, 0);
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-                            //MessageBox.Show($"ReadRegister(0x{regValue:X4}) failed:\n{ex.Message}",
-                            //              "Read error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                            LogStatus($"ReadRegister(0x{regValue:X4}) failed: {ex.Message}");
-                            continue;
-                        }
+                        MessageBox.Show($"Register '{raw}' is not in 0xXXXX format (e.g. 0x002B). " +
+                                        "Item skipped.", "Invalid address",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        continue;
                     }
 
+                    byte dataByte;
+                    try
+                    {
+                        dataByte = ad4368.ReadRegister(regValue);
 
+                        // Add to DataTable
+                        DataRow row = DT4368.NewRow();
+                        row["Index"] = index++;
+                        row["Register"] = raw;                   // already validated
+                        row["Value"] = $"0x{dataByte:X2}";
+                        row["Value byte"] = dataByte;
+                        DT4368.Rows.Add(row);
+
+                        if ((byte)regValue == RF_PLL_POWER_REG)
+                        {
+                            // if the register is the power register, check its status
+                            CheckPowerRegister(RF_PLL_POWER_REG);
+                            //RFLockSampling(RF_PLL_LKDET_REG, 0);
+                        }
+
+                        if ((byte)regValue == RF_PLL_LKDET_REG)
+                        {
+                            // if the register is the Lock Detect bit[0] register, check its status
+                            RFLockSampling(RF_PLL_LKDET_REG, 0);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        LogStatus($"ReadRegister(0x{regValue:X4}) failed: {ex.Message}");
+                        continue;
+                    }
                 }
+
+
+                
             }
         }
 
@@ -858,10 +855,7 @@ namespace BringUp_Control
             return bitValue;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            
-        }
+        
 
         private void Cmd_Import9175_file_Click(object sender, EventArgs e)
         {
@@ -1885,15 +1879,21 @@ namespace BringUp_Control
             {
                 if (ad4368 != null)
                 {
-
+                    if (DT4368.Rows.Count > 0)
+                    {
+                        DT4368.Clear();
+                        //dataGridViewAD4368.Update();
+                    }
                     // With this line, using the public ParsingFile method to set the file path and parse the file:
                     ad4368.ParsingFile(rf_pll_ini_file);
 
 
                     labelFilePathAD4368.Text = $"File Path: {rf_pll_ini_file}";
                     try
-                    { 
-                                               
+                    {
+
+                        
+
                         ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF
                         
 
@@ -1917,64 +1917,7 @@ namespace BringUp_Control
 
                 }
             }
-        }
-
-        private void Cmd_ReadReg_AD4368_Click(object sender, EventArgs e)
-        {
-            string regaddress = string.Empty;
-            string dataRaw = string.Empty;
-            if (selectedTab == tabAD4368)
-            {
-                regaddress = comboRegAddress.SelectedItem?.ToString()?.Trim(); // Get selected value as string
-
-
-                if (!TryParseHexU16(regaddress, out ushort regValue))
-                {
-                    MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
-                        "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    comboRegAddress.Focus();
-                    return;
-                }
-
-
-
-                byte dataValue = ad4368.ReadRegister(regValue);
-
-
-
-                // With the following code to update the correct DataRow:
-                foreach (DataRow row in DT4368.Rows)
-                {
-                    if (row["Register"].ToString() == regaddress)
-                    {
-                        row["Value"] = $"0x{dataValue:X2}";
-                        row["Value byte"] = dataValue;
-                        break;
-                    }
-                }
-
-
-                if ((byte)regValue == RF_PLL_POWER_REG)
-                {
-                    // If the register is the power register, check its status
-                    CheckPowerRegister(RF_PLL_POWER_REG);
-                }
-
-                if ((byte)regValue == RF_PLL_LKDET_REG)
-                {
-                    RFLockSampling((byte)regValue, 0);
-                }
-
-                /*
-                else
-                {
-                    MessageBox.Show("The textbox value is empty or wrong!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    textAD4368_Value.Focus();
-                    textAD4368_Value.Clear();
-                }*/
-
-            }
-        }
+        }        
     }
 }
 
