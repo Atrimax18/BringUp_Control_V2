@@ -141,6 +141,24 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label31 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.ComboDAC_index = new System.Windows.Forms.ComboBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label34 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.label37 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.Cmd_StartSweep = new System.Windows.Forms.Button();
+            this.Cmd_StopSweep = new System.Windows.Forms.Button();
+            this.label39 = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label40 = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -160,6 +178,9 @@
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.groupBox6.SuspendLayout();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -439,11 +460,10 @@
             // 
             // tabAD9175
             // 
-            this.tabAD9175.Controls.Add(this.comboBox1);
-            this.tabAD9175.Controls.Add(this.Cmd_PRBS);
-            this.tabAD9175.Controls.Add(this.textBox3);
-            this.tabAD9175.Controls.Add(this.Cmd_NCO);
-            this.tabAD9175.Controls.Add(this.label25);
+            this.tabAD9175.Controls.Add(this.groupBox6);
+            this.tabAD9175.Controls.Add(this.textBox4);
+            this.tabAD9175.Controls.Add(this.Cmd_ReadRegAD9175);
+            this.tabAD9175.Controls.Add(this.groupBox5);
             this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
             this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_ReadDAC9175);
@@ -470,7 +490,7 @@
             this.comboBox1.Items.AddRange(new object[] {
             "PRBS7",
             "PRBS15"});
-            this.comboBox1.Location = new System.Drawing.Point(181, 88);
+            this.comboBox1.Location = new System.Drawing.Point(6, 21);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(88, 24);
             this.comboBox1.TabIndex = 18;
@@ -478,9 +498,9 @@
             // 
             // Cmd_PRBS
             // 
-            this.Cmd_PRBS.Location = new System.Drawing.Point(296, 87);
+            this.Cmd_PRBS.Location = new System.Drawing.Point(114, 13);
             this.Cmd_PRBS.Name = "Cmd_PRBS";
-            this.Cmd_PRBS.Size = new System.Drawing.Size(112, 47);
+            this.Cmd_PRBS.Size = new System.Drawing.Size(97, 38);
             this.Cmd_PRBS.TabIndex = 17;
             this.Cmd_PRBS.Text = "PRBS Test";
             this.Cmd_PRBS.UseVisualStyleBackColor = true;
@@ -488,18 +508,18 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(725, 540);
+            this.textBox3.Location = new System.Drawing.Point(91, 129);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(113, 22);
+            this.textBox3.Size = new System.Drawing.Size(77, 22);
             this.textBox3.TabIndex = 16;
             this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
             this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
             // 
             // Cmd_NCO
             // 
-            this.Cmd_NCO.Location = new System.Drawing.Point(725, 570);
+            this.Cmd_NCO.Location = new System.Drawing.Point(254, 164);
             this.Cmd_NCO.Name = "Cmd_NCO";
-            this.Cmd_NCO.Size = new System.Drawing.Size(113, 53);
+            this.Cmd_NCO.Size = new System.Drawing.Size(97, 53);
             this.Cmd_NCO.TabIndex = 15;
             this.Cmd_NCO.Text = "Calib NCO";
             this.Cmd_NCO.UseVisualStyleBackColor = true;
@@ -508,11 +528,11 @@
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(10, 88);
+            this.label25.Location = new System.Drawing.Point(8, 94);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(89, 16);
+            this.label25.Size = new System.Drawing.Size(79, 16);
             this.label25.TabIndex = 14;
-            this.label25.Text = "values ????";
+            this.label25.Text = "Stop Freq:";
             // 
             // Cmd_DAC_Init
             // 
@@ -545,9 +565,9 @@
             // 
             // Cmd_WriteReg9175
             // 
-            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(423, 17);
+            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(426, 26);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
-            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(101, 63);
+            this.Cmd_WriteReg9175.Size = new System.Drawing.Size(113, 45);
             this.Cmd_WriteReg9175.TabIndex = 10;
             this.Cmd_WriteReg9175.Text = "Write Register";
             this.Cmd_WriteReg9175.UseVisualStyleBackColor = true;
@@ -563,7 +583,7 @@
             // comboRegisters9175
             // 
             this.comboRegisters9175.FormattingEnabled = true;
-            this.comboRegisters9175.Location = new System.Drawing.Point(181, 37);
+            this.comboRegisters9175.Location = new System.Drawing.Point(676, 37);
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
@@ -592,10 +612,10 @@
             this.groupBox2.Controls.Add(this.dataGridViewAD9175);
             this.groupBox2.Location = new System.Drawing.Point(7, 140);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(712, 509);
+            this.groupBox2.Size = new System.Drawing.Size(712, 254);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "AD9175 REGISTER DATA:";
+            this.groupBox2.Text = "DAC9175 REGISTER DATA:";
             // 
             // dataGridViewAD9175
             // 
@@ -607,7 +627,7 @@
             this.dataGridViewAD9175.Name = "dataGridViewAD9175";
             this.dataGridViewAD9175.ReadOnly = true;
             this.dataGridViewAD9175.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.dataGridViewAD9175.Size = new System.Drawing.Size(700, 482);
+            this.dataGridViewAD9175.Size = new System.Drawing.Size(700, 223);
             this.dataGridViewAD9175.TabIndex = 0;
             // 
             // Cmd_Export9175_file
@@ -1373,11 +1393,11 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(873, 644);
+            this.label31.Location = new System.Drawing.Point(265, 147);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(135, 13);
+            this.label31.Size = new System.Drawing.Size(86, 16);
             this.label31.TabIndex = 17;
-            this.label31.Text = "dac indx, freq Ghz, Tone %";
+            this.label31.Text = "Single Test";
             // 
             // label32
             // 
@@ -1388,12 +1408,192 @@
             this.label32.TabIndex = 18;
             this.label32.Text = "REG VALUE:";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label31);
+            this.groupBox5.Controls.Add(this.label40);
+            this.groupBox5.Controls.Add(this.numericUpDown1);
+            this.groupBox5.Controls.Add(this.label39);
+            this.groupBox5.Controls.Add(this.Cmd_StopSweep);
+            this.groupBox5.Controls.Add(this.Cmd_StartSweep);
+            this.groupBox5.Controls.Add(this.label38);
+            this.groupBox5.Controls.Add(this.label37);
+            this.groupBox5.Controls.Add(this.label36);
+            this.groupBox5.Controls.Add(this.textBox2);
+            this.groupBox5.Controls.Add(this.label35);
+            this.groupBox5.Controls.Add(this.textBox1);
+            this.groupBox5.Controls.Add(this.textBox3);
+            this.groupBox5.Controls.Add(this.label34);
+            this.groupBox5.Controls.Add(this.label33);
+            this.groupBox5.Controls.Add(this.Cmd_NCO);
+            this.groupBox5.Controls.Add(this.ComboDAC_index);
+            this.groupBox5.Controls.Add(this.label25);
+            this.groupBox5.Location = new System.Drawing.Point(6, 400);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(372, 228);
+            this.groupBox5.TabIndex = 19;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Calib NCO Freq Sweep:";
+            // 
+            // ComboDAC_index
+            // 
+            this.ComboDAC_index.FormattingEnabled = true;
+            this.ComboDAC_index.Items.AddRange(new object[] {
+            "DAC0",
+            "DAC1"});
+            this.ComboDAC_index.Location = new System.Drawing.Point(103, 18);
+            this.ComboDAC_index.Name = "ComboDAC_index";
+            this.ComboDAC_index.Size = new System.Drawing.Size(76, 24);
+            this.ComboDAC_index.TabIndex = 16;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(6, 21);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(91, 16);
+            this.label33.TabIndex = 17;
+            this.label33.Text = "DAC INDEX:";
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(6, 58);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(79, 16);
+            this.label34.TabIndex = 18;
+            this.label34.Text = "Start Freq:";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(91, 55);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(77, 22);
+            this.textBox1.TabIndex = 19;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Location = new System.Drawing.Point(174, 58);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(37, 16);
+            this.label35.TabIndex = 20;
+            this.label35.Text = "MHz";
+            // 
+            // Cmd_ReadRegAD9175
+            // 
+            this.Cmd_ReadRegAD9175.Location = new System.Drawing.Point(545, 27);
+            this.Cmd_ReadRegAD9175.Name = "Cmd_ReadRegAD9175";
+            this.Cmd_ReadRegAD9175.Size = new System.Drawing.Size(113, 42);
+            this.Cmd_ReadRegAD9175.TabIndex = 20;
+            this.Cmd_ReadRegAD9175.Text = "Read Register";
+            this.Cmd_ReadRegAD9175.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(91, 91);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(77, 22);
+            this.textBox2.TabIndex = 21;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(175, 94);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(37, 16);
+            this.label36.TabIndex = 22;
+            this.label36.Text = "MHz";
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(8, 132);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(75, 16);
+            this.label37.TabIndex = 23;
+            this.label37.Text = "StepFreq:";
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(727, 606);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(78, 22);
+            this.textBox4.TabIndex = 24;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(175, 132);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(37, 16);
+            this.label38.TabIndex = 24;
+            this.label38.Text = "MHz";
+            // 
+            // Cmd_StartSweep
+            // 
+            this.Cmd_StartSweep.Location = new System.Drawing.Point(254, 47);
+            this.Cmd_StartSweep.Name = "Cmd_StartSweep";
+            this.Cmd_StartSweep.Size = new System.Drawing.Size(97, 39);
+            this.Cmd_StartSweep.TabIndex = 25;
+            this.Cmd_StartSweep.Text = "Start";
+            this.Cmd_StartSweep.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_StopSweep
+            // 
+            this.Cmd_StopSweep.Location = new System.Drawing.Point(254, 91);
+            this.Cmd_StopSweep.Name = "Cmd_StopSweep";
+            this.Cmd_StopSweep.Size = new System.Drawing.Size(97, 39);
+            this.Cmd_StopSweep.TabIndex = 26;
+            this.Cmd_StopSweep.Text = "Stop";
+            this.Cmd_StopSweep.UseVisualStyleBackColor = true;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(8, 170);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(82, 16);
+            this.label39.TabIndex = 27;
+            this.label39.Text = "Tone Amp:";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(96, 164);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(72, 22);
+            this.numericUpDown1.TabIndex = 28;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(175, 166);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(20, 16);
+            this.label40.TabIndex = 29;
+            this.label40.Text = "%";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.comboBox1);
+            this.groupBox6.Controls.Add(this.Cmd_PRBS);
+            this.groupBox6.Location = new System.Drawing.Point(401, 400);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(234, 74);
+            this.groupBox6.TabIndex = 25;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "PRBS TEST:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1160, 774);
-            this.Controls.Add(this.label31);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.textLog);
             this.Controls.Add(this.pictureBox2);
@@ -1439,6 +1639,10 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.groupBox6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1558,6 +1762,24 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button Cmd_RFPLL_Init;
         private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.ComboBox ComboDAC_index;
+        private System.Windows.Forms.Button Cmd_ReadRegAD9175;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Button Cmd_StopSweep;
+        private System.Windows.Forms.Button Cmd_StartSweep;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.GroupBox groupBox6;
     }
 }
 
