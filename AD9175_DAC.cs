@@ -62,11 +62,7 @@ namespace BringUp_Control
             public byte Data { get; set; }
             public OperationType OpType { get; set; }
             public FunctionGroup Group { get; set; }
-        }
-
-
-
-        
+        }        
 
         private string _csvPath;
         private const byte ErrorValue = 0xFF; // error value from readregister function ???? check it !!!!
@@ -743,7 +739,7 @@ namespace BringUp_Control
             }
             else
             {                
-                
+                FSC_Ctrl = -1; // Invalid value
                 MainForm.Instance?.LogStatus("IOUTFS_mA must be between 15.625 and 25.977 mA");
             }
             

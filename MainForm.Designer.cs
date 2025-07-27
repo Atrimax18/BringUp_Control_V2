@@ -65,19 +65,17 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label31 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
             this.numericTone_Amplitude = new System.Windows.Forms.NumericUpDown();
             this.label39 = new System.Windows.Forms.Label();
-            this.Cmd_StopSweep = new System.Windows.Forms.Button();
             this.Cmd_StartSweep = new System.Windows.Forms.Button();
             this.label38 = new System.Windows.Forms.Label();
             this.label37 = new System.Windows.Forms.Label();
             this.label36 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textStop = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textStart = new System.Windows.Forms.TextBox();
+            this.textStep = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
             this.Cmd_NCO = new System.Windows.Forms.Button();
@@ -165,6 +163,10 @@
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.Cmd_STP = new System.Windows.Forms.Button();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.numericTime = new System.Windows.Forms.NumericUpDown();
+            this.label43 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -189,6 +191,7 @@
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -539,7 +542,7 @@
             // 
             this.numericDAC_FS.DecimalPlaces = 3;
             this.numericDAC_FS.Increment = new decimal(new int[] {
-            1,
+            97,
             0,
             0,
             196608});
@@ -625,19 +628,21 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.label43);
+            this.groupBox5.Controls.Add(this.numericTime);
             this.groupBox5.Controls.Add(this.label31);
+            this.groupBox5.Controls.Add(this.checkBox1);
             this.groupBox5.Controls.Add(this.label40);
             this.groupBox5.Controls.Add(this.numericTone_Amplitude);
             this.groupBox5.Controls.Add(this.label39);
-            this.groupBox5.Controls.Add(this.Cmd_StopSweep);
             this.groupBox5.Controls.Add(this.Cmd_StartSweep);
             this.groupBox5.Controls.Add(this.label38);
             this.groupBox5.Controls.Add(this.label37);
             this.groupBox5.Controls.Add(this.label36);
-            this.groupBox5.Controls.Add(this.textBox2);
+            this.groupBox5.Controls.Add(this.textStop);
             this.groupBox5.Controls.Add(this.label35);
-            this.groupBox5.Controls.Add(this.textBox1);
-            this.groupBox5.Controls.Add(this.textBox3);
+            this.groupBox5.Controls.Add(this.textStart);
+            this.groupBox5.Controls.Add(this.textStep);
             this.groupBox5.Controls.Add(this.label34);
             this.groupBox5.Controls.Add(this.label33);
             this.groupBox5.Controls.Add(this.Cmd_NCO);
@@ -648,16 +653,7 @@
             this.groupBox5.Size = new System.Drawing.Size(372, 228);
             this.groupBox5.TabIndex = 19;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Calib NCO Freq Sweep:";
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(265, 147);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(86, 16);
-            this.label31.TabIndex = 17;
-            this.label31.Text = "Single Test";
+            this.groupBox5.Text = "Calib NCO Freq:";
             // 
             // label40
             // 
@@ -689,15 +685,6 @@
             this.label39.TabIndex = 27;
             this.label39.Text = "Tone Amp:";
             // 
-            // Cmd_StopSweep
-            // 
-            this.Cmd_StopSweep.Location = new System.Drawing.Point(254, 91);
-            this.Cmd_StopSweep.Name = "Cmd_StopSweep";
-            this.Cmd_StopSweep.Size = new System.Drawing.Size(97, 39);
-            this.Cmd_StopSweep.TabIndex = 26;
-            this.Cmd_StopSweep.Text = "Stop";
-            this.Cmd_StopSweep.UseVisualStyleBackColor = true;
-            // 
             // Cmd_StartSweep
             // 
             this.Cmd_StartSweep.Location = new System.Drawing.Point(254, 47);
@@ -706,6 +693,7 @@
             this.Cmd_StartSweep.TabIndex = 25;
             this.Cmd_StartSweep.Text = "Start";
             this.Cmd_StartSweep.UseVisualStyleBackColor = true;
+            this.Cmd_StartSweep.Click += new System.EventHandler(this.Cmd_StartSweep_Click);
             // 
             // label38
             // 
@@ -734,12 +722,12 @@
             this.label36.TabIndex = 22;
             this.label36.Text = "MHz";
             // 
-            // textBox2
+            // textStop
             // 
-            this.textBox2.Location = new System.Drawing.Point(91, 91);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(77, 22);
-            this.textBox2.TabIndex = 21;
+            this.textStop.Location = new System.Drawing.Point(91, 91);
+            this.textStop.Name = "textStop";
+            this.textStop.Size = new System.Drawing.Size(77, 22);
+            this.textStop.TabIndex = 21;
             // 
             // label35
             // 
@@ -750,21 +738,21 @@
             this.label35.TabIndex = 20;
             this.label35.Text = "MHz";
             // 
-            // textBox1
+            // textStart
             // 
-            this.textBox1.Location = new System.Drawing.Point(91, 55);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(77, 22);
-            this.textBox1.TabIndex = 19;
+            this.textStart.Location = new System.Drawing.Point(91, 55);
+            this.textStart.Name = "textStart";
+            this.textStart.Size = new System.Drawing.Size(77, 22);
+            this.textStart.TabIndex = 19;
             // 
-            // textBox3
+            // textStep
             // 
-            this.textBox3.Location = new System.Drawing.Point(91, 129);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(77, 22);
-            this.textBox3.TabIndex = 16;
-            this.textBox3.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
-            this.textBox3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
+            this.textStep.Location = new System.Drawing.Point(91, 129);
+            this.textStep.Name = "textStep";
+            this.textStep.Size = new System.Drawing.Size(77, 22);
+            this.textStep.TabIndex = 16;
+            this.textStep.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
+            this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
             // 
             // label34
             // 
@@ -1680,6 +1668,54 @@
             this.Cmd_STP.UseVisualStyleBackColor = true;
             this.Cmd_STP.Click += new System.EventHandler(this.Cmd_STP_Click);
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(250, 20);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(106, 20);
+            this.checkBox1.TabIndex = 30;
+            this.checkBox1.Text = "Single NCO";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(8, 201);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(82, 16);
+            this.label31.TabIndex = 31;
+            this.label31.Text = "Step Time:";
+            // 
+            // numericTime
+            // 
+            this.numericTime.Location = new System.Drawing.Point(96, 195);
+            this.numericTime.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericTime.Name = "numericTime";
+            this.numericTime.Size = new System.Drawing.Size(72, 22);
+            this.numericTime.TabIndex = 32;
+            this.numericTime.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(174, 197);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(56, 16);
+            this.label43.TabIndex = 33;
+            this.label43.Text = "milisec";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1737,6 +1773,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1850,8 +1887,7 @@
         private System.Windows.Forms.Button Cmd_Config;
         private System.Windows.Forms.Button Cmd_Burn_SkyPLL;
         private System.Windows.Forms.Button Cmd_NCO;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.TextBox textStep;
         private System.Windows.Forms.Button Cmd_PRBS;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button Cmd_RFPLL_Init;
@@ -1862,15 +1898,14 @@
         private System.Windows.Forms.Button Cmd_ReadRegAD9175;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textStop;
         private System.Windows.Forms.Label label35;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textStart;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.NumericUpDown numericTone_Amplitude;
         private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Button Cmd_StopSweep;
         private System.Windows.Forms.Button Cmd_StartSweep;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.GroupBox groupBox6;
@@ -1880,6 +1915,10 @@
         private System.Windows.Forms.NumericUpDown numericDAC_FS;
         private System.Windows.Forms.Button Cmd_UpdateFS_Ioutfs;
         private System.Windows.Forms.Button Cmd_STP;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.NumericUpDown numericTime;
+        private System.Windows.Forms.Label label31;
     }
 }
 

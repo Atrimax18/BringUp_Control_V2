@@ -965,7 +965,8 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabAD9175)
             {
-                //todo: check if the DAC is initialized and if not - initialize it
+                NCO_Control(true);
+                ComboDAC_index.SelectedItem = 0; // Set default index to 0
 
                 //IO_Exp.SetPinState();
 
@@ -1840,7 +1841,7 @@ namespace BringUp_Control
         {
             if (e.KeyChar == 13)
             {
-                linevaluetx3 = textBox3.Text;
+                linevaluetx3 = textStep.Text;
                 Cmd_NCO.Focus();
             }
         }
@@ -1981,7 +1982,22 @@ namespace BringUp_Control
 
         private void Cmd_STP_Click(object sender, EventArgs e)
         {
-            RunSTPLTest(0,0,0,15);///
+            if (selectedTab == tabAD9175)
+            {
+                if (ad9175 != null)
+                {
+                    // Run STPL test with default parameters
+                    //RunSTPLTest(0x0F, 0, 0, 0, 15); // Example: 0x0F = 15 in decimal, linkSel = 0 (DAC0), channelSel = 0 (Ch0), iqSel = 0 (I path), sampleIndex = from 0 to 15
+                    for(int i = 0; i < 16; i++)
+                    {
+                        RunSTPLTest(0x0F, 0, 0, 0, (byte)i); // Run test for each sample index from 0 to 15
+                    }
+                }
+                else
+                {                    
+                    LogStatus("DAC Handle is not initialized.");
+                }
+            }            
         }
 
         void RunSTPLTest(
@@ -2034,6 +2050,44 @@ namespace BringUp_Control
                 Console.WriteLine("STPL Test PASSED.");
         }
 
+        private void Cmd_StartSweep_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NCO_Control(bool ncoflag)
+        {
+            if (ncoflag)
+            {
+                textStart.Enabled = true;
+                textStop.Enabled = false;
+                textStep.Enabled = false;
+                numericTone_Amplitude.Enabled = true;
+                numericTime.Enabled = false;
+            }
+            else
+            {
+                textStart.Enabled = true;
+                textStop.Enabled = true;
+                textStep.Enabled = true;
+                numericTone_Amplitude.Enabled = true;
+                numericTime.Enabled = true;
+            }
+                
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                NCO_Control(true); // Enable NCO control
+
+            }
+            else
+            {
+                NCO_Control(false); // Disable NCO control
+            }
+        }
     }
 }
 
