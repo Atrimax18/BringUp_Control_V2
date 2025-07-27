@@ -1997,7 +1997,7 @@ namespace BringUp_Control
                             {
                                 RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);
 
-                                LogStatus($"Sample Index: {sampind.ToString()}");
+                                LogStatus($"Sample Index: {sampind:X4}");
                             }                            
                         }
                     }
