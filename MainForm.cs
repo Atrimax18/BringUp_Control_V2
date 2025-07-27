@@ -1982,16 +1982,24 @@ namespace BringUp_Control
 
         private void Cmd_STP_Click(object sender, EventArgs e)
         {
+            byte sampind = 0x00;
             if (selectedTab == tabAD9175)
             {
                 if (ad9175 != null)
                 {
                     // Run STPL test with default parameters
                     //RunSTPLTest(0x0F, 0, 0, 0, 15); // Example: 0x0F = 15 in decimal, linkSel = 0 (DAC0), channelSel = 0 (Ch0), iqSel = 0 (I path), sampleIndex = from 0 to 15
-                    for(int i = 0; i < 16; i++)
+                    for (int k = 0; k < 2; k++) // linksel
                     {
-                        RunSTPLTest(0x0F, 0, 0, 0, (byte)i); // Run test for each sample index from 0 to 15
+                        for (int i = 0; i < 4; i++) //chanelsele
+                        {
+                            for (int j = 0; j < 2; j++) //iqsel
+                            {
+                                RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);                               
+                            }                            
+                        }
                     }
+                    
                 }
                 else
                 {                    
