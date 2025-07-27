@@ -966,7 +966,7 @@ namespace BringUp_Control
             else if (selectedTab == tabAD9175)
             {
                 NCO_Control(true);
-                ComboDAC_index.SelectedItem = 0; // Set default index to 0
+                ComboDAC_index.SelectedIndex = 0; // Set default index to 0
 
                 //IO_Exp.SetPinState();
 
