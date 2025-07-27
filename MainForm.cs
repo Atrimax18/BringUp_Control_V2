@@ -1981,7 +1981,7 @@ namespace BringUp_Control
 
         private void Cmd_STP_Click(object sender, EventArgs e)
         {
-            RunSTPLTest();
+            RunSTPLTest(0,0,0,15);///
         }
 
         void RunSTPLTest(
