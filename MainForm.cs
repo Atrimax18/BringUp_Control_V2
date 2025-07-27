@@ -1983,6 +1983,8 @@ namespace BringUp_Control
         private void Cmd_STP_Click(object sender, EventArgs e)
         {
             byte sampind = 0x00;
+            ushort testdata = 0x0F;
+
             if (selectedTab == tabAD9175)
             {
                 if (ad9175 != null)
@@ -1995,7 +1997,7 @@ namespace BringUp_Control
                         {
                             for (int j = 0; j < 2; j++) //iqsel I -0 , Q - 1
                             {
-                                RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);
+                                RunSTPLTest(testdata, (byte)k, (byte)(i), (byte)j, sampind);
 
                                 LogStatus($"Sample Index: {sampind:X4}");
                             }                            
