@@ -1995,7 +1995,9 @@ namespace BringUp_Control
                         {
                             for (int j = 0; j < 2; j++) //iqsel I -0 , Q - 1
                             {
-                                RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);                               
+                                RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);
+
+                                LogStatus($"Sample Index: {sampind.ToString()}");
                             }                            
                         }
                     }
