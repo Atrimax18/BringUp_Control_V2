@@ -15,7 +15,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static BringUp_Control.AD9175_DAC;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 
 // BringUp application contains full list of RF part to control them for R&D tests
@@ -1758,7 +1760,11 @@ namespace BringUp_Control
         //test temperature button test readinfo , serial communcation 
         private void button1_Click(object sender, EventArgs e)
         {
+            //si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
 
+            //si5518.SioTest();
+            si5518.ReadInfo();
+            
 
         }
 

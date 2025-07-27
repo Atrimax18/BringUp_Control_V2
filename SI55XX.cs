@@ -72,7 +72,20 @@ namespace BringUp_Control
             Span<byte> buffer = stackalloc byte[2 + data.Length];
             buffer[0] = 0xC0;
             buffer[1] = command;
+            
             data.CopyTo(buffer.Slice(2));
+
+            _spi.Write(buffer);
+            Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
+        }
+
+        private void SendCommand_ONE(byte command)
+        {
+            Span<byte> buffer = stackalloc byte[2];
+            buffer[0] = 0xC0;
+            buffer[1] = command;
+
+            //data.CopyTo(buffer.Slice(2));
 
             _spi.Write(buffer);
             Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
@@ -136,7 +149,11 @@ namespace BringUp_Control
 
         public string ReadInfo()
         {
-            Span<byte> buffer = stackalloc byte[13];
+            Span<byte> buffer = stackalloc byte[15];
+
+            
+            SendCommand_ONE(CMD_DEVICE_INFO);
+
             Read(CMD_DEVICE_INFO, buffer);
 
             string device_info = string.Empty;
@@ -150,12 +167,12 @@ namespace BringUp_Control
 
         private void Read(byte command, Span<byte> buffer)
         {
-            Span<byte> writeBuffer = stackalloc byte[2];
+            //Span<byte> writeBuffer = stackalloc byte[8];
 
-            //writeBuffer[0] = command;
+            Span<byte> writeBuffer = stackalloc byte[15];
 
             writeBuffer[0] = 0xD0;
-            writeBuffer[1] = command;
+            
 
 
             _spi.TransferFullDuplex(writeBuffer, buffer);
@@ -212,9 +229,10 @@ namespace BringUp_Control
         public void SioTest()
         {
             Span<byte> testData = stackalloc byte[2] { 0xAB, 0xCD };
-            Span<byte> reply = stackalloc byte[4];
+            Span<byte> reply = stackalloc byte[8];
 
             SendCommand(CMD_SIO_TEST, testData);
+            
             Read(CMD_SIO_TEST, reply);
 
             /*if (reply[1] != CMD_SIO_TEST || reply[2] != testData[0] || reply[3] != testData[1])
