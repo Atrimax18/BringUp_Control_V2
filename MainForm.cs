@@ -1989,11 +1989,11 @@ namespace BringUp_Control
                 {
                     // Run STPL test with default parameters
                     //RunSTPLTest(0x0F, 0, 0, 0, 15); // Example: 0x0F = 15 in decimal, linkSel = 0 (DAC0), channelSel = 0 (Ch0), iqSel = 0 (I path), sampleIndex = from 0 to 15
-                    for (int k = 0; k < 2; k++) // linksel
+                    for (int k = 0; k < 2; k++) // linksel DAC0 - 0, DAC1 - 1
                     {
-                        for (int i = 0; i < 4; i++) //chanelsele
+                        for (int i = 0; i < 4; i++) //chanelselect 0 - 4
                         {
-                            for (int j = 0; j < 2; j++) //iqsel
+                            for (int j = 0; j < 2; j++) //iqsel I -0 , Q - 1
                             {
                                 RunSTPLTest(0x0F, (byte)k, (byte)(i), (byte)j, sampind);                               
                             }                            
