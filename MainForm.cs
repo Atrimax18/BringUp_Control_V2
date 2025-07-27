@@ -37,6 +37,14 @@ namespace BringUp_Control
         private const int RF_PLL_LKDET_REG = 0x0058;
 
 
+        // Define register addresses
+        private const int REG_SHORT_TPL_TEST_0 = 0x032C;
+        private const int REG_SHORT_TPL_TEST_1 = 0x032D;
+        private const int REG_SHORT_TPL_TEST_2 = 0x032E;
+        private const int REG_SHORT_TPL_TEST_3 = 0x032F;
+
+
+
 
         public const int GPIO3 = 3;
 
@@ -66,6 +74,8 @@ namespace BringUp_Control
         bool TXline_flag = false;   // TX line up values upload flag
         private bool _disposed;
 
+
+        float dac_fs_value = 0.0f; // DAC full scale value
 
         private struct TX_Line
         {
@@ -1837,7 +1847,7 @@ namespace BringUp_Control
 
         private void Cmd_PRBS_Click(object sender, EventArgs e)
         {
-            //PRBS7 - PRBS15
+            //PRBS7 - PRBS15 -PRBS31
 
             string prmbs_value = comboBox1.SelectedItem?.ToString();
 
@@ -1923,7 +1933,107 @@ namespace BringUp_Control
 
                 }
             }
-        }        
+        }
+
+        private void Cmd_UpdateFS_Ioutfs_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                if (ad9175 != null)
+                {
+
+                    int dac_num = ComboDAC_index.SelectedIndex; // Get the selected DAC index from the combo box
+                    dac_fs_value = (float)numericDAC_FS.Value; // Get the DAC full-scale value from the numeric up-down control
+                    ad9175.DAC_FullScale(dac_num, dac_fs_value);
+                    LogStatus($"DAC Ioutfs set to {dac_fs_value} mA");
+                }
+                else
+                {
+                    MessageBox.Show("DAC is not initialized.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void numericDAC_FS_ValueChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                if (numericDAC_FS.Value == numericDAC_FS.Maximum)
+                {
+                    MessageBox.Show("Status: MAX VALUE REACHED!", "Warning");
+                    dac_fs_value = (float)numericDAC_FS.Maximum; // set dac fs value for 25.977 mA
+                }
+                else
+                    dac_fs_value = (float)numericDAC_FS.Value;
+
+
+
+                if(numericDAC_FS.Value == numericDAC_FS.Minimum)
+                {
+                    MessageBox.Show("Status: MAX VALUE REACHED!", "Warning");
+                    dac_fs_value = (float)numericDAC_FS.Minimum; // set dac fs value for 25.977 mA
+                }
+                else
+                    dac_fs_value = (float)numericDAC_FS.Value;
+
+            }
+        }
+
+        private void Cmd_STP_Click(object sender, EventArgs e)
+        {
+            RunSTPLTest();
+        }
+
+        void RunSTPLTest(
+            ushort expectedSample,   // Expected sample value (12-bit max), will be shifted by 4 bits (x16)
+            byte linkSel,            // 0 = Link 0 (DAC0), 1 = Link 1 (DAC1)
+            byte channelSel,         // 0 = Ch0, 1 = Ch1, 2 = Ch2
+            byte iqSel,              // 0 = I path, 1 = Q path
+            byte sampleIndex         // 0 to 15 = which sample inside frame to test
+            )
+        {
+            // Step 3: Set expected reference sample (shift left by 4 bits)
+            ushort shiftedSample = (ushort)(expectedSample << 4);
+            byte refMSB = (byte)((shiftedSample >> 8) & 0xFF);
+            byte refLSB = (byte)(shiftedSample & 0xFF);
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_2, refMSB);
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_1, refLSB);
+
+            // Step 4 & 6: Select link and IQ path
+            byte tplTest3 = 0x00;
+            tplTest3 |= (byte)((linkSel & 0x01) << 7);
+            tplTest3 |= (byte)((iqSel & 0x01) << 6);
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_3, tplTest3);
+
+            // Step 5 & 7: Select channel and sample index
+            byte tplTest0 = 0x00;
+            tplTest0 |= (byte)((sampleIndex & 0x0F) << 4);   // bits 7:4 = sample index
+            tplTest0 |= (byte)((channelSel & 0x03) << 2);    // bits 3:2 = channel
+            tplTest0 |= 0x01; // bit 0 = enable test
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_0, tplTest0);
+
+            // Step 9: Trigger reset
+            tplTest0 |= 0x02;  // bit 1 = set reset
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_0, tplTest0);
+
+            tplTest0 &= 0xFD;  // bit 1 = clear reset
+            ad9175.WriteRegister(REG_SHORT_TPL_TEST_0, tplTest0);
+
+            // Step 10: Wait desired time
+            double desiredTimeSec = 10.0; // Example: 1 GSPS, BER = 1e-10
+            Console.WriteLine("Waiting for test to complete...");
+            Thread.Sleep((int)(desiredTimeSec * 1000)); // Convert seconds to ms
+
+            // Step 11: Read result
+            byte result = ad9175.ReadRegister(REG_SHORT_TPL_TEST_3);
+            bool fail = (result & 0x01) != 0;
+
+            if (fail)
+                Console.WriteLine("STPL Test FAILED.");
+            else
+                Console.WriteLine("STPL Test PASSED.");
+        }
+
     }
 }
 
