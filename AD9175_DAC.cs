@@ -998,7 +998,7 @@ namespace BringUp_Control
             // MAIN DAC PAGE for DAC0 or DAC1
             WriteRegister(0x0008, (byte)(1<<(6+dac_index))); // Optimized calibration setting register
 
-            int DDSM_CAL_FTW = (int)(1.0*(NCO_Freq / 11.7) * Math.Pow(2, 32)); // Enabling Calibration NCO accumulator by setting Bit 2 to 1
+            int DDSM_CAL_FTW = (int)(1.0*(NCO_Freq / 11700) * Math.Pow(2, 32)); // Enabling Calibration NCO accumulator by setting Bit 2 to 1
 
             
             WriteRegister(0x01E6, 1 << 2); // 

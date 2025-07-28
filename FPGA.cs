@@ -1,9 +1,12 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BringUp_Control
@@ -12,10 +15,25 @@ namespace BringUp_Control
     {
 
         private SpiDriver _ft;
+        private FtdiInterfaceManager _interfaceManager;
 
-        public void Init(SpiDriver ft)
+        private const int BC = 12; // Bit count for I/Q components
+        private const int MaxRetries = 3;
+
+        public Dictionary<string, DebuggerInstance> Debuggers = new Dictionary<string, DebuggerInstance>
         {
-            _ft = ft;            
+            ["uplink_modem"] = new DebuggerInstance("debugger_0_", 4, 8, 1024),
+            ["uplink_DAC"] = new DebuggerInstance("debugger_1_", 2, 8, 1024),
+            ["downlink_modem"] = new DebuggerInstance("debugger_2_", 4, 8, 1024),
+            ["downlink_ADC"] = new DebuggerInstance("debugger_3_", 1, 20, 1024)
+        };
+
+        public void Init(SpiDriver ft, FtdiInterfaceManager interfaceManager)
+        {
+            _ft = ft ?? throw new ArgumentNullException(nameof(ft));
+            _interfaceManager = interfaceManager ?? throw new ArgumentNullException(nameof(interfaceManager));
+
+            _ft = _interfaceManager.GetSpi(); // Get current SPI interface
         }
 
         /// <summary>
@@ -95,8 +113,139 @@ namespace BringUp_Control
                 (byte)(value & 0xFF)
             };
         }
+        public uint ReadRegisterWithIntegrity(uint address)
+        {
+            var list = new List<uint>();
+            for (int i = 0; i < MaxRetries; i++)
+                list.Add(SpiRead(address));
 
-        
+            return FindMajority(list);
+        }
+
+        private uint FindMajority(List<uint> values)
+        {
+            return values.GroupBy(x => x)
+                         .OrderByDescending(g => g.Count())
+                         .First().Key;
+        }
+
+        public int ConvertFromComplex(Complex a)
+        {
+            int real = (int)Math.Round(a.Real);
+            int imag = (int)Math.Round(a.Imaginary);
+            int i = (real + (1 << BC)) % (1 << BC);
+            int q = (imag + (1 << BC)) % (1 << BC);
+            return (q << BC) | i;
+        }
+
+        public Complex ConvertToComplex(uint packed)
+        {
+            int i = (int)(packed & 0xFFF);
+            if (i > 2047) i -= 4096;
+            int q = (int)(packed >> BC);
+            if (q > 2047) q -= 4096;
+            return new Complex(i, q);
+        }
+
+        public Complex[] LoadVector(string path)
+        {
+            return File.ReadAllLines(path)
+                       .Select(line => line.Trim().Replace("j", "i"))
+                       .Where(line => !string.IsNullOrWhiteSpace(line))
+                       .Select(s => ParseComplex(s))
+                       .ToArray();
+        }
+
+        // Helper method to parse a string into a Complex number
+        private static Complex ParseComplex(string s)
+        {
+            // Handles formats like "1.0+2.0i" or "1.0-2.0i"
+            s = s.Replace(" ", "");
+            int iIndex = s.LastIndexOf('i');
+            if (iIndex < 0)
+                throw new FormatException("Invalid complex format: missing 'i'.");
+
+            string withoutI = s.Substring(0, iIndex);
+            int plusIndex = withoutI.LastIndexOf('+');
+            int minusIndex = withoutI.LastIndexOf('-');
+
+            int splitIndex = Math.Max(plusIndex, minusIndex);
+            if (splitIndex <= 0)
+                throw new FormatException("Invalid complex format: missing '+' or '-' between real and imaginary.");
+
+            string realPart = withoutI.Substring(0, splitIndex);
+            string imagPart = withoutI.Substring(splitIndex);
+
+            double real = double.Parse(realPart, System.Globalization.CultureInfo.InvariantCulture);
+            double imag = double.Parse(imagPart, System.Globalization.CultureInfo.InvariantCulture);
+
+            return new Complex(real, imag);
+        }
+
+        public void WriteToPlayerMemory(string debuggerKey, int stream, Complex[] samples)
+        {
+            if (!Debuggers.TryGetValue(debuggerKey, out DebuggerInstance dbg))
+            {
+                MessageBox.Show("Invalid debugger key: " + debuggerKey);
+                return;
+            }
+
+            int count = samples.Length;
+            if (count % dbg.Parallel != 0 || count / dbg.Parallel > dbg.MemLen)
+            {
+                MessageBox.Show("Invalid sample count: must be divisible by " + dbg.Parallel);
+                return;
+            }
+
+            string prefix = dbg.Prefix;
+            SpiWrite(StringToAddress(prefix + "rgf_set_active_channel"), (uint)stream);
+            SpiWrite(StringToAddress(prefix + "rgf_player_count"), (uint)(count / dbg.Parallel));
+            SpiWrite(StringToAddress(prefix + "rgf_set_wr_address"), 0);
+
+            foreach (var c in samples)
+            {
+                int packed = ConvertFromComplex(c);
+                SpiWrite(StringToAddress(prefix + "rgf_wr_sample"), (uint)packed);
+            }
+        }
+
+        public void ActivatePlayer(string debuggerKey, bool play)
+        {
+            if (!Debuggers.TryGetValue(debuggerKey, out DebuggerInstance dbg))
+            {
+                MessageBox.Show("Invalid debugger key: " + debuggerKey);
+                return;
+            }
+            SpiWrite(StringToAddress(dbg.Prefix + "rgf_activate_player"), play ? 1u : 0u);
+        }
+
+        public void StopPlayer(string debuggerKey)
+        {
+            ActivatePlayer(debuggerKey, false);
+        }
+
+        private uint StringToAddress(string regName)
+        {
+            // Placeholder mapping: in real usage, translate regName to actual address
+            return 0x80000000; // Replace with real logic or lookup
+        }
+        public class DebuggerInstance
+        {
+            public string Prefix { get; set; }
+            public int StreamCount { get; set; }
+            public int Parallel { get; set; }
+            public int MemLen { get; set; }
+
+            public DebuggerInstance(string prefix, int streams, int par, int memlen)
+            {
+                Prefix = prefix;
+                StreamCount = streams;
+                Parallel = par;
+                MemLen = memlen;
+            }
+        }
+
+
         public void Dispose()
         {
             _ft?.Dispose();

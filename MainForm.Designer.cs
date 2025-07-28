@@ -54,6 +54,10 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.label44 = new System.Windows.Forms.Label();
+            this.textRegDAC9175 = new System.Windows.Forms.TextBox();
+            this.Cmd_Link_Status = new System.Windows.Forms.Button();
+            this.Cmd_STP = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.Cmd_UpdateFS_Ioutfs = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
@@ -65,6 +69,10 @@
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.numericTime = new System.Windows.Forms.NumericUpDown();
+            this.label31 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.label40 = new System.Windows.Forms.Label();
             this.numericTone_Amplitude = new System.Windows.Forms.NumericUpDown();
             this.label39 = new System.Windows.Forms.Label();
@@ -125,6 +133,10 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Tests = new System.Windows.Forms.Button();
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
@@ -162,11 +174,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.Cmd_STP = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label31 = new System.Windows.Forms.Label();
-            this.numericTime = new System.Windows.Forms.NumericUpDown();
-            this.label43 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -178,6 +185,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericDAC_FS)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTone_Amplitude)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).BeginInit();
@@ -191,7 +199,6 @@
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -377,7 +384,7 @@
             // 
             // Cmd_WriteReg_AD4368
             // 
-            this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(340, 29);
+            this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(304, 29);
             this.Cmd_WriteReg_AD4368.Name = "Cmd_WriteReg_AD4368";
             this.Cmd_WriteReg_AD4368.Size = new System.Drawing.Size(114, 45);
             this.Cmd_WriteReg_AD4368.TabIndex = 7;
@@ -389,14 +396,14 @@
             // 
             this.textAD4368_Value.Location = new System.Drawing.Point(205, 48);
             this.textAD4368_Value.Name = "textAD4368_Value";
-            this.textAD4368_Value.Size = new System.Drawing.Size(116, 22);
+            this.textAD4368_Value.Size = new System.Drawing.Size(93, 22);
             this.textAD4368_Value.TabIndex = 6;
             this.textAD4368_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextAD4368_Value_KeyPress);
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dataGridViewAD4368);
-            this.groupBox1.Location = new System.Drawing.Point(13, 159);
+            this.groupBox1.Location = new System.Drawing.Point(9, 159);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(550, 490);
             this.groupBox1.TabIndex = 5;
@@ -480,6 +487,9 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.label44);
+            this.tabAD9175.Controls.Add(this.textRegDAC9175);
+            this.tabAD9175.Controls.Add(this.Cmd_Link_Status);
             this.tabAD9175.Controls.Add(this.Cmd_STP);
             this.tabAD9175.Controls.Add(this.groupBox7);
             this.tabAD9175.Controls.Add(this.groupBox6);
@@ -505,6 +515,42 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(6, 72);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(184, 16);
+            this.label44.TabIndex = 30;
+            this.label44.Text = "REGISTER VALUE[0xFF]:";
+            // 
+            // textRegDAC9175
+            // 
+            this.textRegDAC9175.Location = new System.Drawing.Point(9, 47);
+            this.textRegDAC9175.Name = "textRegDAC9175";
+            this.textRegDAC9175.Size = new System.Drawing.Size(94, 22);
+            this.textRegDAC9175.TabIndex = 29;
+            this.textRegDAC9175.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textRegDAC9175_KeyPress);
+            // 
+            // Cmd_Link_Status
+            // 
+            this.Cmd_Link_Status.Location = new System.Drawing.Point(725, 354);
+            this.Cmd_Link_Status.Name = "Cmd_Link_Status";
+            this.Cmd_Link_Status.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_Link_Status.TabIndex = 28;
+            this.Cmd_Link_Status.Text = "Link Status";
+            this.Cmd_Link_Status.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_STP
+            // 
+            this.Cmd_STP.Location = new System.Drawing.Point(740, 582);
+            this.Cmd_STP.Name = "Cmd_STP";
+            this.Cmd_STP.Size = new System.Drawing.Size(83, 39);
+            this.Cmd_STP.TabIndex = 27;
+            this.Cmd_STP.Text = "STP";
+            this.Cmd_STP.UseVisualStyleBackColor = true;
+            this.Cmd_STP.Click += new System.EventHandler(this.Cmd_STP_Click);
             // 
             // groupBox7
             // 
@@ -619,12 +665,13 @@
             // 
             // Cmd_ReadRegAD9175
             // 
-            this.Cmd_ReadRegAD9175.Location = new System.Drawing.Point(545, 27);
+            this.Cmd_ReadRegAD9175.Location = new System.Drawing.Point(256, 72);
             this.Cmd_ReadRegAD9175.Name = "Cmd_ReadRegAD9175";
-            this.Cmd_ReadRegAD9175.Size = new System.Drawing.Size(113, 42);
+            this.Cmd_ReadRegAD9175.Size = new System.Drawing.Size(113, 45);
             this.Cmd_ReadRegAD9175.TabIndex = 20;
             this.Cmd_ReadRegAD9175.Text = "Read Register";
             this.Cmd_ReadRegAD9175.UseVisualStyleBackColor = true;
+            this.Cmd_ReadRegAD9175.Click += new System.EventHandler(this.Cmd_ReadRegAD9175_Click);
             // 
             // groupBox5
             // 
@@ -654,6 +701,54 @@
             this.groupBox5.TabIndex = 19;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Calib NCO Freq:";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(174, 197);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(56, 16);
+            this.label43.TabIndex = 33;
+            this.label43.Text = "milisec";
+            // 
+            // numericTime
+            // 
+            this.numericTime.Location = new System.Drawing.Point(96, 195);
+            this.numericTime.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.numericTime.Name = "numericTime";
+            this.numericTime.Size = new System.Drawing.Size(72, 22);
+            this.numericTime.TabIndex = 32;
+            this.numericTime.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(8, 201);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(82, 16);
+            this.label31.TabIndex = 31;
+            this.label31.Text = "Step Time:";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(250, 20);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(106, 20);
+            this.checkBox1.TabIndex = 30;
+            this.checkBox1.Text = "Single NCO";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // label40
             // 
@@ -728,6 +823,7 @@
             this.textStop.Name = "textStop";
             this.textStop.Size = new System.Drawing.Size(77, 22);
             this.textStop.TabIndex = 21;
+            this.textStop.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStop_KeyPress);
             // 
             // label35
             // 
@@ -744,6 +840,7 @@
             this.textStart.Name = "textStart";
             this.textStart.Size = new System.Drawing.Size(77, 22);
             this.textStart.TabIndex = 19;
+            this.textStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStart_KeyPress);
             // 
             // textStep
             // 
@@ -751,8 +848,7 @@
             this.textStep.Name = "textStep";
             this.textStep.Size = new System.Drawing.Size(77, 22);
             this.textStep.TabIndex = 16;
-            this.textStep.TextChanged += new System.EventHandler(this.TextBox3_TextChanged);
-            this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox3_KeyPress);
+            this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStep_KeyPress);
             // 
             // label34
             // 
@@ -804,7 +900,7 @@
             // 
             // Cmd_DAC_Init
             // 
-            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 140);
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 87);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
             this.Cmd_DAC_Init.Size = new System.Drawing.Size(113, 45);
             this.Cmd_DAC_Init.TabIndex = 13;
@@ -814,7 +910,7 @@
             // 
             // Cmd_WriteDAC9175
             // 
-            this.Cmd_WriteDAC9175.Location = new System.Drawing.Point(725, 336);
+            this.Cmd_WriteDAC9175.Location = new System.Drawing.Point(725, 290);
             this.Cmd_WriteDAC9175.Name = "Cmd_WriteDAC9175";
             this.Cmd_WriteDAC9175.Size = new System.Drawing.Size(114, 58);
             this.Cmd_WriteDAC9175.TabIndex = 12;
@@ -823,7 +919,7 @@
             // 
             // Cmd_ReadDAC9175
             // 
-            this.Cmd_ReadDAC9175.Location = new System.Drawing.Point(725, 272);
+            this.Cmd_ReadDAC9175.Location = new System.Drawing.Point(725, 226);
             this.Cmd_ReadDAC9175.Name = "Cmd_ReadDAC9175";
             this.Cmd_ReadDAC9175.Size = new System.Drawing.Size(114, 58);
             this.Cmd_ReadDAC9175.TabIndex = 11;
@@ -833,7 +929,7 @@
             // 
             // Cmd_WriteReg9175
             // 
-            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(426, 26);
+            this.Cmd_WriteReg9175.Location = new System.Drawing.Point(256, 17);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
             this.Cmd_WriteReg9175.Size = new System.Drawing.Size(113, 45);
             this.Cmd_WriteReg9175.TabIndex = 10;
@@ -843,10 +939,11 @@
             // 
             // textDAC9175_Value
             // 
-            this.textDAC9175_Value.Location = new System.Drawing.Point(316, 37);
+            this.textDAC9175_Value.Location = new System.Drawing.Point(9, 91);
             this.textDAC9175_Value.Name = "textDAC9175_Value";
             this.textDAC9175_Value.Size = new System.Drawing.Size(101, 22);
             this.textDAC9175_Value.TabIndex = 9;
+            this.textDAC9175_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textDAC9175_Value_KeyPress);
             // 
             // comboRegisters9175
             // 
@@ -860,16 +957,16 @@
             // labelDAC9175_Register
             // 
             this.labelDAC9175_Register.AutoSize = true;
-            this.labelDAC9175_Register.Location = new System.Drawing.Point(10, 40);
+            this.labelDAC9175_Register.Location = new System.Drawing.Point(6, 27);
             this.labelDAC9175_Register.Name = "labelDAC9175_Register";
-            this.labelDAC9175_Register.Size = new System.Drawing.Size(165, 16);
+            this.labelDAC9175_Register.Size = new System.Drawing.Size(226, 16);
             this.labelDAC9175_Register.TabIndex = 4;
-            this.labelDAC9175_Register.Text = "REGISTER ADDRESS:";
+            this.labelDAC9175_Register.Text = "REGISTER ADDRESS[0xFFFF]:";
             // 
             // labelFilePath9175
             // 
             this.labelFilePath9175.AutoSize = true;
-            this.labelFilePath9175.Location = new System.Drawing.Point(10, 12);
+            this.labelFilePath9175.Location = new System.Drawing.Point(6, 3);
             this.labelFilePath9175.Name = "labelFilePath9175";
             this.labelFilePath9175.Size = new System.Drawing.Size(107, 16);
             this.labelFilePath9175.TabIndex = 3;
@@ -878,7 +975,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.dataGridViewAD9175);
-            this.groupBox2.Location = new System.Drawing.Point(7, 140);
+            this.groupBox2.Location = new System.Drawing.Point(6, 140);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(712, 254);
             this.groupBox2.TabIndex = 2;
@@ -901,7 +998,7 @@
             // Cmd_Export9175_file
             // 
             this.Cmd_Export9175_file.Enabled = false;
-            this.Cmd_Export9175_file.Location = new System.Drawing.Point(725, 191);
+            this.Cmd_Export9175_file.Location = new System.Drawing.Point(725, 138);
             this.Cmd_Export9175_file.Name = "Cmd_Export9175_file";
             this.Cmd_Export9175_file.Size = new System.Drawing.Size(114, 45);
             this.Cmd_Export9175_file.TabIndex = 1;
@@ -1265,6 +1362,10 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.comboBox2);
+            this.tabFPGA.Controls.Add(this.button4);
+            this.tabFPGA.Controls.Add(this.button3);
+            this.tabFPGA.Controls.Add(this.button2);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Tests);
             this.tabFPGA.Controls.Add(this.Cmd_WriteFPGA);
             this.tabFPGA.Controls.Add(this.label22);
@@ -1285,6 +1386,53 @@
             this.tabFPGA.TabIndex = 7;
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "DAC0",
+            "DAC1",
+            "ADC0",
+            "modem uplink0",
+            "modem uplink1",
+            "modem uplink2",
+            "modem uplink3",
+            "modem donwlink0",
+            "modem donwlink1",
+            "modem donwlink2",
+            "modem donwlink3"});
+            this.comboBox2.Location = new System.Drawing.Point(666, 420);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(125, 24);
+            this.comboBox2.TabIndex = 17;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(670, 499);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(125, 38);
+            this.button4.TabIndex = 16;
+            this.button4.Text = "Stop Player";
+            this.button4.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(670, 450);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(125, 43);
+            this.button3.TabIndex = 15;
+            this.button3.Text = "Activate Player";
+            this.button3.UseVisualStyleBackColor = true;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(666, 18);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(145, 52);
+            this.button2.TabIndex = 14;
+            this.button2.Text = "LOAD FPGA JESD204";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // Cmd_FPGA_Tests
             // 
@@ -1371,7 +1519,7 @@
             // 
             // Cmd_FPGA_Export
             // 
-            this.Cmd_FPGA_Export.Location = new System.Drawing.Point(666, 95);
+            this.Cmd_FPGA_Export.Location = new System.Drawing.Point(666, 166);
             this.Cmd_FPGA_Export.Name = "Cmd_FPGA_Export";
             this.Cmd_FPGA_Export.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Export.TabIndex = 4;
@@ -1409,11 +1557,11 @@
             // 
             // Cmd_FPGA_Import
             // 
-            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 44);
+            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 90);
             this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
             this.Cmd_FPGA_Import.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Import.TabIndex = 0;
-            this.Cmd_FPGA_Import.Text = "Import Data";
+            this.Cmd_FPGA_Import.Text = "LOAD Vectors";
             this.Cmd_FPGA_Import.UseVisualStyleBackColor = true;
             this.Cmd_FPGA_Import.Click += new System.EventHandler(this.Cmd_FPGA_Import_Click);
             // 
@@ -1658,64 +1806,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // Cmd_STP
-            // 
-            this.Cmd_STP.Location = new System.Drawing.Point(740, 582);
-            this.Cmd_STP.Name = "Cmd_STP";
-            this.Cmd_STP.Size = new System.Drawing.Size(83, 39);
-            this.Cmd_STP.TabIndex = 27;
-            this.Cmd_STP.Text = "STP";
-            this.Cmd_STP.UseVisualStyleBackColor = true;
-            this.Cmd_STP.Click += new System.EventHandler(this.Cmd_STP_Click);
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(250, 20);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(106, 20);
-            this.checkBox1.TabIndex = 30;
-            this.checkBox1.Text = "Single NCO";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(8, 201);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(82, 16);
-            this.label31.TabIndex = 31;
-            this.label31.Text = "Step Time:";
-            // 
-            // numericTime
-            // 
-            this.numericTime.Location = new System.Drawing.Point(96, 195);
-            this.numericTime.Maximum = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.numericTime.Name = "numericTime";
-            this.numericTime.Size = new System.Drawing.Size(72, 22);
-            this.numericTime.TabIndex = 32;
-            this.numericTime.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(174, 197);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(56, 16);
-            this.label43.TabIndex = 33;
-            this.label43.Text = "milisec";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1755,6 +1845,7 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTone_Amplitude)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewAD9175)).EndInit();
@@ -1773,7 +1864,6 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTime)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1919,6 +2009,13 @@
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.NumericUpDown numericTime;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox textRegDAC9175;
+        private System.Windows.Forms.Button Cmd_Link_Status;
     }
 }
 

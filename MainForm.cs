@@ -64,6 +64,7 @@ namespace BringUp_Control
 
         DataTable DT4368 = new DataTable();
         DataTable DT9175 = new DataTable();
+        DataTable DTFPGA = new DataTable();
         List<string> deviceInfo = new List<string>();
 
         TabPage selectedTab = new TabPage();
@@ -94,6 +95,14 @@ namespace BringUp_Control
 
         private string fpga_address = string.Empty; // FPGA address for register access (string)
         private string fpga_data = string.Empty;    // FPGA data for register access (string)
+
+        private string daq_address = string.Empty;
+        private string daq_value = string.Empty;
+
+        private string start_freq = string.Empty; // Start frequency for DAQ
+        private string stop_freq = string.Empty;  // Stop frequency for DAQ
+        private string step_freq = string.Empty;  // Step frequency for DAQ
+        private int delay_miliseconds; // Delay in milliseconds for DAQ   
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -544,26 +553,41 @@ namespace BringUp_Control
             return ulong.TryParse(input, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
         }
 
+        private bool IsHexString4bytes_DAC(string input)
+        {
+
+            // Replace the range operator with a substring method for compatibility with C# 7.3
+            if (!HexU16Pattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            input = input.Substring(2); // Remove "0x" prefix
+            return ulong.TryParse(input, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out _);
+        }
+
         private void ComboRegAddress_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
-            int selectedHex = Convert.ToInt32(selectedRegisterAddress.Substring(2), 16); // Convert hex string to int
-
-            // Disable the button for values 0x0002 to 0x000D
-            if (driverflag)
+            if (selectedTab == tabAD4368)
             {
-                Cmd_WriteReg_AD4368.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
-                textAD4368_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
+                int selectedHex = Convert.ToInt32(selectedRegisterAddress.Substring(2), 16); // Convert hex string to int
+
+                // Disable the button for values 0x0002 to 0x000D
+                if (driverflag)
+                {
+                    Cmd_WriteReg_AD4368.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                    textAD4368_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                }
+
+
+                if (driverflag && usbflag)
+                {
+                    byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
+                    textAD4368_Value.Text = $"0x{valbyte:X2}";
+                }
+
+                textAD4368_Value.Focus();
             }
-
-
-            if (driverflag && usbflag)
-            {
-                byte valbyte = ad4368.ReadRegister((ushort)selectedHex);
-                textAD4368_Value.Text = $"0x{valbyte:X2}";
-            }
-
-            textAD4368_Value.Focus();
+            
         }
 
         private void Cmd_WriteReg_AD4368_Click(object sender, EventArgs e)
@@ -700,6 +724,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD4368)
             {
+
                 byte powerreturn = ad4368.ReadRegister((ushort)address);
 
                 if (powerreturn == 0x00)
@@ -936,6 +961,7 @@ namespace BringUp_Control
 
             if (selectedTab == tabRFLine)
             {
+                //gpio_control.Write(GPIO3, false);
                 if (!TXline_flag)
                 {
 
@@ -945,10 +971,7 @@ namespace BringUp_Control
                     numericATT2.Value = Convert.ToDecimal(txLineData.att2);
                     numericATT3.Value = Convert.ToDecimal(txLineData.att3);
 
-                    // instance HMC1119 object for further operations
-                    //hmc1119 = new HMC1119();
-                    // // instance HMC8414 object for further operations
-                    //hmc8414 = new HMC8414();
+                    
                     hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                     hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
@@ -959,12 +982,13 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabFPGA)
             {
-
-                fpga.Init(ftDev); // Initialize FPGA with the current FTDI device
+                //gpio_control.Write(GPIO3, true);
+                fpga.Init(ftDev, InterfaceManager); // Initialize FPGA with the current FTDI device
                 textFPGA_Address.Focus();
             }
             else if (selectedTab == tabAD9175)
             {
+                //gpio_control.Write(GPIO3, false);
                 NCO_Control(true);
                 ComboDAC_index.SelectedIndex = 0; // Set default index to 0
 
@@ -979,6 +1003,7 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabAD4368)
             {
+                //gpio_control.Write(GPIO3, false);
                 if (tabControl1.SelectedTab == tabAD4368 && !isAD4368GridBound)
                 {
                     DT4368 = ad4368.InitDataTable();
@@ -1002,7 +1027,8 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabSi5518)
             {
-                //si5518 = new SI55XX();
+                
+                //gpio_control.Write(GPIO3, false);
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
@@ -1010,6 +1036,7 @@ namespace BringUp_Control
             }
             else
             {
+                //gpio_control.Write(GPIO3, false);
                 //ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                 ad4368.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize AD4368 with the current FTDI device
             }        
@@ -1231,6 +1258,18 @@ namespace BringUp_Control
 
             if (selectedTab == tabFPGA)
             {
+                if (fpga == null)
+                {
+                    MessageBox.Show("FPGA interface not initialized. Please reconnect the FTDI device.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(fpga_data))
+                {
+                    MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 try
                 {
                     fpga.SpiWrite(AlignmentRegister(HexStringToUInt(fpga_address)), HexStringToUInt(fpga_data));
@@ -1250,6 +1289,18 @@ namespace BringUp_Control
 
             if (selectedTab == tabFPGA)
             {
+                if (fpga == null)
+                {
+                    MessageBox.Show("FPGA interface not initialized. Please reconnect the FTDI device.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(fpga_data))
+                {
+                    MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 try
                 {
                     uint addr = HexStringToUInt(fpga_address);
@@ -1258,7 +1309,7 @@ namespace BringUp_Control
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     LogStatus("Writing to FPGA Caused an ERROR!!!");
                 }
             }
@@ -1373,15 +1424,15 @@ namespace BringUp_Control
             {
                 if (!string.IsNullOrWhiteSpace(textDAC9175_Value.Text))
                 {
-                    string regaddress = comboRegisters9175.SelectedItem?.ToString()?.Trim(); // Get selected value as string
+                    string regaddress = daq_address;//    comboRegisters9175.SelectedItem?.ToString()?.Trim(); // Get selected value as string
 
-                    string dataRaw = textDAC9175_Value.Text.Trim();
+                    string dataRaw = daq_value;//   textDAC9175_Value.Text.Trim();
 
                     if (!TryParseHexU16(regaddress, out ushort regValue))
                     {
                         MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
                                         "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        comboRegAddress.Focus();
+                        textRegDAC9175.Focus();
                         return;
                     }
 
@@ -1445,7 +1496,9 @@ namespace BringUp_Control
             if (selectedTab == tabFPGA)
             {
                 // TEST function now
-                TestRegister();
+                //TestRegister();
+
+
             }
 
         }
@@ -1944,9 +1997,21 @@ namespace BringUp_Control
                 {
 
                     int dac_num = ComboDAC_index.SelectedIndex; // Get the selected DAC index from the combo box
-                    dac_fs_value = (float)numericDAC_FS.Value; // Get the DAC full-scale value from the numeric up-down control
-                    ad9175.DAC_FullScale(dac_num, dac_fs_value);
-                    LogStatus($"DAC Ioutfs set to {dac_fs_value} mA");
+
+                    if (dac_num > -1)
+                    {
+
+                        dac_fs_value = (float)numericDAC_FS.Value; // Get the DAC full-scale value from the numeric up-down control
+                        ad9175.DAC_FullScale(dac_num, dac_fs_value);
+                        LogStatus($"DAC Ioutfs set to {dac_fs_value} mA");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a DAC from the combo box.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+
+                    }
+
                 }
                 else
                 {
@@ -2064,7 +2129,87 @@ namespace BringUp_Control
 
         private void Cmd_StartSweep_Click(object sender, EventArgs e)
         {
+            if (selectedTab == tabAD9175)
+            {
+                if (ad9175 != null)
+                {
+                    if (checkBox1.Checked) // single sweep
+                    {
+                        if (ComboDAC_index.SelectedIndex < 0)
+                        {
+                            MessageBox.Show("Please select a DAC from the combo box.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
 
+                        if (string.IsNullOrWhiteSpace(textStart.Text))
+                        {
+                            MessageBox.Show("Please enter valid start frequency.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        // FIX: Convert start_freq (string) to float before passing to Calibration_NCO
+                        if (!float.TryParse(textStart.Text, out float startFreqFloat))
+                        {
+                            MessageBox.Show("Start frequency must be a valid number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        ad9175.Calibration_NCO(ComboDAC_index.SelectedIndex, startFreqFloat, (int)numericTone_Amplitude.Value);
+
+                        LogStatus("Single sweep Done.");
+                    }
+                    else
+                    {
+                        if (ComboDAC_index.SelectedIndex < 0)
+                        {
+                            MessageBox.Show("Please select a DAC from the combo box.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(textStart.Text))
+                        {
+                            MessageBox.Show("Please enter valid start frequency.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(textStop.Text))
+                        {
+                            MessageBox.Show("Please enter valid start frequency.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        // FIX: Convert start_freq (string) to float before passing to Calibration_NCO
+                        if (!float.TryParse(textStart.Text, out float startFreqFloat))
+                        {
+                            MessageBox.Show("Start frequency must be a valid number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+                        if (!float.TryParse(textStop.Text, out float stopFreqFloat))
+                        {
+                            MessageBox.Show("Start frequency must be a valid number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+
+
+                        LogStatus("Sweep started with the specified parameters.");
+                        //do for loop with calibration NCO
+                        for (float freq = startFreqFloat; freq <= stopFreqFloat; freq += float.Parse(textStep.Text))
+                        {
+                            ad9175.Calibration_NCO(ComboDAC_index.SelectedIndex, freq, (int)numericTone_Amplitude.Value);
+                            Thread.Sleep((int)numericTime.Value); // milliseconds
+                        }
+                        
+                    }
+
+
+                        
+                }
+                else
+                {
+                    LogStatus("DAC Handle is not initialized.");
+                }
+            }
         }
 
         private void NCO_Control(bool ncoflag)
@@ -2088,6 +2233,7 @@ namespace BringUp_Control
                 
         }
 
+        //daq combobox for dac0/1
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
@@ -2099,6 +2245,144 @@ namespace BringUp_Control
             {
                 NCO_Control(false); // Disable NCO control
             }
+        }
+
+        private void textRegDAC9175_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textRegDAC9175.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (IsHexString4bytes_DAC(textRegDAC9175.Text))
+                    {
+                        daq_address = textRegDAC9175.Text;
+                        textDAC9175_Value.Focus();
+                    }
+                    else
+                    {
+                        textRegDAC9175.Clear();
+                        textRegDAC9175.Focus();
+                        daq_address = string.Empty;
+                        MessageBox.Show("The register address is not correct!", "Warning");
+                    }
+                }
+            }
+        }
+
+        private void textDAC9175_Value_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textDAC9175_Value.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (IsHexString(textDAC9175_Value.Text))
+                    {
+                        daq_value = textDAC9175_Value.Text;
+                        Cmd_WriteReg9175.Focus();
+                    }
+                    else
+                    {
+                        textDAC9175_Value.Clear();
+                        textDAC9175_Value.Focus();
+                        daq_value = string.Empty;
+                        MessageBox.Show("The register value is not correct!", "Warning");
+                    }
+                }
+            }
+
+        }
+
+        private void Cmd_ReadRegAD9175_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                if (string.IsNullOrWhiteSpace(daq_address))
+                {
+                    MessageBox.Show("Please enter a valid register address and value.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                //string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
+                int selectedHex = Convert.ToInt32(daq_address.Substring(2), 16); // Convert hex string to int
+                byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
+                textDAC9175_Value.Text = $"0x{valbyte:X2}";                
+            }
+        }
+
+        private void textStart_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textStart.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (Regex.IsMatch(textStart.Text, "\\d{4}"))
+                    {
+                        start_freq = textStart.Text;
+                        textStop.Focus();
+                    }
+                    else
+                    {
+                        textStart.Clear();
+                        textStart.Focus();
+                        start_freq = string.Empty;
+                        MessageBox.Show("The start frequency is not correct!", "Warning");
+                    }
+                }
+            }
+        }
+
+        private void textStop_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textStop.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (Regex.IsMatch(textStop.Text, "\\d{4}"))
+                    {
+                        stop_freq = textStop.Text;
+                        textStep.Focus();
+                    }
+                    else
+                    {
+                        textStop.Clear();
+                        textStop.Focus();
+                        stop_freq = string.Empty;
+                        MessageBox.Show("The stop frequency is not correct!", "Warning");
+                    }
+                }
+            }
+
+        }
+
+        private void textStep_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+            if (selectedTab == tabAD9175)
+            {
+                if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textStop.Text))
+                {
+                    // Validate Hex value entered in this field
+                    if (Regex.IsMatch(textStep.Text, "^\\d{1,3}$"))
+                    {
+                        step_freq = textStep.Text;
+                        Cmd_StartSweep.Focus();
+                    }
+                    else
+                    {
+                        textStep.Clear();
+                        textStep.Focus();
+                        step_freq = string.Empty;
+                        MessageBox.Show("The step frequency is not correct!", "Warning");
+                    }
+                }
+            }
+
         }
     }
 }
