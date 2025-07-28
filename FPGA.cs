@@ -246,6 +246,36 @@ namespace BringUp_Control
         }
 
 
+        public string LoadVectorDataCsv()
+        {
+            string filepath = string.Empty;
+            using (OpenFileDialog ftfile = new OpenFileDialog())
+            {
+                try
+                {
+                    ftfile.InitialDirectory = Directory.GetCurrentDirectory();
+                    ftfile.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
+                    ftfile.FilterIndex = 0;
+
+                    if (ftfile.ShowDialog() == DialogResult.OK)
+                    {
+                        
+
+                        filepath = ftfile.FileName;
+
+                        //ParsingFile(filepath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Warning");
+
+                }
+
+                return filepath;
+            }
+        }
+
         public void Dispose()
         {
             _ft?.Dispose();

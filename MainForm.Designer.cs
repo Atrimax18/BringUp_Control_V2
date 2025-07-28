@@ -64,9 +64,8 @@
             this.numericDAC_FS = new System.Windows.Forms.NumericUpDown();
             this.label41 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboPRBS = new System.Windows.Forms.ComboBox();
             this.Cmd_PRBS = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
             this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.label43 = new System.Windows.Forms.Label();
@@ -86,7 +85,6 @@
             this.textStep = new System.Windows.Forms.TextBox();
             this.label34 = new System.Windows.Forms.Label();
             this.label33 = new System.Windows.Forms.Label();
-            this.Cmd_NCO = new System.Windows.Forms.Button();
             this.ComboDAC_index = new System.Windows.Forms.ComboBox();
             this.label25 = new System.Windows.Forms.Label();
             this.Cmd_DAC_Init = new System.Windows.Forms.Button();
@@ -133,9 +131,9 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.comboBoxDebugger = new System.Windows.Forms.ComboBox();
+            this.Cmd_Stop_Player = new System.Windows.Forms.Button();
+            this.Cmd_Activate_Player = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Tests = new System.Windows.Forms.Button();
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
@@ -146,7 +144,6 @@
             this.textFPGA_Value = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.Cmd_FPGA_Export = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Write = new System.Windows.Forms.Button();
             this.textFPGA_Output = new System.Windows.Forms.TextBox();
             this.textFPGA_Address = new System.Windows.Forms.TextBox();
@@ -493,7 +490,6 @@
             this.tabAD9175.Controls.Add(this.Cmd_STP);
             this.tabAD9175.Controls.Add(this.groupBox7);
             this.tabAD9175.Controls.Add(this.groupBox6);
-            this.tabAD9175.Controls.Add(this.textBox4);
             this.tabAD9175.Controls.Add(this.Cmd_ReadRegAD9175);
             this.tabAD9175.Controls.Add(this.groupBox5);
             this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
@@ -624,7 +620,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.comboBox1);
+            this.groupBox6.Controls.Add(this.comboPRBS);
             this.groupBox6.Controls.Add(this.Cmd_PRBS);
             this.groupBox6.Location = new System.Drawing.Point(384, 400);
             this.groupBox6.Name = "groupBox6";
@@ -633,18 +629,17 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "PRBS TEST:";
             // 
-            // comboBox1
+            // comboPRBS
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.comboPRBS.FormattingEnabled = true;
+            this.comboPRBS.Items.AddRange(new object[] {
             "PRBS7",
             "PRBS15",
             "PRBS31"});
-            this.comboBox1.Location = new System.Drawing.Point(6, 21);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(88, 24);
-            this.comboBox1.TabIndex = 18;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.ComboBox1_SelectedIndexChanged);
+            this.comboPRBS.Location = new System.Drawing.Point(6, 21);
+            this.comboPRBS.Name = "comboPRBS";
+            this.comboPRBS.Size = new System.Drawing.Size(88, 24);
+            this.comboPRBS.TabIndex = 18;
             // 
             // Cmd_PRBS
             // 
@@ -655,13 +650,6 @@
             this.Cmd_PRBS.Text = "PRBS Test";
             this.Cmd_PRBS.UseVisualStyleBackColor = true;
             this.Cmd_PRBS.Click += new System.EventHandler(this.Cmd_PRBS_Click);
-            // 
-            // textBox4
-            // 
-            this.textBox4.Location = new System.Drawing.Point(760, 532);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(78, 22);
-            this.textBox4.TabIndex = 24;
             // 
             // Cmd_ReadRegAD9175
             // 
@@ -692,7 +680,6 @@
             this.groupBox5.Controls.Add(this.textStep);
             this.groupBox5.Controls.Add(this.label34);
             this.groupBox5.Controls.Add(this.label33);
-            this.groupBox5.Controls.Add(this.Cmd_NCO);
             this.groupBox5.Controls.Add(this.ComboDAC_index);
             this.groupBox5.Controls.Add(this.label25);
             this.groupBox5.Location = new System.Drawing.Point(6, 400);
@@ -868,16 +855,6 @@
             this.label33.TabIndex = 17;
             this.label33.Text = "DAC INDEX:";
             // 
-            // Cmd_NCO
-            // 
-            this.Cmd_NCO.Location = new System.Drawing.Point(254, 164);
-            this.Cmd_NCO.Name = "Cmd_NCO";
-            this.Cmd_NCO.Size = new System.Drawing.Size(97, 53);
-            this.Cmd_NCO.TabIndex = 15;
-            this.Cmd_NCO.Text = "Calib NCO";
-            this.Cmd_NCO.UseVisualStyleBackColor = true;
-            this.Cmd_NCO.Click += new System.EventHandler(this.Cmd_NCO_Click);
-            // 
             // ComboDAC_index
             // 
             this.ComboDAC_index.FormattingEnabled = true;
@@ -916,6 +893,7 @@
             this.Cmd_WriteDAC9175.TabIndex = 12;
             this.Cmd_WriteDAC9175.Text = "Write To Device";
             this.Cmd_WriteDAC9175.UseVisualStyleBackColor = true;
+            this.Cmd_WriteDAC9175.Click += new System.EventHandler(this.Cmd_WriteDAC9175_Click);
             // 
             // Cmd_ReadDAC9175
             // 
@@ -1362,9 +1340,9 @@
             // 
             // tabFPGA
             // 
-            this.tabFPGA.Controls.Add(this.comboBox2);
-            this.tabFPGA.Controls.Add(this.button4);
-            this.tabFPGA.Controls.Add(this.button3);
+            this.tabFPGA.Controls.Add(this.comboBoxDebugger);
+            this.tabFPGA.Controls.Add(this.Cmd_Stop_Player);
+            this.tabFPGA.Controls.Add(this.Cmd_Activate_Player);
             this.tabFPGA.Controls.Add(this.button2);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Tests);
             this.tabFPGA.Controls.Add(this.Cmd_WriteFPGA);
@@ -1375,7 +1353,6 @@
             this.tabFPGA.Controls.Add(this.textFPGA_Value);
             this.tabFPGA.Controls.Add(this.label21);
             this.tabFPGA.Controls.Add(this.label9);
-            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Export);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Write);
             this.tabFPGA.Controls.Add(this.textFPGA_Output);
             this.tabFPGA.Controls.Add(this.textFPGA_Address);
@@ -1387,43 +1364,43 @@
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
             // 
-            // comboBox2
+            // comboBoxDebugger
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "DAC0",
-            "DAC1",
-            "ADC0",
-            "modem uplink0",
-            "modem uplink1",
-            "modem uplink2",
-            "modem uplink3",
-            "modem donwlink0",
-            "modem donwlink1",
-            "modem donwlink2",
-            "modem donwlink3"});
-            this.comboBox2.Location = new System.Drawing.Point(666, 420);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(125, 24);
-            this.comboBox2.TabIndex = 17;
+            this.comboBoxDebugger.FormattingEnabled = true;
+            this.comboBoxDebugger.Items.AddRange(new object[] {
+            "Uplink Modem0",
+            "Uplink Modem1",
+            "Uplink Modem2",
+            "Uplink Modem3",
+            "Uplink DAC0",
+            "Uplink DAC1",
+            "Downlink Modem0",
+            "Downlink Modem1",
+            "Downlink Modem2",
+            "Downlink Modem3",
+            "Downlink ADC"});
+            this.comboBoxDebugger.Location = new System.Drawing.Point(666, 420);
+            this.comboBoxDebugger.Name = "comboBoxDebugger";
+            this.comboBoxDebugger.Size = new System.Drawing.Size(145, 24);
+            this.comboBoxDebugger.TabIndex = 17;
             // 
-            // button4
+            // Cmd_Stop_Player
             // 
-            this.button4.Location = new System.Drawing.Point(670, 499);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(125, 38);
-            this.button4.TabIndex = 16;
-            this.button4.Text = "Stop Player";
-            this.button4.UseVisualStyleBackColor = true;
+            this.Cmd_Stop_Player.Location = new System.Drawing.Point(666, 503);
+            this.Cmd_Stop_Player.Name = "Cmd_Stop_Player";
+            this.Cmd_Stop_Player.Size = new System.Drawing.Size(145, 45);
+            this.Cmd_Stop_Player.TabIndex = 16;
+            this.Cmd_Stop_Player.Text = "Stop Player";
+            this.Cmd_Stop_Player.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // Cmd_Activate_Player
             // 
-            this.button3.Location = new System.Drawing.Point(670, 450);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(125, 43);
-            this.button3.TabIndex = 15;
-            this.button3.Text = "Activate Player";
-            this.button3.UseVisualStyleBackColor = true;
+            this.Cmd_Activate_Player.Location = new System.Drawing.Point(666, 452);
+            this.Cmd_Activate_Player.Name = "Cmd_Activate_Player";
+            this.Cmd_Activate_Player.Size = new System.Drawing.Size(145, 45);
+            this.Cmd_Activate_Player.TabIndex = 15;
+            this.Cmd_Activate_Player.Text = "Activate Player";
+            this.Cmd_Activate_Player.UseVisualStyleBackColor = true;
             // 
             // button2
             // 
@@ -1438,19 +1415,21 @@
             // 
             this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(666, 350);
             this.Cmd_FPGA_Tests.Name = "Cmd_FPGA_Tests";
-            this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(145, 55);
+            this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(145, 29);
             this.Cmd_FPGA_Tests.TabIndex = 13;
             this.Cmd_FPGA_Tests.Text = "FPGA Tests";
             this.Cmd_FPGA_Tests.UseVisualStyleBackColor = true;
+            this.Cmd_FPGA_Tests.Click += new System.EventHandler(this.Cmd_FPGA_Tests_Click);
             // 
             // Cmd_WriteFPGA
             // 
-            this.Cmd_WriteFPGA.Location = new System.Drawing.Point(666, 289);
+            this.Cmd_WriteFPGA.Location = new System.Drawing.Point(666, 314);
             this.Cmd_WriteFPGA.Name = "Cmd_WriteFPGA";
-            this.Cmd_WriteFPGA.Size = new System.Drawing.Size(145, 55);
+            this.Cmd_WriteFPGA.Size = new System.Drawing.Size(145, 30);
             this.Cmd_WriteFPGA.TabIndex = 12;
             this.Cmd_WriteFPGA.Text = "Write to FPGA";
             this.Cmd_WriteFPGA.UseVisualStyleBackColor = true;
+            this.Cmd_WriteFPGA.Click += new System.EventHandler(this.Cmd_WriteFPGA_Click);
             // 
             // label22
             // 
@@ -1463,9 +1442,9 @@
             // 
             // Cmd_Read_Registers
             // 
-            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 228);
+            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 281);
             this.Cmd_Read_Registers.Name = "Cmd_Read_Registers";
-            this.Cmd_Read_Registers.Size = new System.Drawing.Size(145, 55);
+            this.Cmd_Read_Registers.Size = new System.Drawing.Size(145, 27);
             this.Cmd_Read_Registers.TabIndex = 10;
             this.Cmd_Read_Registers.Text = "Read from FPGA";
             this.Cmd_Read_Registers.UseVisualStyleBackColor = true;
@@ -1516,16 +1495,6 @@
             this.label9.Size = new System.Drawing.Size(128, 16);
             this.label9.TabIndex = 5;
             this.label9.Text = "FPGA ADDRESS:";
-            // 
-            // Cmd_FPGA_Export
-            // 
-            this.Cmd_FPGA_Export.Location = new System.Drawing.Point(666, 166);
-            this.Cmd_FPGA_Export.Name = "Cmd_FPGA_Export";
-            this.Cmd_FPGA_Export.Size = new System.Drawing.Size(145, 45);
-            this.Cmd_FPGA_Export.TabIndex = 4;
-            this.Cmd_FPGA_Export.Text = "Export Data";
-            this.Cmd_FPGA_Export.UseVisualStyleBackColor = true;
-            this.Cmd_FPGA_Export.Click += new System.EventHandler(this.Cmd_FPGA_Export_Click);
             // 
             // Cmd_FPGA_Write
             // 
@@ -1945,7 +1914,6 @@
         private System.Windows.Forms.TextBox textFPGA_Value;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button Cmd_FPGA_Export;
         private System.Windows.Forms.Button Cmd_FPGA_Read;
         private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
@@ -1976,10 +1944,9 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button Cmd_Config;
         private System.Windows.Forms.Button Cmd_Burn_SkyPLL;
-        private System.Windows.Forms.Button Cmd_NCO;
         private System.Windows.Forms.TextBox textStep;
         private System.Windows.Forms.Button Cmd_PRBS;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboPRBS;
         private System.Windows.Forms.Button Cmd_RFPLL_Init;
         private System.Windows.Forms.Label label32;
         private System.Windows.Forms.GroupBox groupBox5;
@@ -1992,7 +1959,6 @@
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.TextBox textStart;
         private System.Windows.Forms.Label label34;
-        private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label40;
         private System.Windows.Forms.NumericUpDown numericTone_Amplitude;
         private System.Windows.Forms.Label label39;
@@ -2010,9 +1976,9 @@
         private System.Windows.Forms.NumericUpDown numericTime;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.ComboBox comboBoxDebugger;
+        private System.Windows.Forms.Button Cmd_Stop_Player;
+        private System.Windows.Forms.Button Cmd_Activate_Player;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.TextBox textRegDAC9175;
         private System.Windows.Forms.Button Cmd_Link_Status;

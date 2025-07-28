@@ -991,6 +991,7 @@ namespace BringUp_Control
                 //gpio_control.Write(GPIO3, false);
                 NCO_Control(true);
                 ComboDAC_index.SelectedIndex = 0; // Set default index to 0
+                comboPRBS.SelectedIndex = 0; // Set default index to 0
 
                 //IO_Exp.SetPinState();
 
@@ -1495,8 +1496,10 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                // TEST function now
-                //TestRegister();
+                
+                string fpgavectors = fpga.LoadVectorDataCsv();
+                LogStatus($"FPGA Vectors file loaded");
+                
 
 
             }
@@ -1890,20 +1893,13 @@ namespace BringUp_Control
 
         }
 
-        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == 13)
-            {
-                linevaluetx3 = textStep.Text;
-                Cmd_NCO.Focus();
-            }
-        }
+        
 
         private void Cmd_PRBS_Click(object sender, EventArgs e)
         {
             //PRBS7 - PRBS15 -PRBS31
 
-            string prmbs_value = comboBox1.SelectedItem?.ToString();
+            string prmbs_value = comboPRBS.SelectedItem?.ToString();
 
             ad9175.PRBS_Test(prmbs_value);
         }
@@ -2382,6 +2378,21 @@ namespace BringUp_Control
                     }
                 }
             }
+
+        }
+
+        private void Cmd_WriteDAC9175_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Cmd_WriteFPGA_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Cmd_FPGA_Tests_Click(object sender, EventArgs e)
+        {
 
         }
     }
