@@ -135,6 +135,8 @@ namespace BringUp_Control
 
         string rf_pll_ini_file = string.Empty; // RF PLL 4368 INI file path
 
+        string jesd_file = string.Empty; // JESD file path
+
         TX_Line txLineData = new TX_Line();
         public MainForm()
         {
@@ -203,6 +205,7 @@ namespace BringUp_Control
                         rf_pll_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["PLL4368:INIT_FILE"]);
                         dac_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:INIT_FILE"]);
                         daq_reg_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:REG_FILE"]);
+                        jesd_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["FPGA:JESD204_FILE"]);
 
                         if (File.Exists(dac_ini_file))
                         {
