@@ -98,7 +98,6 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridViewAD9175 = new System.Windows.Forms.DataGridView();
             this.Cmd_Export9175_file = new System.Windows.Forms.Button();
-            this.Cmd_Import9175_file = new System.Windows.Forms.Button();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.Cmd_Burn_SkyPLL = new System.Windows.Forms.Button();
             this.Cmd_Config = new System.Windows.Forms.Button();
@@ -502,7 +501,6 @@
             this.tabAD9175.Controls.Add(this.labelFilePath9175);
             this.tabAD9175.Controls.Add(this.groupBox2);
             this.tabAD9175.Controls.Add(this.Cmd_Export9175_file);
-            this.tabAD9175.Controls.Add(this.Cmd_Import9175_file);
             this.tabAD9175.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabAD9175.Location = new System.Drawing.Point(4, 25);
             this.tabAD9175.Name = "tabAD9175";
@@ -531,7 +529,7 @@
             // 
             // Cmd_Link_Status
             // 
-            this.Cmd_Link_Status.Location = new System.Drawing.Point(725, 354);
+            this.Cmd_Link_Status.Location = new System.Drawing.Point(724, 587);
             this.Cmd_Link_Status.Name = "Cmd_Link_Status";
             this.Cmd_Link_Status.Size = new System.Drawing.Size(113, 45);
             this.Cmd_Link_Status.TabIndex = 28;
@@ -540,11 +538,11 @@
             // 
             // Cmd_STP
             // 
-            this.Cmd_STP.Location = new System.Drawing.Point(740, 582);
+            this.Cmd_STP.Location = new System.Drawing.Point(724, 529);
             this.Cmd_STP.Name = "Cmd_STP";
-            this.Cmd_STP.Size = new System.Drawing.Size(83, 39);
+            this.Cmd_STP.Size = new System.Drawing.Size(113, 45);
             this.Cmd_STP.TabIndex = 27;
-            this.Cmd_STP.Text = "STP";
+            this.Cmd_STP.Text = "STPL";
             this.Cmd_STP.UseVisualStyleBackColor = true;
             this.Cmd_STP.Click += new System.EventHandler(this.Cmd_STP_Click);
             // 
@@ -983,16 +981,6 @@
             this.Cmd_Export9175_file.Text = "Export File";
             this.Cmd_Export9175_file.UseVisualStyleBackColor = true;
             this.Cmd_Export9175_file.Click += new System.EventHandler(this.Cmd_Export9175_file_Click);
-            // 
-            // Cmd_Import9175_file
-            // 
-            this.Cmd_Import9175_file.Location = new System.Drawing.Point(725, 465);
-            this.Cmd_Import9175_file.Name = "Cmd_Import9175_file";
-            this.Cmd_Import9175_file.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Import9175_file.TabIndex = 0;
-            this.Cmd_Import9175_file.Text = "Import File";
-            this.Cmd_Import9175_file.UseVisualStyleBackColor = true;
-            this.Cmd_Import9175_file.Click += new System.EventHandler(this.Cmd_Import9175_file_Click);
             // 
             // tabSi5518
             // 
@@ -1861,7 +1849,6 @@
         private System.Windows.Forms.Label labelFilePath9175;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button Cmd_Export9175_file;
-        private System.Windows.Forms.Button Cmd_Import9175_file;
         private System.Windows.Forms.CheckBox checkRFLOCK;
         private System.Windows.Forms.RadioButton radioRF_POWER_Status;
         private System.Windows.Forms.DataGridView dataGridViewAD9175;

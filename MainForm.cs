@@ -519,6 +519,19 @@ namespace BringUp_Control
 
         }
 
+        private static bool TryParseHexU16_sec(string input, out ushort value)
+        {
+            value = 0;
+
+            if (!HexU16Pattern.IsMatch(input?.Trim() ?? string.Empty))
+                return false;
+
+            // Use Substring instead of the range operator
+            string hexPart = input.Substring(2);
+            return ushort.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
+
+        }
+
         // Validation of correct HEX value, return int value
         private bool IsHexString(string input)
         {
@@ -890,17 +903,7 @@ namespace BringUp_Control
 
             }
             return bitValue;
-        }
-
-        
-
-        private void Cmd_Import9175_file_Click(object sender, EventArgs e)
-        {
-            if (selectedTab == tabAD9175)
-            {
-                labelFilePath9175.Text = $"DAC File Path: {ad9175.LoadDataTableToCsv()}";
-            }
-        }
+        }         
 
         private void Cmd_Export9175_file_Click(object sender, EventArgs e)
         {
@@ -1430,7 +1433,7 @@ namespace BringUp_Control
 
                     string dataRaw = daq_value;//   textDAC9175_Value.Text.Trim();
 
-                    if (!TryParseHexU16(regaddress, out ushort regValue))
+                    if (!TryParseHexU16_sec(regaddress, out ushort regValue))
                     {
                         MessageBox.Show("Register address must be in 0xXXXX format (e.g. 0x002B).",
                                         "Invalid address", MessageBoxButtons.OK, MessageBoxIcon.Error);

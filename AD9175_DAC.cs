@@ -396,41 +396,11 @@ namespace BringUp_Control
 
         #endregion  
 
-        //Table 50 : Power Up registee writing - DONE
-        public void PowerUp()
-        {
-            WriteRegister(0x0000, 0x81); // Soft reset
-            WriteRegister(0x0000, 0x3C); // Release RESET and configure 4-wire SPI protocol
-            WriteRegister(0x0091, 0x00); // Power up clock receiver
-            WriteRegister(0x0206, 0x01); // Take PHY out of reset
-            WriteRegister(0x0705, 0x01); // Enable Bootloader
-            WriteRegister(0x0090, 0x00); // Power on DAC and bias circuity
-        }
+        //Table 50 : Power Up registee writing     
 
-        // Table 51: DAC and PLL configuration sequence - DONE
-        public void DAC_PLL_Config()
-        {
-            WriteRegister(0x0095, 0x01); // Bypass internal PLL
-            WriteRegister(0x0790, 0xFF); // Bypass internal PLL
-            WriteRegister(0x0791, 0xFF); // Bypass internal PLL            
-
-        }
+        // Table 51: DAC and PLL configuration sequence        
         
-        // Table 52: Delay lock loop configuration sequence - DONE
-        public byte DelayLockLoop()
-        {
-            WriteRegister(0x00C0, 0x00); // Power up delay line
-            WriteRegister(0x00DB, 0x00); // 
-            WriteRegister(0x00DB, 0x01); // Update DLL settings to circuityBypass internal PLL
-            WriteRegister(0x00DB, 0x00); // 
-            WriteRegister(0x00C1, 0x68); // Set DLL search mode Fdac > 4.5GHz
-            WriteRegister(0x00C1, 0x69); // Set DLL search mode Fdac > 4.5GHz
-            WriteRegister(0x00C7, 0x01); // Enable DLL read status
-            
-
-            return ReadRegister(0x00C3); // Ensure DLL is locked by reading value 1 for Bit0 of this register
-
-        }
+        // Table 52: Delay lock loop configuration sequence        
 
         // parse bit position value: value - byte of data, bitIndex - position of the bit that must be tested
         public bool GetBit(byte value, int bitIndex)
@@ -441,46 +411,11 @@ namespace BringUp_Control
             return (value & (1 << bitIndex)) != 0;
         }
 
-        // Table 53: Calibration sequence - DONE
-        public void Calibration()
-        {
-            WriteRegister(0x0050, 0x2A); // Optimized calibration setting register
-            WriteRegister(0x0061, 0x68); // Required calibration control register
-            WriteRegister(0x0051, 0x82); // Optimized calibration setting register
-            WriteRegister(0x0051, 0x83); // Required calibration control register 
-            WriteRegister(0x0081, 0x03); // Required calibration control register
-        }
+        // Table 53: Calibration sequence        
         
-        // Table 54: JESD204B configuration sequence - DONE
-        public void JESD204B_Setup()
-        {
-            WriteRegister(0x0100, 0x00); // Power up digital datapath clocks
-            WriteRegister(0x0110, 0x37); // dual link and mode 23
-            WriteRegister(0x0111, 0x61); // Main datapath configuration
-            WriteRegister(0x0084, 0x01); // SYSREF singla input
-            WriteRegister(0x0312, 0x00); // ?????????????????????? NO DATA
-            
-            //run LINK = 0
-            WriteRegister(0x0300, 0x08); // Corresponds to the mode selection made in register 0x110
-            
-            WriteRegister(0x0475, 0x09); // Soft reset JESD2024B quad byte deframer
-            WriteRegister(0x0453, 0x03); // Set scrambling option for SERDES data
-            WriteRegister(0x0458, 0x0B); // L value to JESD_MODE            
-            WriteRegister(0x0475, 0x01); // Bring the JESD204B quad byte deframer out of reset
-            //run LINK = 1
-            WriteRegister(0x0300, 0x0C); // Corresponds to the mode selection made in register 0x110
-            
-            WriteRegister(0x0475, 0x09); // Soft reset JESD2024B quad byte deframer
-            WriteRegister(0x0453, 0x03); // Set scrambling option for SERDES data
-            WriteRegister(0x0458, 0x0B); // L value to JESD_MODE
-            WriteRegister(0x0475, 0x01); // Bring the JESD204B quad byte deframer out of reset
-        }
+        // Table 54: JESD204B configuration sequence        
 
-        // Table 55: Channel datapath configuration sequence - CAN BE SKIPPED
-        public void ChannelDatapath_Setup()
-        {
-            
-        }
+        // Table 55: Channel datapath configuration sequence        
 
         // Table 56: Main datapath and Main NCO configuration sequence - TEST IT!!!
         public void MainDAC_DDCM_Setup(byte[] DDCM_DAC0)
@@ -492,80 +427,11 @@ namespace BringUp_Control
             }           
         }
 
-        // Table 57 : JESD204B SERDES configuration sequence
-        public byte JESD204B_SERDES_Setup()
-        {
-            WriteRegister(0x0240, 0xAA); // EQ settings IN_Loss < 11dB value 0xAA
-            WriteRegister(0x0241, 0xAA); // EQ settings IN_Loss < 11dB value 0xAA
-            WriteRegister(0x0242, 0x55); // EQ settings IN_Loss < 11dB value 0x55
-            WriteRegister(0x0243, 0x55); // EQ settings IN_Loss < 11dB value 0x55
-            WriteRegister(0x0244, 0x1F); // EQ settings
-            WriteRegister(0x0245, 0x1F); // EQ settings
-            WriteRegister(0x0246, 0x1F); // EQ settings
-            WriteRegister(0x0247, 0x1F); // EQ settings
-            WriteRegister(0x0248, 0x1F); // EQ settings
-            WriteRegister(0x0249, 0x1F); // EQ settings
-            WriteRegister(0x024A, 0x1F); // EQ settings
-            WriteRegister(0x024B, 0x1F); // EQ settings
-           
-            WriteRegister(0x0201, 0x00); // Power down unused PHYs - - 0x00 = all PHYs powered up
-            WriteRegister(0x0203, 0x00); // Powe up SYNCOUT0/1 - 0x00 = all SYNCOUT powered up
-            WriteRegister(0x0253, 0x01); // Set SYNCOUT0' to be LVDS
-            WriteRegister(0x0254, 0x01); // Set SYNCOUT1' to be LVDS
-            WriteRegister(0x0210, 0x16); // SERDES required register write value
-            WriteRegister(0x0216, 0x05); // SERDES required register write value
-            WriteRegister(0x0212, 0xFF); // SERDES required register write value
-            WriteRegister(0x0212, 0x00); // SERDES required register write value
-            WriteRegister(0x0210, 0x87); // SERDES required register write value
-            WriteRegister(0x0216, 0x11); // SERDES required register write value
-            WriteRegister(0x0213, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x00); // 
-            WriteRegister(0x0200, 0x00); // Powe up SERDES circuittry blocks
-            Thread.Sleep(100); // delay 100ms
-            
-            WriteRegister(0x0210, 0x86); // SERDES required register write value
-            WriteRegister(0x0216, 0x40); // SERDES required register write value
-            WriteRegister(0x0213, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x00); // SERDES required register write value
+        // Table 57 : JESD204B SERDES configuration sequence        
 
-            WriteRegister(0x0210, 0x86); // SERDES required register write value
-            WriteRegister(0x0216, 0x00); // SERDES required register write value
-            WriteRegister(0x0213, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x00); // SERDES required register write value
+        //Table 58: Transport layer configuration sequence        
 
-            WriteRegister(0x0210, 0x87); // SERDES required register write value
-            WriteRegister(0x0216, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x01); // SERDES required register write value
-            WriteRegister(0x0213, 0x00); // SERDES required register write value
-
-            WriteRegister(0x0280, 0x05); // SERDES required register write value
-            WriteRegister(0x0280, 0x01); // SERDES required register write value
-
-            return ReadRegister(0x0281); //Ensure Bit0 reads back 1 to indicate SERDES PLL is locked
-        }
-
-        //Table 58: Transport layer configuration sequence - DONE
-        public void TransportLayer_Setup()
-        {
-            WriteRegister(0x0308, 0x08); // Crosbar setup , program the physical lane value
-            WriteRegister(0x0309, 0x1A); // logical lines 3 and 2
-            WriteRegister(0x030A, 0x2C); // logical lines 5 and 4
-            WriteRegister(0x030B, 0x3E); // logical lines 7 and 6
-            
-            WriteRegister(0x003B, 0xF1); // Enable the sync logic , rotation mode
-            WriteRegister(0x003A, 0x02); // Setup sync for one-shot sync mode
-            WriteRegister(0x0300, 0x0B); // Link modes duallink
-            
-        }
-
-        // Table 59: Register cleanup sequence - DONE
-        public void CleanUpRegisterList()
-        {
-            WriteRegister(0x0085, 0x13); // Set the default register value
-            WriteRegister(0x01DE, 0x03); // Disable analog SPI
-            WriteRegister(0x0008, 0xC0); // Page all main DACs fro TXEN control update
-            WriteRegister(0x0596, 0x0C); // SPU turn on TXEnx feature
-        }
+        // Table 59: Register cleanup sequence        
 
         public List<string> LoadComboRegister9175()
         {
@@ -746,8 +612,7 @@ namespace BringUp_Control
             return FSC_Ctrl;
         }
         
-        public void DAC_DT_Clear()
-        {
+        public void DAC_DT_Clear()        {
             
             dtAD9175.Clear();
         }
@@ -762,24 +627,13 @@ namespace BringUp_Control
 
             return dtAD9175;
         }
-
         
-        public byte[] DDSM_Calculation()
+        public void LoadDacRegs()
         {
-            byte[] DDSM = new byte[8];
-            DDSM[0] = 0x00;
-            DDSM[1] = 0x00;
-            DDSM[2] = 0x00;
-            DDSM[3] = 0x00;
-            DDSM[4] = 0x00;
-            DDSM[5] = 0x00;
-            DDSM[6] = 0x00;
-            DDSM[7] = 0x00;
+            dtAD9175.Rows.Clear();
 
-
-
-            return DDSM;
         }
+        
 
         public void WriteRegister(ushort address, byte data)
         {
