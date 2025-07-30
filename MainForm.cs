@@ -969,7 +969,7 @@ namespace BringUp_Control
 
             if (selectedTab == tabRFLine)
             {
-                //gpio_control.Write(GPIO3, false);
+                gpio_control.Write(GPIO3, false);
                 if (!TXline_flag)
                 {
 
@@ -1022,7 +1022,7 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabAD4368)
             {
-                //gpio_control.Write(GPIO3, false);
+                gpio_control.Write(GPIO3, false);
                 if (tabControl1.SelectedTab == tabAD4368 && !isAD4368GridBound)
                 {
                     DT4368 = ad4368.InitDataTable();
@@ -1047,7 +1047,7 @@ namespace BringUp_Control
             else if (selectedTab == tabSi5518)
             {
                 
-                //gpio_control.Write(GPIO3, false);
+                gpio_control.Write(GPIO3, false);
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
