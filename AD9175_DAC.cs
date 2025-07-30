@@ -627,13 +627,61 @@ namespace BringUp_Control
 
             return dtAD9175;
         }
-        
-        public void LoadDacRegs()
-        {
-            dtAD9175.Rows.Clear();
 
+        public void ReadAllRegisters()
+        {
+            for (int i = 0; i < dtAD9175.Rows.Count; i++)
+            {
+                ReadRegisterAndUpdate(i);
+            }
         }
-        
+
+        public void ReadRegisterAndUpdate(int rowIndex)
+        {
+            if (rowIndex < 0 || rowIndex >= dtAD9175.Rows.Count)
+                return;
+
+            var row = dtAD9175.Rows[rowIndex];
+            string regHex = row["Register"].ToString();
+
+            if (regHex.StartsWith("0x") &&
+                ushort.TryParse(regHex.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out ushort reg))
+            {
+                byte val = ReadRegister(reg);  // <-- Replace this with your actual SPI read method
+                row["Value"] = $"0x{val:X2}";
+                row["Value byte"] = val;
+            }
+        }
+
+
+
+        public void LoadRegisterFile(string filePath)
+        {
+            dtAD9175.Clear(); // Optional: clear if reloading
+
+            var lines = File.ReadAllLines(filePath);
+            int index = 0;
+            try
+            {
+                foreach (var line in lines)
+                {
+                    var parts = line.Split(',');
+                    if (parts.Length == 2 &&
+                        ushort.TryParse(parts[0].Trim().Replace("0x", ""), System.Globalization.NumberStyles.HexNumber, null, out ushort reg) &&
+                        byte.TryParse(parts[1].Trim(), out byte val))
+                    {
+                        dtAD9175.Rows.Add(index++, $"0x{reg:X4}", $"0x{val:X2}", val);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error reading file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
+        }
+
 
         public void WriteRegister(ushort address, byte data)
         {

@@ -170,6 +170,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Cmd_DAQ_Reg_Read = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -483,6 +484,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.Cmd_DAQ_Reg_Read);
             this.tabAD9175.Controls.Add(this.label44);
             this.tabAD9175.Controls.Add(this.textRegDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_Link_Status);
@@ -1763,6 +1765,16 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // Cmd_DAQ_Reg_Read
+            // 
+            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 468);
+            this.Cmd_DAQ_Reg_Read.Name = "Cmd_DAQ_Reg_Read";
+            this.Cmd_DAQ_Reg_Read.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_DAQ_Reg_Read.TabIndex = 31;
+            this.Cmd_DAQ_Reg_Read.Text = "Read Registers";
+            this.Cmd_DAQ_Reg_Read.UseVisualStyleBackColor = true;
+            this.Cmd_DAQ_Reg_Read.Click += new System.EventHandler(this.Cmd_DAQ_Reg_Read_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1969,6 +1981,7 @@
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.TextBox textRegDAC9175;
         private System.Windows.Forms.Button Cmd_Link_Status;
+        private System.Windows.Forms.Button Cmd_DAQ_Reg_Read;
     }
 }
 

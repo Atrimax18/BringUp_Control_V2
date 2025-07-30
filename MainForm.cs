@@ -131,6 +131,7 @@ namespace BringUp_Control
         string Prod_file_pll = string.Empty;
 
         string dac_ini_file = string.Empty; // DAC 9175 INI file path
+        string daq_reg_file = string.Empty;
 
         string rf_pll_ini_file = string.Empty; // RF PLL 4368 INI file path
 
@@ -201,6 +202,7 @@ namespace BringUp_Control
                         // set init files for RF PLL and DAC
                         rf_pll_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["PLL4368:INIT_FILE"]);
                         dac_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:INIT_FILE"]);
+                        daq_reg_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:REG_FILE"]);
 
                         if (File.Exists(dac_ini_file))
                         {
@@ -985,24 +987,34 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabFPGA)
             {
-                //gpio_control.Write(GPIO3, true);
+                gpio_control.Write(GPIO3, true);
                 fpga.Init(ftDev, InterfaceManager); // Initialize FPGA with the current FTDI device
                 textFPGA_Address.Focus();
             }
             else if (selectedTab == tabAD9175)
             {
-                //gpio_control.Write(GPIO3, false);
+                gpio_control.Write(GPIO3, false);
                 NCO_Control(true);
                 ComboDAC_index.SelectedIndex = 0; // Set default index to 0
                 comboPRBS.SelectedIndex = 0; // Set default index to 0
 
-                //IO_Exp.SetPinState();
-
+                
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 ad9175.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
 
-
+                if (DT9175.Rows.Count > 0)
+                { 
+                    ad9175.ReadAllRegisters();
+                }
+                else if (DT9175.Rows.Count == 0)
+                {
+                    DT9175 = ad9175.InitDataTableDAC();
+                    dataGridViewAD9175.DataSource = DT9175;
+                    ad9175.LoadRegisterFile(daq_reg_file);
+                }         
+                
+                
                 comboRegisters9175.Focus();
             }
             else if (selectedTab == tabAD4368)
@@ -1141,6 +1153,8 @@ namespace BringUp_Control
                     try
                     {
                         code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
+
+                        ad9175.ReadAllRegisters();
                     }
                     catch (Exception ex)
                     {
@@ -2366,6 +2380,11 @@ namespace BringUp_Control
         private void Cmd_FPGA_Tests_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Cmd_DAQ_Reg_Read_Click(object sender, EventArgs e)
+        {
+            ad9175.ReadAllRegisters();
         }
     }
 }
