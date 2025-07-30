@@ -1866,38 +1866,7 @@ namespace BringUp_Control
             // si5518.BurnNvmPllSynth(nvm_file_pll,Prod_file_pll,config_file_pll);
         }
 
-        private void Cmd_NCO_Click(object sender, EventArgs e)
-        {
-            if (selectedTab == tabAD9175)
-            {
-                try
-                {
-                    float[] numbers = linevaluetx3
-                        .Split(',')
-                        .Select(n => float.Parse(n.Trim()))
-                        .ToArray();
-
-                    if (numbers.Length != 3)
-                    {
-                        LogStatus("Please enter exactly 3 numbers.");
-                        return;
-                    }
-
-                    ad9175.Calibration_NCO((int)numbers[0], numbers[1], (int)numbers[2]);
-
-
-                }
-                catch (Exception ex)
-                {
-                    LogStatus($"Error: {ex.Message}");
-
-                }
-            }
-
-
-        }
-
-        
+               
 
         private void Cmd_PRBS_Click(object sender, EventArgs e)
         {
@@ -1913,11 +1882,7 @@ namespace BringUp_Control
 
         }
 
-        private void TextBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void Cmd_I2C_Write_Click(object sender, EventArgs e)
         {
 
@@ -1960,18 +1925,12 @@ namespace BringUp_Control
 
                     labelFilePathAD4368.Text = $"File Path: {rf_pll_ini_file}";
                     try
-                    {
-
-                        
+                    {                       
 
                         ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF
-                        
-
-
                         LogStatus("AD4368 RF PLL reinitialized on SPI CS1");
                         WriteToRFPLL();
                         LogStatus("AD4368 RF PLL initialized successfully.");
-
 
                         Cmd_ReadAll_AD4368.Enabled = true;
                         Cmd_WriteAll_AD4368.Enabled = true;
@@ -2323,7 +2282,16 @@ namespace BringUp_Control
                     if (Regex.IsMatch(textStart.Text, "\\d{4}"))
                     {
                         start_freq = textStart.Text;
-                        textStop.Focus();
+                        if (checkBox1.Checked)
+                        {
+                            Cmd_StartSweep.Focus();
+                        }
+                        else
+                        {
+                            // If sweep is enabled, focus on stop frequency control
+                            textStop.Focus();
+                        }
+                        
                     }
                     else
                     {
