@@ -1131,6 +1131,7 @@ namespace BringUp_Control
                     Cmd_ReadDAC9175.Enabled = true;
 
                     ad9175.DAC9175_InitEngine(dac_ini_file);
+                    labelFilePath9175.Text = $"DAC File Path: {dac_ini_file}";
 
                     int code;
 
