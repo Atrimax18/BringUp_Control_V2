@@ -54,6 +54,7 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.Cmd_DAQ_Reg_Read = new System.Windows.Forms.Button();
             this.label44 = new System.Windows.Forms.Label();
             this.textRegDAC9175 = new System.Windows.Forms.TextBox();
             this.Cmd_Link_Status = new System.Windows.Forms.Button();
@@ -170,7 +171,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.Cmd_DAQ_Reg_Read = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -511,6 +511,16 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_DAQ_Reg_Read
+            // 
+            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 468);
+            this.Cmd_DAQ_Reg_Read.Name = "Cmd_DAQ_Reg_Read";
+            this.Cmd_DAQ_Reg_Read.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_DAQ_Reg_Read.TabIndex = 31;
+            this.Cmd_DAQ_Reg_Read.Text = "Read Registers";
+            this.Cmd_DAQ_Reg_Read.UseVisualStyleBackColor = true;
+            this.Cmd_DAQ_Reg_Read.Click += new System.EventHandler(this.Cmd_DAQ_Reg_Read_Click);
             // 
             // label44
             // 
@@ -1400,6 +1410,7 @@
             this.button2.TabIndex = 14;
             this.button2.Text = "LOAD FPGA JESD204";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Cmd_FPGA_Tests
             // 
@@ -1764,16 +1775,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
-            // 
-            // Cmd_DAQ_Reg_Read
-            // 
-            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 468);
-            this.Cmd_DAQ_Reg_Read.Name = "Cmd_DAQ_Reg_Read";
-            this.Cmd_DAQ_Reg_Read.Size = new System.Drawing.Size(113, 45);
-            this.Cmd_DAQ_Reg_Read.TabIndex = 31;
-            this.Cmd_DAQ_Reg_Read.Text = "Read Registers";
-            this.Cmd_DAQ_Reg_Read.UseVisualStyleBackColor = true;
-            this.Cmd_DAQ_Reg_Read.Click += new System.EventHandler(this.Cmd_DAQ_Reg_Read_Click);
             // 
             // MainForm
             // 
