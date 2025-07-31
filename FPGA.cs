@@ -28,6 +28,15 @@ namespace BringUp_Control
             ["downlink_ADC"] = new DebuggerInstance("debugger_3_", 1, 20, 1024)
         };
 
+        public class RegisterEntry
+        {
+            public string Module { get; set; }
+            public string RegisterName { get; set; }
+            public string Address { get; set; }
+            public string AccessType { get; set; }
+            public string Value { get; set; }
+        }
+
         public void Init(SpiDriver ft, FtdiInterfaceManager interfaceManager)
         {
             _ft = ft ?? throw new ArgumentNullException(nameof(ft));
@@ -95,6 +104,42 @@ namespace BringUp_Control
 
             return result;
         }
+
+        
+
+
+
+        public static List<RegisterEntry> ParseRegisterFile(string filePath)
+        {
+            var entries = new List<RegisterEntry>();
+
+            foreach (var line in File.ReadLines(filePath))
+            {
+                var parts = line.Split(',').Select(p => p.Trim()).ToArray();
+                if (parts.Length == 5)
+                {
+                    entries.Add(new RegisterEntry
+                    {
+                        Module = parts[0],
+                        RegisterName = parts[1],
+                        Address = parts[2],
+                        AccessType = parts[3],
+                        Value = parts[4]
+                    });
+                }
+            }
+
+            return entries;
+        }
+
+        private void LoadCsvToGrid(string fgpa_file)
+        {
+            //string filePath = @"C:\Path\To\FPGA_JESD204C.csv"; // update as needed
+            var registerEntries = ParseRegisterFile(fgpa_file);
+            dataGridView1.DataSource = registerEntries;
+        }
+
+
 
         //convert from uint to hex string
         public string UIntToHexValue(uint value)

@@ -134,7 +134,7 @@
             this.comboBoxDebugger = new System.Windows.Forms.ComboBox();
             this.Cmd_Stop_Player = new System.Windows.Forms.Button();
             this.Cmd_Activate_Player = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.Cmd_Load_JESD204 = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Tests = new System.Windows.Forms.Button();
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
@@ -1343,7 +1343,7 @@
             this.tabFPGA.Controls.Add(this.comboBoxDebugger);
             this.tabFPGA.Controls.Add(this.Cmd_Stop_Player);
             this.tabFPGA.Controls.Add(this.Cmd_Activate_Player);
-            this.tabFPGA.Controls.Add(this.button2);
+            this.tabFPGA.Controls.Add(this.Cmd_Load_JESD204);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Tests);
             this.tabFPGA.Controls.Add(this.Cmd_WriteFPGA);
             this.tabFPGA.Controls.Add(this.label22);
@@ -1402,15 +1402,15 @@
             this.Cmd_Activate_Player.Text = "Activate Player";
             this.Cmd_Activate_Player.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // Cmd_Load_JESD204
             // 
-            this.button2.Location = new System.Drawing.Point(666, 18);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(145, 52);
-            this.button2.TabIndex = 14;
-            this.button2.Text = "LOAD FPGA JESD204";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.Cmd_Load_JESD204.Location = new System.Drawing.Point(666, 18);
+            this.Cmd_Load_JESD204.Name = "Cmd_Load_JESD204";
+            this.Cmd_Load_JESD204.Size = new System.Drawing.Size(145, 52);
+            this.Cmd_Load_JESD204.TabIndex = 14;
+            this.Cmd_Load_JESD204.Text = "LOAD FPGA JESD204";
+            this.Cmd_Load_JESD204.UseVisualStyleBackColor = true;
+            this.Cmd_Load_JESD204.Click += new System.EventHandler(this.Cmd_Load_JESD204_Click);
             // 
             // Cmd_FPGA_Tests
             // 
@@ -1435,7 +1435,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(20, 104);
+            this.label22.Location = new System.Drawing.Point(3, 104);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(96, 16);
             this.label22.TabIndex = 11;
@@ -1509,12 +1509,12 @@
             // 
             // textFPGA_Output
             // 
-            this.textFPGA_Output.Location = new System.Drawing.Point(23, 123);
+            this.textFPGA_Output.Location = new System.Drawing.Point(3, 535);
             this.textFPGA_Output.Multiline = true;
             this.textFPGA_Output.Name = "textFPGA_Output";
             this.textFPGA_Output.ReadOnly = true;
             this.textFPGA_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textFPGA_Output.Size = new System.Drawing.Size(506, 510);
+            this.textFPGA_Output.Size = new System.Drawing.Size(506, 117);
             this.textFPGA_Output.TabIndex = 2;
             // 
             // textFPGA_Address
@@ -1975,7 +1975,7 @@
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.NumericUpDown numericTime;
         private System.Windows.Forms.Label label31;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button Cmd_Load_JESD204;
         private System.Windows.Forms.ComboBox comboBoxDebugger;
         private System.Windows.Forms.Button Cmd_Stop_Player;
         private System.Windows.Forms.Button Cmd_Activate_Player;

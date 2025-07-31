@@ -2390,9 +2390,9 @@ namespace BringUp_Control
             ad9175.ReadAllRegisters();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
-
+            var entries = ad9175.ReadJESD204Entries();
         }
     }
 }
