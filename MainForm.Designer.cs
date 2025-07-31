@@ -171,6 +171,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.dataGridFPGA = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -196,6 +197,7 @@
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -1340,6 +1342,7 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.dataGridFPGA);
             this.tabFPGA.Controls.Add(this.comboBoxDebugger);
             this.tabFPGA.Controls.Add(this.Cmd_Stop_Player);
             this.tabFPGA.Controls.Add(this.Cmd_Activate_Player);
@@ -1509,12 +1512,12 @@
             // 
             // textFPGA_Output
             // 
-            this.textFPGA_Output.Location = new System.Drawing.Point(3, 535);
+            this.textFPGA_Output.Location = new System.Drawing.Point(6, 535);
             this.textFPGA_Output.Multiline = true;
             this.textFPGA_Output.Name = "textFPGA_Output";
             this.textFPGA_Output.ReadOnly = true;
             this.textFPGA_Output.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textFPGA_Output.Size = new System.Drawing.Size(506, 117);
+            this.textFPGA_Output.Size = new System.Drawing.Size(586, 117);
             this.textFPGA_Output.TabIndex = 2;
             // 
             // textFPGA_Address
@@ -1776,6 +1779,14 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // dataGridFPGA
+            // 
+            this.dataGridFPGA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridFPGA.Location = new System.Drawing.Point(6, 130);
+            this.dataGridFPGA.Name = "dataGridFPGA";
+            this.dataGridFPGA.Size = new System.Drawing.Size(586, 399);
+            this.dataGridFPGA.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1834,6 +1845,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1983,6 +1995,7 @@
         private System.Windows.Forms.TextBox textRegDAC9175;
         private System.Windows.Forms.Button Cmd_Link_Status;
         private System.Windows.Forms.Button Cmd_DAQ_Reg_Read;
+        private System.Windows.Forms.DataGridView dataGridFPGA;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -17,6 +18,8 @@ namespace BringUp_Control
         private SpiDriver _ft;
         private FtdiInterfaceManager _interfaceManager;
 
+        DataTable dtFPGA = new DataTable();
+
         private const int BC = 12; // Bit count for I/Q components
         private const int MaxRetries = 3;
 
@@ -28,14 +31,7 @@ namespace BringUp_Control
             ["downlink_ADC"] = new DebuggerInstance("debugger_3_", 1, 20, 1024)
         };
 
-        public class RegisterEntry
-        {
-            public string Module { get; set; }
-            public string RegisterName { get; set; }
-            public string Address { get; set; }
-            public string AccessType { get; set; }
-            public string Value { get; set; }
-        }
+        
 
         public void Init(SpiDriver ft, FtdiInterfaceManager interfaceManager)
         {
@@ -105,39 +101,71 @@ namespace BringUp_Control
             return result;
         }
 
-        
 
-
-
-        public static List<RegisterEntry> ParseRegisterFile(string filePath)
+        public DataTable InitDataTableFPGA()
         {
-            var entries = new List<RegisterEntry>();
+            dtFPGA.Columns.Add("Module", typeof(string));
+            dtFPGA.Columns.Add("RegisterName", typeof(string));
+            dtFPGA.Columns.Add("Address", typeof(string));
+            dtFPGA.Columns.Add("AccessType", typeof(string));
+            dtFPGA.Columns.Add("Value", typeof(string));
 
-            foreach (var line in File.ReadLines(filePath))
+
+            return dtFPGA;
+        }
+
+
+        public void LoadRegisterFile(string filePath)
+        {
+
+            dtFPGA.Clear();
+            try 
             {
-                var parts = line.Split(',').Select(p => p.Trim()).ToArray();
-                if (parts.Length == 5)
+                foreach (var line in File.ReadLines(filePath))
                 {
-                    entries.Add(new RegisterEntry
+                    var parts = line.Split(',').Select(p => p.Trim()).ToArray();
+                    if (parts.Length == 5)
                     {
-                        Module = parts[0],
-                        RegisterName = parts[1],
-                        Address = parts[2],
-                        AccessType = parts[3],
-                        Value = parts[4]
-                    });
+                        dtFPGA.Rows.Add(parts[0], parts[1], parts[2], parts[3], parts[4]);
+                    }
                 }
             }
-
-            return entries;
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading register file: " + ex.Message);
+                return;
+            }             
         }
 
-        private void LoadCsvToGrid(string fgpa_file)
+        //for loading the file from the FPGA
+        public void WriteReadFPGA()
         {
-            //string filePath = @"C:\Path\To\FPGA_JESD204C.csv"; // update as needed
-            var registerEntries = ParseRegisterFile(fgpa_file);
-            dataGridView1.DataSource = registerEntries;
+            foreach (DataRow row in dtFPGA.Rows)
+            {
+                string access = row["AccessType"].ToString();
+                string addressStr = row["Address"].ToString();
+                string valueStr = row["Value"].ToString();
+
+                uint address = Convert.ToUInt32(addressStr.Replace("0x", ""), 16);
+
+                if (access == "R")
+                {
+                    uint readVal = SpiRead(AlignmentRegisterFPGA(address));
+                    row["Value"] = $"0x{readVal:X8}";  // update value column
+                }
+                else if (access == "W")
+                {
+                    uint writeVal = Convert.ToUInt32(valueStr.Replace("0x", ""), 16);
+                    SpiWrite(AlignmentRegisterFPGA(address), writeVal);
+                }
+            }
         }
+
+        private uint AlignmentRegisterFPGA(uint alignaddress)
+        {
+            return alignaddress & 0xFFFFFFFC;
+        }
+
 
 
 

@@ -992,6 +992,18 @@ namespace BringUp_Control
             {
                 gpio_control.Write(GPIO3, true);
                 fpga.Init(ftDev, InterfaceManager); // Initialize FPGA with the current FTDI device
+                
+                if(DTFPGA.Rows.Count > 0)
+                {
+                    
+                }
+                else if (DTFPGA.Rows.Count == 0)
+                {
+                    DTFPGA = fpga.InitDataTableFPGA();
+                    dataGridFPGA.DataSource = DTFPGA;
+                    
+                }
+                
                 textFPGA_Address.Focus();
             }
             else if (selectedTab == tabAD9175)
@@ -1332,7 +1344,7 @@ namespace BringUp_Control
                 catch (Exception ex)
                 {
                     //MessageBox.Show($"Failed to write to FPGA: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    LogStatus("Writing to FPGA Caused an ERROR!!!");
+                    LogStatus($"Writing to FPGA Caused an ERROR!!! {ex.Message}");
                 }
             }
         }
@@ -2392,7 +2404,10 @@ namespace BringUp_Control
 
         private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
-            var entries = ad9175.ReadJESD204Entries();
+            fpga.LoadRegisterFile(jesd_file); 
+            LogStatusFPGA($"JESD204B register file loaded: {jesd_file}");
+
+            fpga.WriteReadFPGA();
         }
     }
 }
