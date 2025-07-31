@@ -111,6 +111,8 @@ namespace BringUp_Control
         private uint _spiLocId = UInt32.MaxValue;   // interface-A  (SPI)
         private uint _gpioLocId = UInt32.MaxValue;   // interface-B  (GPIO / future I²C)
 
+        private uint _spiLocId_FPGA = UInt32.MaxValue; // interface-A  (SPI FPGA)
+
         SpiDriver ftDev;
         AD4368_PLL ad4368; // Analog Devices 4368 RF PLL
         AD9175_DAC ad9175; // Analog Devices 9175 DAC
@@ -297,6 +299,8 @@ namespace BringUp_Control
                     uint locfirst = FTDriver.GetDeviceInterfaceSPI("FT4222 A");   //Device A interface for SPI
                     uint locsecond = FTDriver.GetDeviceInterfaceSPI("FT4222 B");  //Device B interface for GPIO and I2C
 
+                    
+
                     // ── Guard: if nothing changed we’re already initialised ────────────────────
                     bool locationsUnchanged = (ftDev != null) &&
                                               (gpio_control != null) &&
@@ -313,6 +317,9 @@ namespace BringUp_Control
                     InterfaceManager = new FtdiInterfaceManager(_spiLocId); // Initialize FTDI interface manager
                     InterfaceManager.BusModeChanged += OnBusModeChanged;
 
+
+
+                    _spiLocId_FPGA = 4625;
                     // ************************* Dispose if already has init ******************************************
 
                     fpga?.Dispose();
@@ -1001,7 +1008,9 @@ namespace BringUp_Control
                 {
                     DTFPGA = fpga.InitDataTableFPGA();
                     dataGridFPGA.DataSource = DTFPGA;
-                    
+                    fpga.LoadRegisterFile(jesd_file);
+                    LogStatusFPGA($"JESD204B register file loaded: {jesd_file}");
+
                 }
                 
                 textFPGA_Address.Focus();
@@ -1340,6 +1349,7 @@ namespace BringUp_Control
                     uint addr = HexStringToUInt(fpga_address);
                     uint retval = fpga.SpiRead(AlignmentRegister(HexStringToUInt(fpga_address)));
                     LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
+                    textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
                 }
                 catch (Exception ex)
                 {
@@ -1524,15 +1534,38 @@ namespace BringUp_Control
             }
         }
 
-        // Import FPGA file with relevant data
+        // Import FPGA vector file with relevant data
         private void Cmd_FPGA_Import_Click(object sender, EventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
-                
+                if(fpga == null)
+                {
+                    MessageBox.Show("FPGA interface not initialized. Please reconnect the FTDI device.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 string fpgavectors = fpga.LoadVectorDataCsv();
                 LogStatus($"FPGA Vectors file loaded");
-                
+
+                if (!string.IsNullOrEmpty(fpgavectors))
+                {
+                    try
+                    {
+                        fpga.LoadVectorFile(fpgavectors);
+                        LogStatusFPGA($"FPGA vector file loaded: {fpgavectors}");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogStatusFPGA($"Error loading FPGA vector file: {ex.Message}");
+                        MessageBox.Show($"Error loading FPGA vector file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    LogStatusFPGA("No FPGA vector file selected.");
+                }
+
 
 
             }
@@ -2404,8 +2437,7 @@ namespace BringUp_Control
 
         private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
-            fpga.LoadRegisterFile(jesd_file); 
-            LogStatusFPGA($"JESD204B register file loaded: {jesd_file}");
+            
 
             fpga.WriteReadFPGA();
         }

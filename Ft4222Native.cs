@@ -337,7 +337,7 @@ namespace BringUp_Control
 
         }
 
-        public static uint FindSpiInterfaceLocId()
+        public uint FindSpiInterfaceLocId()
         {
             uint devCount = 0;
             FT_CreateDeviceInfoList(out devCount);

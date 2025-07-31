@@ -114,7 +114,7 @@ namespace BringUp_Control
             return dtFPGA;
         }
 
-
+        //Load JES204C register data file from a CSV file
         public void LoadRegisterFile(string filePath)
         {
 
@@ -165,9 +165,6 @@ namespace BringUp_Control
         {
             return alignaddress & 0xFFFFFFFC;
         }
-
-
-
 
         //convert from uint to hex string
         public string UIntToHexValue(uint value)
@@ -331,12 +328,9 @@ namespace BringUp_Control
                     ftfile.FilterIndex = 0;
 
                     if (ftfile.ShowDialog() == DialogResult.OK)
-                    {
-                        
+                    {                       
 
                         filepath = ftfile.FileName;
-
-                        //ParsingFile(filepath);
                     }
                 }
                 catch (Exception ex)
@@ -349,6 +343,11 @@ namespace BringUp_Control
             }
         }
 
+
+        public void LoadVectorFile(string vectorfile)
+        {
+
+        }
         public void Dispose()
         {
             _ft?.Dispose();

@@ -1407,9 +1407,9 @@
             // 
             // Cmd_Load_JESD204
             // 
-            this.Cmd_Load_JESD204.Location = new System.Drawing.Point(666, 18);
+            this.Cmd_Load_JESD204.Location = new System.Drawing.Point(666, 20);
             this.Cmd_Load_JESD204.Name = "Cmd_Load_JESD204";
-            this.Cmd_Load_JESD204.Size = new System.Drawing.Size(145, 52);
+            this.Cmd_Load_JESD204.Size = new System.Drawing.Size(145, 45);
             this.Cmd_Load_JESD204.TabIndex = 14;
             this.Cmd_Load_JESD204.Text = "LOAD FPGA JESD204";
             this.Cmd_Load_JESD204.UseVisualStyleBackColor = true;
@@ -1530,7 +1530,7 @@
             // 
             // Cmd_FPGA_Import
             // 
-            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 90);
+            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 75);
             this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
             this.Cmd_FPGA_Import.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Import.TabIndex = 0;
