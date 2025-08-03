@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static BringUp_Control.AD9175_DAC;
+using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
@@ -2459,6 +2460,23 @@ namespace BringUp_Control
             if (selectedTab == tabFPGA)
             {
                 string test_mode = comboBoxDebugger.SelectedItem.ToString();
+
+                switch (test_mode)
+                {
+                    case "Uplink Modem0":
+                        break;
+                    case "Uplink Modem1":
+                        break;
+                    case "Uplink Modem2":
+                        break;
+                    case "Uplink Modem3":
+                        break;
+
+
+
+
+                        
+                }
 
 
 

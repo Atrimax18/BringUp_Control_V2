@@ -261,10 +261,10 @@ namespace BringUp_Control
 
         public Dictionary<string, DebuggerInstance> Debuggers = new Dictionary<string, DebuggerInstance>
         {
-            ["uplink_modem"] = new DebuggerInstance("debugger_0_", 4, 8, 1024),
-            ["uplink_DAC"] = new DebuggerInstance("debugger_1_", 2, 8, 1024),
-            ["downlink_modem"] = new DebuggerInstance("debugger_2_", 4, 8, 1024),
-            ["downlink_ADC"] = new DebuggerInstance("debugger_3_", 1, 20, 1024)
+            ["uplink_modem"] = new DebuggerInstance("debugger_i0_", 4, 8, 1024),
+            ["uplink_DAC"] = new DebuggerInstance("debugger_i1_", 2, 8, 1024),
+            ["downlink_modem"] = new DebuggerInstance("debugger_i2_", 4, 8, 1024),
+            ["downlink_ADC"] = new DebuggerInstance("debugger_i3_", 1, 20, 1024)
         };
 
         
@@ -407,21 +407,18 @@ namespace BringUp_Control
 
                 if (access == "R")
                 {
-                    uint readVal = SpiRead(AlignmentRegisterFPGA(address));
+                    uint readVal = SpiRead(address);
                     row["Value"] = $"0x{readVal:X8}";  // update value column
                 }
                 else if (access == "W")
                 {
                     uint writeVal = Convert.ToUInt32(valueStr.Replace("0x", ""), 16);
-                    SpiWrite(AlignmentRegisterFPGA(address), writeVal);
+                    SpiWrite(address, writeVal);
                 }
             }
         }
 
-        private uint AlignmentRegisterFPGA(uint alignaddress)
-        {
-            return alignaddress & 0xFFFFFFFC;
-        }
+        
 
         //convert from uint to hex string
         public string UIntToHexValue(uint value)
@@ -518,6 +515,9 @@ namespace BringUp_Control
             }
 
             int count = samples.Length;
+
+            int PlayerCount = count / dbg.Parallel;
+
             if (count % dbg.Parallel != 0 || count / dbg.Parallel > dbg.MemLen)
             {
                 MessageBox.Show("Invalid sample count: must be divisible by " + dbg.Parallel);
@@ -525,14 +525,16 @@ namespace BringUp_Control
             }
 
             string prefix = dbg.Prefix;
-            SpiWrite(StringToAddress(prefix + "rgf_set_active_channel"), (uint)stream);
-            SpiWrite(StringToAddress(prefix + "rgf_player_count"), (uint)(count / dbg.Parallel));
-            SpiWrite(StringToAddress(prefix + "rgf_set_wr_address"), 0);
+            SpiWriteByName(prefix+ "rgf_set_active_channel", (uint)stream);
+            SpiWriteByName(prefix+ "rgf_player_count", (uint)PlayerCount);
+            SpiWriteByName(prefix+ "rgf_set_wr_address", 0);
+
+            
 
             foreach (var c in samples)
             {
                 int packed = ConvertFromComplex(c);
-                SpiWrite(StringToAddress(prefix + "rgf_wr_sample"), (uint)packed);
+                //SpiWrite(StringToAddress(prefix + "rgf_wr_sample"), (uint)packed);
             }
         }
 
@@ -543,7 +545,8 @@ namespace BringUp_Control
                 MessageBox.Show("Invalid debugger key: " + debuggerKey);
                 return;
             }
-            SpiWrite(StringToAddress(dbg.Prefix + "rgf_activate_player"), play ? 1u : 0u);
+            string preffix = dbg.Prefix;
+            SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
         }
 
         public void StopPlayer(string debuggerKey)
@@ -551,11 +554,7 @@ namespace BringUp_Control
             ActivatePlayer(debuggerKey, false);
         }
 
-        private uint StringToAddress(string regName)
-        {
-            // Placeholder mapping: in real usage, translate regName to actual address
-            return 0x80000000; // Replace with real logic or lookup
-        }
+        
         public class DebuggerInstance
         {
             public string Prefix { get; set; }
@@ -603,8 +602,16 @@ namespace BringUp_Control
 
         public void LoadVectorFile(string vectorfile)
         {
+            if (!string.IsNullOrEmpty(vectorfile))
+            {
 
+            }
+            else
+            {
+                   
+            }
         }
+
         public void Dispose()
         {
             //_ft?.Dispose();
