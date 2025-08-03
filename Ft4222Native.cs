@@ -337,7 +337,7 @@ namespace BringUp_Control
 
         }
 
-        public uint FindSpiInterfaceLocId()
+        public uint FindSpiInterfaceLocId(string serialnum)
         {
             uint devCount = 0;
             FT_CreateDeviceInfoList(out devCount);
@@ -353,8 +353,11 @@ namespace BringUp_Control
 
                 FT_GetDeviceInfoDetail(i, ref flags, ref type, ref id, ref locId, sn, desc, ref h);
 
-                if (type == FTDI.FT_DEVICE.FT_DEVICE_4222H_0 ||
-                    type == FTDI.FT_DEVICE.FT_DEVICE_4222H_1_2)     // Interface A or B
+                string str = Encoding.ASCII.GetString(sn).TrimEnd('\0');
+
+               
+
+                if(str.Contains(serialnum))
                     return locId;
             }
 

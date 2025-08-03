@@ -59,6 +59,7 @@ namespace BringUp_Control
 
         Ft4222Native FTDriver = new Ft4222Native();
         FtdiInterfaceManager InterfaceManager; // FTDI SPI interface manager
+        FtdiInterfaceManager InterfaceManagerFPGA; // FTDI SPI interface manager for FPGA
 
 
 
@@ -71,7 +72,7 @@ namespace BringUp_Control
 
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
-        bool PLL_Init_Flag = false; // PLL Init Flag
+        
         bool TXline_flag = false;   // TX line up values upload flag
         private bool _disposed;
 
@@ -114,9 +115,10 @@ namespace BringUp_Control
         private uint _spiLocId_FPGA = UInt32.MaxValue; // interface-A  (SPI FPGA)
 
         SpiDriver ftDev;
+        SpiDriver ftFPGA; // SPI driver for FPGA
         AD4368_PLL ad4368; // Analog Devices 4368 RF PLL
         AD9175_DAC ad9175; // Analog Devices 9175 DAC
-        FPGA fpga;
+        FPGA fpga; // FPGA interface for register access
         GpioDriver gpio_control;
         i2cDriver i2cBus;
         TMP100 tmp100;   // temperature sensors
@@ -295,11 +297,28 @@ namespace BringUp_Control
                 }
                 else
                 {
-                    // FTDI reconnected — reinitialize
-                    uint locfirst = FTDriver.GetDeviceInterfaceSPI("FT4222 A");   //Device A interface for SPI
-                    uint locsecond = FTDriver.GetDeviceInterfaceSPI("FT4222 B");  //Device B interface for GPIO and I2C
+                    uint fpganum = 0;
+                    if (num > 2)
+                    {
+                        fpganum = FTDriver.FindSpiInterfaceLocId("SATIXFY2A");
 
+                        _spiLocId_FPGA = fpganum; // INTERFACE FT4222 FPGA
+                        InterfaceManagerFPGA = new FtdiInterfaceManager(_spiLocId_FPGA); // Initialize FTDI interface manager for FPGA
+                        InterfaceManagerFPGA.BusModeChanged += OnBusModeChanged;
+                        ftFPGA = InterfaceManagerFPGA.GetSpi();
+
+                    }
+                    // FTDI reconnected — reinitialize
                     
+
+
+                    uint locfirst = FTDriver.FindSpiInterfaceLocId("A");
+                    uint locsecond = FTDriver.FindSpiInterfaceLocId("B");
+
+                    //uint locfirst = FTDriver.GetDeviceInterfaceSPI("FT4222 A");   //Device A interface for SPI
+                    //uint locsecond = FTDriver.GetDeviceInterfaceSPI("FT4222 B");  //Device B interface for GPIO and I2C
+
+
 
                     // ── Guard: if nothing changed we’re already initialised ────────────────────
                     bool locationsUnchanged = (ftDev != null) &&
@@ -312,14 +331,18 @@ namespace BringUp_Control
                         return;   // avoid handle churn
 
                     // ── Either first time or the device list really changed ───────────────────
-                    _spiLocId = locfirst;    //INTERFACE FT4222 A
-                    _gpioLocId = locsecond;  //INTERFACE FT4222 B
+                    _spiLocId = locfirst;    //INTERFACE FT4222 A bringup board
+                    _gpioLocId = locsecond;  //INTERFACE FT4222 B bringup board
+
+                    
                     InterfaceManager = new FtdiInterfaceManager(_spiLocId); // Initialize FTDI interface manager
+                    
+
                     InterfaceManager.BusModeChanged += OnBusModeChanged;
 
 
 
-                    _spiLocId_FPGA = 4625;
+                    
                     // ************************* Dispose if already has init ******************************************
 
                     fpga?.Dispose();
@@ -998,7 +1021,8 @@ namespace BringUp_Control
             else if (selectedTab == tabFPGA)
             {
                 gpio_control.Write(GPIO3, true);
-                fpga.Init(ftDev, InterfaceManager); // Initialize FPGA with the current FTDI device
+                //fpga.Init(ftDev, InterfaceManager);
+                fpga.Init(ftFPGA, InterfaceManagerFPGA); // Initialize FPGA with the current FTDI device
                 
                 if(DTFPGA.Rows.Count > 0)
                 {
@@ -1107,10 +1131,7 @@ namespace BringUp_Control
 
         }
 
-        private void Cmd_Import_AD4368_File_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void Cmd_Export_AD4368_File_Click(object sender, EventArgs e)
         {
@@ -1262,8 +1283,7 @@ namespace BringUp_Control
                 {
                     double voltdata;
                    
-                    //ftDev = InterfaceManager.GetSpi();
-                    //i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
+                    
                     ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
                     Thread.Sleep(10);
                     ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
@@ -1617,12 +1637,12 @@ namespace BringUp_Control
 
         private void Cmd_Read_Registers_Click(object sender, EventArgs e)
         {
-            if (selectedTab == tabFPGA)
+            /*if (selectedTab == tabFPGA)
             {
                 string startaddress = "0x00001000";
                 string stopaaddress = "0x00001020";
                 Read_FPGA_Registers(HexStringToUInt(startaddress), HexStringToUInt(stopaaddress));
-            }
+            }*/
 
         }
 

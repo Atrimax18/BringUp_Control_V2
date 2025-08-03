@@ -350,7 +350,8 @@ namespace BringUp_Control
         }
         public void Dispose()
         {
-            _ft?.Dispose();
+            //_ft?.Dispose();
+            _ft = null; 
         }
 
     }
