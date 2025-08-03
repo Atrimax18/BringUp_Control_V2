@@ -1330,7 +1330,7 @@ namespace BringUp_Control
 
                 try
                 {
-                    fpga.SpiWrite(AlignmentRegister(HexStringToUInt(fpga_address)), HexStringToUInt(fpga_data));
+                    fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
                     LogStatus($"The register address {fpga_address} passed value {fpga_data} to FPGA");
                 }
                 catch (Exception ex)
@@ -1361,8 +1361,9 @@ namespace BringUp_Control
 
                 try
                 {
-                    uint addr = HexStringToUInt(fpga_address);
-                    uint retval = fpga.SpiRead(AlignmentRegister(HexStringToUInt(fpga_address)));
+                    
+                    
+                    uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
                     LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                     textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
                 }
@@ -1641,11 +1642,7 @@ namespace BringUp_Control
 
         }
 
-        //Alignment Register Map 32-bit word
-        private uint AlignmentRegister(uint alignaddress)
-        {
-            return alignaddress & 0xFFFFFFFC;
-        }
+        
 
 
 
