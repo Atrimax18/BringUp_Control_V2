@@ -1005,13 +1005,22 @@ namespace BringUp_Control
                     numericATT2.Value = Convert.ToDecimal(txLineData.att2);
                     numericATT3.Value = Convert.ToDecimal(txLineData.att3);
 
-                    
+
                     hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                     hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
 
                     hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+                    TXline_flag = true; // Set flag to true after initialization
+                }
+                else
+                {
 
+
+                    // Reinitialize HMC8414 if already initialized
+                    hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, checkAmp1.Checked);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, checkAmp2.Checked);
                 }
             }
             else if (selectedTab == tabFPGA)

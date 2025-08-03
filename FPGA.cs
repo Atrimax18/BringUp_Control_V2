@@ -141,7 +141,7 @@ namespace BringUp_Control
             { "activate_loopback", 0x1C0 },
             { "end", 0x1C4 }
         };
-        /*public static readonly Dictionary<string, uint> RegisterMapCoin_Digital = new Dictionary<string, uint>()
+        public static readonly Dictionary<string, uint> RegisterMapCoin_Digital = new Dictionary<string, uint>()
         {
             { "container_version", 0x0 },
             { "dsp_cfg_ul_i0_nco_delta_phase", 0x4 },
@@ -257,7 +257,7 @@ namespace BringUp_Control
             { "enable_data_path", 0x1BC},
             { "activate_loopback", 0x1C0 },
             { "end", 0x1C4 }
-        };*/
+        };
 
         public Dictionary<string, DebuggerInstance> Debuggers = new Dictionary<string, DebuggerInstance>
         {
@@ -343,7 +343,7 @@ namespace BringUp_Control
         //new test function to read register from FPGA
         public uint SpiReadByName(string regName)
         {
-            if (!RegisterMapTOP_Container.TryGetValue(regName, out uint offset))
+            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
                 throw new ArgumentException($"Register '{regName}' not found.");
 
             uint address = BASE_ADDRESS + offset;
@@ -353,7 +353,7 @@ namespace BringUp_Control
         //new test function to write register to FPGA
         public void SpiWriteByName(string regName, uint value)
         {
-            if (!RegisterMapTOP_Container.TryGetValue(regName, out uint offset))
+            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
                 throw new ArgumentException($"Register '{regName}' not found.");
 
             uint address = BASE_ADDRESS + offset;
