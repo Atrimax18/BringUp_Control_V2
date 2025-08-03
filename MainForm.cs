@@ -308,8 +308,7 @@ namespace BringUp_Control
                         ftFPGA = InterfaceManagerFPGA.GetSpi();
 
                     }
-                    // FTDI reconnected — reinitialize
-                    
+                    // FTDI reconnected — reinitialize                  
 
 
                     uint locfirst = FTDriver.FindSpiInterfaceLocId("A");
@@ -336,8 +335,6 @@ namespace BringUp_Control
 
                     
                     InterfaceManager = new FtdiInterfaceManager(_spiLocId); // Initialize FTDI interface manager
-                    
-
                     InterfaceManager.BusModeChanged += OnBusModeChanged;
 
 
@@ -405,8 +402,6 @@ namespace BringUp_Control
                     ad7091 = new AD7091();
                     si5518 = new SI55XX();
                     fpga = new FPGA();
-
-
 
                     // GUI elements enabled/disabled
                     SetControlsEnabled(true);
@@ -2447,7 +2442,7 @@ namespace BringUp_Control
 
         private void Cmd_FPGA_Tests_Click(object sender, EventArgs e)
         {
-
+            uint deft = fpga.SpiReadByName("dsp_cfg_ul_i2_gain");
         }
 
         private void Cmd_DAQ_Reg_Read_Click(object sender, EventArgs e)
@@ -2460,6 +2455,17 @@ namespace BringUp_Control
             
 
             fpga.WriteReadFPGA();
+        }
+
+        private void comboBoxDebugger_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabFPGA)
+            {
+                string test_mode = comboBoxDebugger.SelectedItem.ToString();
+
+
+
+            }
         }
     }
 }

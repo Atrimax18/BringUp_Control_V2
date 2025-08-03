@@ -131,6 +131,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.dataGridFPGA = new System.Windows.Forms.DataGridView();
             this.comboBoxDebugger = new System.Windows.Forms.ComboBox();
             this.Cmd_Stop_Player = new System.Windows.Forms.Button();
             this.Cmd_Activate_Player = new System.Windows.Forms.Button();
@@ -171,7 +172,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.dataGridFPGA = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -194,10 +194,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericATT1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabFPGA.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).BeginInit();
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -1367,6 +1367,14 @@
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
             // 
+            // dataGridFPGA
+            // 
+            this.dataGridFPGA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridFPGA.Location = new System.Drawing.Point(6, 130);
+            this.dataGridFPGA.Name = "dataGridFPGA";
+            this.dataGridFPGA.Size = new System.Drawing.Size(586, 399);
+            this.dataGridFPGA.TabIndex = 18;
+            // 
             // comboBoxDebugger
             // 
             this.comboBoxDebugger.FormattingEnabled = true;
@@ -1382,10 +1390,11 @@
             "Downlink Modem2",
             "Downlink Modem3",
             "Downlink ADC"});
-            this.comboBoxDebugger.Location = new System.Drawing.Point(666, 420);
+            this.comboBoxDebugger.Location = new System.Drawing.Point(666, 96);
             this.comboBoxDebugger.Name = "comboBoxDebugger";
             this.comboBoxDebugger.Size = new System.Drawing.Size(145, 24);
             this.comboBoxDebugger.TabIndex = 17;
+            this.comboBoxDebugger.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger_SelectedIndexChanged);
             // 
             // Cmd_Stop_Player
             // 
@@ -1530,7 +1539,7 @@
             // 
             // Cmd_FPGA_Import
             // 
-            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 75);
+            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(666, 130);
             this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
             this.Cmd_FPGA_Import.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Import.TabIndex = 0;
@@ -1779,14 +1788,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // dataGridFPGA
-            // 
-            this.dataGridFPGA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridFPGA.Location = new System.Drawing.Point(6, 130);
-            this.dataGridFPGA.Name = "dataGridFPGA";
-            this.dataGridFPGA.Size = new System.Drawing.Size(586, 399);
-            this.dataGridFPGA.TabIndex = 18;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1840,12 +1841,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabFPGA.ResumeLayout(false);
             this.tabFPGA.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).EndInit();
             this.tabMux.ResumeLayout(false);
             this.tabMux.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridFPGA)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

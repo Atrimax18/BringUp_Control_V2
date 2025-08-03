@@ -17,11 +17,247 @@ namespace BringUp_Control
 
         private SpiDriver _ft;
         private FtdiInterfaceManager _interfaceManager;
+        private const uint BASE_ADDRESS = 0x00001000;
 
         DataTable dtFPGA = new DataTable();
 
         private const int BC = 12; // Bit count for I/Q components
         private const int MaxRetries = 3;
+
+        public static readonly Dictionary<string, uint> RegisterMapTOP_Container = new Dictionary<string, uint>()
+        {
+            { "container_version", 0x0 },
+            { "dsp_cfg_ul_i0_nco_delta_phase", 0x4 },
+            { "dsp_cfg_ul_i0_gain", 0x8 },
+            { "dsp_cfg_ul_i1_nco_delta_phase", 0xC },
+            { "dsp_cfg_ul_i1_gain", 0x10 },
+            { "dsp_cfg_ul_i2_nco_delta_phase", 0x14 },
+            { "dsp_cfg_ul_i2_gain", 0x18 },
+            { "dsp_cfg_ul_i3_nco_delta_phase", 0x1C },
+            { "dsp_cfg_ul_i3_gain", 0x20 },
+            { "dsp_cfg_dl_i0_nco_delta_phase", 0x24 },
+            { "dsp_cfg_dl_i0_gain", 0x28 },
+            { "dsp_cfg_dl_i1_nco_delta_phase", 0x2C },
+            { "dsp_cfg_dl_i1_gain", 0x30 },
+            { "dsp_cfg_dl_i2_nco_delta_phase", 0x34 },
+            { "dsp_cfg_dl_i2_gain", 0x38 },
+            { "dsp_cfg_dl_i3_nco_delta_phase", 0x3C },
+            { "dsp_cfg_dl_i3_gain", 0x40 },
+            { "dsp_ul_pwr_measure_ctrl_start", 0x44 },
+            { "dsp_ul_pwr_measure_ctrl_log2_sample_count_added_to_min", 0x48},
+            { "dsp_ul_pwr_measure_ctrl_power_sat_msb", 0x4C},
+            { "dsp_ul_pwr_measure_status_i0_valid", 0x50},
+            { "dsp_ul_pwr_measure_status_i0_average_power", 0x54},
+            { "dsp_ul_pwr_measure_status_i0_power_sat_count", 0x58},
+            { "dsp_ul_pwr_measure_status_i1_valid", 0x5C},
+            { "dsp_ul_pwr_measure_status_i1_average_power", 0x60},
+            { "dsp_ul_pwr_measure_status_i1_power_sat_count", 0x64},
+            { "dsp_ul_pwr_measure_status_i2_valid", 0x68 },
+            { "dsp_ul_pwr_measure_status_i2_average_power", 0x6C},
+            { "dsp_ul_pwr_measure_status_i2_power_sat_count", 0x70},
+            { "dsp_ul_pwr_measure_status_i3_valid", 0x74},
+            { "dsp_ul_pwr_measure_status_i3_average_power", 0x78},
+            { "dsp_ul_pwr_measure_status_i3_power_sat_count", 0x7C},
+            { "dsp_dl_pwr_measure_ctrl_start", 0x80},
+            { "dsp_dl_pwr_measure_ctrl_log2_sample_count_added_to_min", 0x84},
+            { "dsp_dl_pwr_measure_ctrl_power_sat_msb", 0x88},
+            { "dsp_dl_pwr_measure_status_i0_valid", 0x8C},
+            { "dsp_dl_pwr_measure_status_i0_average_power", 0x90 },
+            { "dsp_dl_pwr_measure_status_i0_power_sat_count", 0x94},
+            { "dsp_dl_pwr_measure_status_i1_valid", 0x98},
+            { "dsp_dl_pwr_measure_status_i1_average_power", 0x9C},
+            { "dsp_dl_pwr_measure_status_i1_power_sat_count", 0xA0},
+            { "dsp_dl_pwr_measure_status_i2_valid", 0xA4},
+            { "dsp_dl_pwr_measure_status_i2_average_power", 0xA8},
+            { "dsp_dl_pwr_measure_status_i2_power_sat_count", 0xAC},
+            { "dsp_dl_pwr_measure_status_i3_valid", 0xB0},
+            { "dsp_dl_pwr_measure_status_i3_average_power", 0xB4},
+            { "dsp_dl_pwr_measure_status_i3_power_sat_count", 0xB8},
+            { "debugger_i0_hw_channel_count", 0xBC},
+            { "debugger_i0_hw_samples_per_channel",0xC0},
+            { "debugger_i0_hw_memory_depth", 0xC4},
+            { "debugger_i0_rgf_set_active_channel", 0xC8},
+            { "debugger_i0_rgf_set_wr_address", 0xCC},
+            { "debugger_i0_rgf_set_rd_address", 0xD0},
+            { "debugger_i0_rgf_get_wr_address", 0xD4},
+            { "debugger_i0_rgf_get_rd_address", 0xD8},
+            { "debugger_i0_rgf_get_wr_pointer", 0xDC},
+            { "debugger_i0_rgf_get_rd_pointer", 0xE0},
+            { "debugger_i0_rgf_wr_sample", 0xE4 },
+            { "debugger_i0_rgf_rd_sample", 0xE8},
+            { "debugger_i0_rgf_start_recording", 0xEC},
+            { "debugger_i0_rgf_activate_player", 0xF0},
+            { "debugger_i0_rgf_player_count", 0xF4},
+            { "debugger_i0_rgf_mode_status", 0xF8},
+            { "debugger_i1_hw_channel_count", 0xFC},
+            { "debugger_i1_hw_samples_per_channel", 0x100},
+            { "debugger_i1_hw_memory_depth", 0x104},
+            { "debugger_i1_rgf_set_active_channel", 0x108},
+            { "debugger_i1_rgf_set_wr_address", 0x10C},
+            { "debugger_i1_rgf_set_rd_address", 0x110},
+            { "debugger_i1_rgf_get_wr_address", 0x114},
+            { "debugger_i1_rgf_get_rd_address", 0x118},
+            { "debugger_i1_rgf_get_wr_pointer", 0x11C},
+            { "debugger_i1_rgf_get_rd_pointer", 0x120},
+            { "debugger_i1_rgf_wr_sample", 0x124},
+            { "debugger_i1_rgf_rd_sample", 0x128},
+            { "debugger_i1_rgf_start_recording", 0x12C},
+            { "debugger_i1_rgf_activate_player", 0x130},
+            { "debugger_i1_rgf_player_count", 0x134},
+            { "debugger_i1_rgf_mode_status", 0x138},
+            { "debugger_i2_hw_channel_count", 0x13C},
+            { "debugger_i2_hw_samples_per_channel", 0x140},
+            { "debugger_i2_hw_memory_depth", 0x144},
+            { "debugger_i2_rgf_set_active_channel", 0x148},
+            { "debugger_i2_rgf_set_wr_address", 0x14C},
+            { "debugger_i2_rgf_set_rd_address", 0x150},
+            { "debugger_i2_rgf_get_wr_address", 0x154},
+            { "debugger_i2_rgf_get_rd_address", 0x158},
+            { "debugger_i2_rgf_get_wr_pointer", 0x15C},
+            { "debugger_i2_rgf_get_rd_pointer", 0x160},
+            { "debugger_i2_rgf_wr_sample", 0x164},
+            { "debugger_i2_rgf_rd_sample", 0x168},
+            { "debugger_i2_rgf_start_recording", 0x16C},
+            { "debugger_i2_rgf_activate_player", 0x170},
+            { "debugger_i2_rgf_player_count", 0x174},
+            { "debugger_i2_rgf_mode_status", 0x178},
+            { "debugger_i3_hw_channel_count", 0x17C},
+            { "debugger_i3_hw_samples_per_channel", 0x180},
+            { "debugger_i3_hw_memory_depth", 0x184},
+            { "debugger_i3_rgf_set_active_channel", 0x188},
+            { "debugger_i3_rgf_set_wr_address", 0x18C},
+            { "debugger_i3_rgf_set_rd_address", 0x190},
+            { "debugger_i3_rgf_get_wr_address", 0x194},
+            { "debugger_i3_rgf_get_rd_address", 0x198},
+            { "debugger_i3_rgf_get_wr_pointer", 0x19C},
+            { "debugger_i3_rgf_get_rd_pointer", 0x1A0},
+            { "debugger_i3_rgf_wr_sample", 0x1A4},
+            { "debugger_i3_rgf_rd_sample", 0x1A8},
+            { "debugger_i3_rgf_start_recording", 0x1AC},
+            { "debugger_i3_rgf_activate_player", 0x1B0},
+            { "debugger_i3_rgf_player_count", 0x1B4},
+            { "debugger_i3_rgf_mode_status", 0x1B8},
+            { "enable_data_path", 0x1BC},
+            { "activate_loopback", 0x1C0 },
+            { "end", 0x1C4 }
+        };
+        public static readonly Dictionary<string, uint> RegisterMapCoin_Digital = new Dictionary<string, uint>()
+        {
+            { "container_version", 0x0 },
+            { "dsp_cfg_ul_i0_nco_delta_phase", 0x4 },
+            { "dsp_cfg_ul_i0_gain", 0x8 },
+            { "dsp_cfg_ul_i1_nco_delta_phase", 0xC },
+            { "dsp_cfg_ul_i1_gain", 0x10 },
+            { "dsp_cfg_ul_i2_nco_delta_phase", 0x14 },
+            { "dsp_cfg_ul_i2_gain", 0x18 },
+            { "dsp_cfg_ul_i3_nco_delta_phase", 0x1C },
+            { "dsp_cfg_ul_i3_gain", 0x20 },
+            { "dsp_cfg_dl_i0_nco_delta_phase", 0x24 },
+            { "dsp_cfg_dl_i0_gain", 0x28 },
+            { "dsp_cfg_dl_i1_nco_delta_phase", 0x2C },
+            { "dsp_cfg_dl_i1_gain", 0x30 },
+            { "dsp_cfg_dl_i2_nco_delta_phase", 0x34 },
+            { "dsp_cfg_dl_i2_gain", 0x38 },
+            { "dsp_cfg_dl_i3_nco_delta_phase", 0x3C },
+            { "dsp_cfg_dl_i3_gain", 0x40 },
+            { "dsp_ul_pwr_measure_ctrl_start", 0x44 },
+            { "dsp_ul_pwr_measure_ctrl_log2_sample_count_added_to_min", 0x48},
+            { "dsp_ul_pwr_measure_ctrl_power_sat_msb", 0x4C},
+            { "dsp_ul_pwr_measure_status_i0_valid", 0x50},
+            { "dsp_ul_pwr_measure_status_i0_average_power", 0x54},
+            { "dsp_ul_pwr_measure_status_i0_power_sat_count", 0x58},
+            { "dsp_ul_pwr_measure_status_i1_valid", 0x5C},
+            { "dsp_ul_pwr_measure_status_i1_average_power", 0x60},
+            { "dsp_ul_pwr_measure_status_i1_power_sat_count", 0x64},
+            { "dsp_ul_pwr_measure_status_i2_valid", 0x68 },
+            { "dsp_ul_pwr_measure_status_i2_average_power", 0x6C},
+            { "dsp_ul_pwr_measure_status_i2_power_sat_count", 0x70},
+            { "dsp_ul_pwr_measure_status_i3_valid", 0x74},
+            { "dsp_ul_pwr_measure_status_i3_average_power", 0x78},
+            { "dsp_ul_pwr_measure_status_i3_power_sat_count", 0x7C},
+            { "dsp_dl_pwr_measure_ctrl_start", 0x80},
+            { "dsp_dl_pwr_measure_ctrl_log2_sample_count_added_to_min", 0x84},
+            { "dsp_dl_pwr_measure_ctrl_power_sat_msb", 0x88},
+            { "dsp_dl_pwr_measure_status_i0_valid", 0x8C},
+            { "dsp_dl_pwr_measure_status_i0_average_power", 0x90 },
+            { "dsp_dl_pwr_measure_status_i0_power_sat_count", 0x94},
+            { "dsp_dl_pwr_measure_status_i1_valid", 0x98},
+            { "dsp_dl_pwr_measure_status_i1_average_power", 0x9C},
+            { "dsp_dl_pwr_measure_status_i1_power_sat_count", 0xA0},
+            { "dsp_dl_pwr_measure_status_i2_valid", 0xA4},
+            { "dsp_dl_pwr_measure_status_i2_average_power", 0xA8},
+            { "dsp_dl_pwr_measure_status_i2_power_sat_count", 0xAC},
+            { "dsp_dl_pwr_measure_status_i3_valid", 0xB0},
+            { "dsp_dl_pwr_measure_status_i3_average_power", 0xB4},
+            { "dsp_dl_pwr_measure_status_i3_power_sat_count", 0xB8},
+            { "debugger_i0_hw_channel_count", 0xBC},
+            { "debugger_i0_hw_samples_per_channel",0xC0},
+            { "debugger_i0_hw_memory_depth", 0xC4},
+            { "debugger_i0_rgf_set_active_channel", 0xC8},
+            { "debugger_i0_rgf_set_wr_address", 0xCC},
+            { "debugger_i0_rgf_set_rd_address", 0xD0},
+            { "debugger_i0_rgf_get_wr_address", 0xD4},
+            { "debugger_i0_rgf_get_rd_address", 0xD8},
+            { "debugger_i0_rgf_get_wr_pointer", 0xDC},
+            { "debugger_i0_rgf_get_rd_pointer", 0xE0},
+            { "debugger_i0_rgf_wr_sample", 0xE4 },
+            { "debugger_i0_rgf_rd_sample", 0xE8},
+            { "debugger_i0_rgf_start_recording", 0xEC},
+            { "debugger_i0_rgf_activate_player", 0xF0},
+            { "debugger_i0_rgf_player_count", 0xF4},
+            { "debugger_i0_rgf_mode_status", 0xF8},
+            { "debugger_i1_hw_channel_count", 0xFC},
+            { "debugger_i1_hw_samples_per_channel", 0x100},
+            { "debugger_i1_hw_memory_depth", 0x104},
+            { "debugger_i1_rgf_set_active_channel", 0x108},
+            { "debugger_i1_rgf_set_wr_address", 0x10C},
+            { "debugger_i1_rgf_set_rd_address", 0x110},
+            { "debugger_i1_rgf_get_wr_address", 0x114},
+            { "debugger_i1_rgf_get_rd_address", 0x118},
+            { "debugger_i1_rgf_get_wr_pointer", 0x11C},
+            { "debugger_i1_rgf_get_rd_pointer", 0x120},
+            { "debugger_i1_rgf_wr_sample", 0x124},
+            { "debugger_i1_rgf_rd_sample", 0x128},
+            { "debugger_i1_rgf_start_recording", 0x12C},
+            { "debugger_i1_rgf_activate_player", 0x130},
+            { "debugger_i1_rgf_player_count", 0x134},
+            { "debugger_i1_rgf_mode_status", 0x138},
+            { "debugger_i2_hw_channel_count", 0x13C},
+            { "debugger_i2_hw_samples_per_channel", 0x140},
+            { "debugger_i2_hw_memory_depth", 0x144},
+            { "debugger_i2_rgf_set_active_channel", 0x148},
+            { "debugger_i2_rgf_set_wr_address", 0x14C},
+            { "debugger_i2_rgf_set_rd_address", 0x150},
+            { "debugger_i2_rgf_get_wr_address", 0x154},
+            { "debugger_i2_rgf_get_rd_address", 0x158},
+            { "debugger_i2_rgf_get_wr_pointer", 0x15C},
+            { "debugger_i2_rgf_get_rd_pointer", 0x160},
+            { "debugger_i2_rgf_wr_sample", 0x164},
+            { "debugger_i2_rgf_rd_sample", 0x168},
+            { "debugger_i2_rgf_start_recording", 0x16C},
+            { "debugger_i2_rgf_activate_player", 0x170},
+            { "debugger_i2_rgf_player_count", 0x174},
+            { "debugger_i2_rgf_mode_status", 0x178},
+            { "debugger_i3_hw_channel_count", 0x17C},
+            { "debugger_i3_hw_samples_per_channel", 0x180},
+            { "debugger_i3_hw_memory_depth", 0x184},
+            { "debugger_i3_rgf_set_active_channel", 0x188},
+            { "debugger_i3_rgf_set_wr_address", 0x18C},
+            { "debugger_i3_rgf_set_rd_address", 0x190},
+            { "debugger_i3_rgf_get_wr_address", 0x194},
+            { "debugger_i3_rgf_get_rd_address", 0x198},
+            { "debugger_i3_rgf_get_wr_pointer", 0x19C},
+            { "debugger_i3_rgf_get_rd_pointer", 0x1A0},
+            { "debugger_i3_rgf_wr_sample", 0x1A4},
+            { "debugger_i3_rgf_rd_sample", 0x1A8},
+            { "debugger_i3_rgf_start_recording", 0x1AC},
+            { "debugger_i3_rgf_activate_player", 0x1B0},
+            { "debugger_i3_rgf_player_count", 0x1B4},
+            { "debugger_i3_rgf_mode_status", 0x1B8},
+            { "enable_data_path", 0x1BC},
+            { "activate_loopback", 0x1C0 },
+            { "end", 0x1C4 }
+        };
 
         public Dictionary<string, DebuggerInstance> Debuggers = new Dictionary<string, DebuggerInstance>
         {
@@ -87,7 +323,7 @@ namespace BringUp_Control
 
             // Bytes 5–10 are dummy (0x00)
             for (int i = 5; i < txBuffer.Length; i++)
-                txBuffer[i] = 0x00;
+              txBuffer[i] = 0x00;            
 
             _ft.TransferFullDuplex(txBuffer, rxBuffer); // Perform full-duplex SPI transfer
 
@@ -102,6 +338,27 @@ namespace BringUp_Control
         }
 
 
+
+
+        //new test function to read register from FPGA
+        public uint SpiReadByName(string regName)
+        {
+            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
+                throw new ArgumentException($"Register '{regName}' not found.");
+
+            uint address = BASE_ADDRESS + offset;
+
+            return SpiRead(address);
+        }
+        //new test function to write register to FPGA
+        public void SpiWriteByName(string regName, uint value)
+        {
+            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
+                throw new ArgumentException($"Register '{regName}' not found.");
+
+            uint address = BASE_ADDRESS + offset;
+            SpiWrite(address, value);
+        }
         public DataTable InitDataTableFPGA()
         {
             dtFPGA.Columns.Add("Module", typeof(string));
@@ -353,6 +610,8 @@ namespace BringUp_Control
             //_ft?.Dispose();
             _ft = null; 
         }
+
+        
 
     }
 }
