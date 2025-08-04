@@ -586,6 +586,19 @@ namespace BringUp_Control
             string hexPart = input.Substring(2);
             return byte.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
         }
+        //checks correct format of hex value, return bool
+        public bool IsValidHex(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            string clean = input.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
+                ? input.Substring(2)
+                : input;
+
+            // Hex characters only
+            return uint.TryParse(clean, System.Globalization.NumberStyles.HexNumber, null, out _);
+        }
         private bool IsHexString4bytes(string input)
         {
 
@@ -1341,7 +1354,7 @@ namespace BringUp_Control
                 try
                 {
                     fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
-                    LogStatus($"The register address {fpga_address} passed value {fpga_data} to FPGA");
+                    LogStatus($"The register address {fpga_address} passed value [{NormalizeHexString(fpga_data)}] to FPGA");
                 }
                 catch (Exception ex)
                 {
@@ -1350,6 +1363,21 @@ namespace BringUp_Control
                 }
 
             }
+        }
+
+        public string NormalizeHexString(string hexInput)
+        {
+            if (string.IsNullOrWhiteSpace(hexInput))
+                return "0x00000000";
+
+            string clean = hexInput.StartsWith("0x", StringComparison.OrdinalIgnoreCase)
+                ? hexInput.Substring(2)
+                : hexInput;
+
+            if (!uint.TryParse(clean, System.Globalization.NumberStyles.HexNumber, null, out uint value))
+                return "0x00000000"; // Fallback or throw
+
+            return $"0x{value:X8}";
         }
 
         private void Cmd_FPGA_Read_Click(object sender, EventArgs e)
@@ -1370,9 +1398,7 @@ namespace BringUp_Control
                 }
 
                 try
-                {
-                    
-                    
+                {                   
                     uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
                     LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                     textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
@@ -1385,23 +1411,13 @@ namespace BringUp_Control
             }
         }
 
-        public static uint HexStringToUInt(string hex)
+        public static uint  HexStringToUInt(string hex)
         {
             if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 hex = hex.Substring(2);
 
             return Convert.ToUInt32(hex, 16);
-        }
-
-        public static byte[] HexStringToByteArray(string hex)
-        {
-            if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                hex = hex.Substring(2);
-
-            return Enumerable.Range(0, hex.Length / 2)
-                .Select(i => Convert.ToByte(hex.Substring(i * 2, 2), 16))
-                .ToArray();
-        }
+        }        
 
         public static byte[] BuildSpiWriteBuffer(byte[] addressBytes, byte[] valueBytes)
         {
@@ -1464,6 +1480,7 @@ namespace BringUp_Control
                 }
             }
         }
+                
 
         private void TextFPGA_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1471,7 +1488,8 @@ namespace BringUp_Control
             {
                 if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
-                    if (IsHexString4bytes(textFPGA_Value.Text))
+                    
+                    if(IsValidHex(textFPGA_Value.Text))
                     {
                         fpga_data = textFPGA_Value.Text;
                         Cmd_FPGA_Write.Focus();
@@ -1571,15 +1589,15 @@ namespace BringUp_Control
                     return;
                 }
 
-                string fpgavectors = fpga.LoadVectorDataCsv();
+                string fpgavector_file = fpga.LoadVectorDataCsv();
                 LogStatus($"FPGA Vectors file loaded");
 
-                if (!string.IsNullOrEmpty(fpgavectors))
+                if (!string.IsNullOrEmpty(fpgavector_file))
                 {
                     try
                     {
-                        fpga.LoadVectorFile(fpgavectors);
-                        LogStatusFPGA($"FPGA vector file loaded: {fpgavectors}");
+                        fpga.LoadVectorFile(fpgavector_file);
+                        LogStatusFPGA($"FPGA vector file loaded: {fpgavector_file}");
                     }
                     catch (Exception ex)
                     {
@@ -2464,32 +2482,53 @@ namespace BringUp_Control
             fpga.WriteReadFPGA();
         }
 
+
+        public static string ExtractLinkModePrefix(string input)
+        {
+            input = input.ToLower();
+
+            // Match either "uplink modem" or "downlink modem" (ignore trailing digits)
+            var match = Regex.Match(input, @"(uplink|downlink)\s+modem");
+            if (match.Success)
+            {
+                // Replace space with underscore to normalize the format
+                return match.Value.Replace(" ", "_");
+            }
+
+            return null; // or throw exception if not matched
+        }
+
+        public int ExtractTrailingNumber(string input)
+        {
+            var match = Regex.Match(input, @"(\d+)$");  // Match digits at end of string
+            if (match.Success && int.TryParse(match.Value, out int result))
+            {
+                return result;
+            }
+            return -1; // or throw exception if preferred
+        }
         private void comboBoxDebugger_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
                 string test_mode = comboBoxDebugger.SelectedItem.ToString();
 
-                switch (test_mode)
-                {
-                    case "Uplink Modem0":
-                        break;
-                    case "Uplink Modem1":
-                        break;
-                    case "Uplink Modem2":
-                        break;
-                    case "Uplink Modem3":
-                        break;
-
-
-
-
-                        
-                }
+                fpga.StreamNum = ExtractTrailingNumber(test_mode);
+                fpga.DebugMode = ExtractLinkModePrefix(test_mode);
 
 
 
             }
+        }
+
+        private void Cmd_Activate_Player_Click(object sender, EventArgs e)
+        {
+            fpga.ActivatePlayer(fpga.DebugMode, true);
+        }
+
+        private void Cmd_Stop_Player_Click(object sender, EventArgs e)
+        {
+            fpga.StopPlayer(fpga.DebugMode);
         }
     }
 }

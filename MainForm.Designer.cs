@@ -1404,6 +1404,7 @@
             this.Cmd_Stop_Player.TabIndex = 16;
             this.Cmd_Stop_Player.Text = "Stop Player";
             this.Cmd_Stop_Player.UseVisualStyleBackColor = true;
+            this.Cmd_Stop_Player.Click += new System.EventHandler(this.Cmd_Stop_Player_Click);
             // 
             // Cmd_Activate_Player
             // 
@@ -1413,6 +1414,7 @@
             this.Cmd_Activate_Player.TabIndex = 15;
             this.Cmd_Activate_Player.Text = "Activate Player";
             this.Cmd_Activate_Player.UseVisualStyleBackColor = true;
+            this.Cmd_Activate_Player.Click += new System.EventHandler(this.Cmd_Activate_Player_Click);
             // 
             // Cmd_Load_JESD204
             // 

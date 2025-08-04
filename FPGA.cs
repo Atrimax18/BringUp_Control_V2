@@ -267,7 +267,23 @@ namespace BringUp_Control
             ["downlink_ADC"] = new DebuggerInstance("debugger_i3_", 1, 20, 1024)
         };
 
-        
+        private Complex[] VectorArray;
+
+
+        private int stream;
+        private string debug_mode;
+
+        public int StreamNum 
+        {
+            get { return stream; }
+            set { stream = value; }  
+        }
+
+        public string DebugMode
+        {
+            get { return debug_mode; }
+            set { debug_mode = value; }
+        }
 
         public void Init(SpiDriver ft, FtdiInterfaceManager interfaceManager)
         {
@@ -453,7 +469,7 @@ namespace BringUp_Control
                          .First().Key;
         }
 
-        public int ConvertFromComplex(Complex a)
+        public int ConvertFromComplex_old(Complex a)
         {
             int real = (int)Math.Round(a.Real);
             int imag = (int)Math.Round(a.Imaginary);
@@ -462,14 +478,15 @@ namespace BringUp_Control
             return (q << BC) | i;
         }
 
-        public Complex ConvertToComplex(uint packed)
+        public uint ConvertFromComplex(Complex c)
         {
-            int i = (int)(packed & 0xFFF);
-            if (i > 2047) i -= 4096;
-            int q = (int)(packed >> BC);
-            if (q > 2047) q -= 4096;
-            return new Complex(i, q);
+            const int BC = 12;
+            int real = ((int)c.Real + (1 << BC)) % (1 << BC);
+            int imag = ((int)c.Imaginary + (1 << BC)) % (1 << BC);
+            return (uint)((imag << BC) | real);
         }
+
+        
 
         public Complex[] LoadVector(string path)
         {
@@ -513,10 +530,23 @@ namespace BringUp_Control
                 MessageBox.Show("Invalid debugger key: " + debuggerKey);
                 return;
             }
+            string prefix = dbg.Prefix;
 
+
+            uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel
+            if (status_reg != 0)
+            {
+                MainForm.Instance.LogStatus("Debugger is busy.....");
+                return;
+            }
+            // vector lenght
             int count = samples.Length;
 
-            int PlayerCount = count / dbg.Parallel;
+            if (stream >= dbg.StreamCount)
+            {
+                MessageBox.Show("Invalid stream number: " + stream);
+                return;
+            }
 
             if (count % dbg.Parallel != 0 || count / dbg.Parallel > dbg.MemLen)
             {
@@ -524,17 +554,39 @@ namespace BringUp_Control
                 return;
             }
 
-            string prefix = dbg.Prefix;
+
+            int PlayerCount = count / dbg.Parallel;
+
+            if (PlayerCount > dbg.MemLen || PlayerCount == 0)
+            {
+                MessageBox.Show("Vector size {PlayerCount} exceeds memory length: " + dbg.MemLen);
+                return;
+            }
+
+            if (PlayerCount == 0)
+            {
+                MessageBox.Show("Vector size is zero, nothing to write.");
+                return;
+            }
+            
             SpiWriteByName(prefix+ "rgf_set_active_channel", (uint)stream);
             SpiWriteByName(prefix+ "rgf_player_count", (uint)PlayerCount);
             SpiWriteByName(prefix+ "rgf_set_wr_address", 0);
 
+            uint[] packedSamples = samples.Select(ConvertFromComplex).ToArray();
+            for (int i = 0; i < packedSamples.Length; i++)
+            {
+                SpiWriteByName(prefix + "rgf_wr_sample", packedSamples[i]);
+            }
             
 
-            foreach (var c in samples)
+
+            uint ptr = SpiReadByName(prefix + "rgf_get_wr_pointer"); // sample in memory line
+            uint addr= SpiReadByName(prefix + "rgf_get_wr_address"); // memory line address
+
+            if (ptr != 0 || addr != PlayerCount % dbg.MemLen)
             {
-                int packed = ConvertFromComplex(c);
-                //SpiWrite(StringToAddress(prefix + "rgf_wr_sample"), (uint)packed);
+                MainForm.Instance.LogStatus($"Error , write address, sample pointer = {addr} and {ptr}, expected: {PlayerCount}");
             }
         }
 
@@ -546,12 +598,46 @@ namespace BringUp_Control
                 return;
             }
             string preffix = dbg.Prefix;
+
+            uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
+
+            if (status_reg != 0)
+            {
+                MainForm.Instance.LogStatus("Debugger is busy.....");
+                return;
+            }
+
             SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
         }
 
         public void StopPlayer(string debuggerKey)
         {
-            ActivatePlayer(debuggerKey, false);
+            if (!Debuggers.TryGetValue(debuggerKey, out DebuggerInstance dbg))
+            {
+                MessageBox.Show("Invalid debugger key: " + debuggerKey);
+                return;
+            }
+            
+
+            bool stop = false;
+
+            if (!stop)
+            {
+                SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0);
+            }
+                       
+
+            uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel
+
+            if (status_reg != 0)
+            {
+                MainForm.Instance.LogStatus("Debugger is busy.....");
+                return;
+            }
+            else
+            {
+                MainForm.Instance.LogStatus("Player stopped.");
+            }            
         }
 
         
@@ -604,11 +690,13 @@ namespace BringUp_Control
         {
             if (!string.IsNullOrEmpty(vectorfile))
             {
+                VectorArray = LoadVector(vectorfile);
 
+                WriteToPlayerMemory(debug_mode, stream, VectorArray);
             }
             else
             {
-                   
+                MainForm.Instance.LogStatus("Vector file is not selected.");
             }
         }
 
