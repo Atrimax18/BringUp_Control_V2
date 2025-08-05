@@ -1662,19 +1662,7 @@ namespace BringUp_Control
                 Read_FPGA_Registers(HexStringToUInt(startaddress), HexStringToUInt(stopaaddress));
             }*/
 
-        }
-
-        
-
-
-
-        
-
-        
-
-        
-
-        
+        }        
 
         private void ComboDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
