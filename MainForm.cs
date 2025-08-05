@@ -104,7 +104,7 @@ namespace BringUp_Control
         private string start_freq = string.Empty; // Start frequency for DAQ
         private string stop_freq = string.Empty;  // Stop frequency for DAQ
         private string step_freq = string.Empty;  // Step frequency for DAQ
-        private int delay_miliseconds; // Delay in milliseconds for DAQ   
+        
 
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
@@ -1206,7 +1206,7 @@ namespace BringUp_Control
 
                     comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
                     LogStatus("DAC9175 reinitialized on SPI CS1");
-                    Cmd_ReadDAC9175.Enabled = true;
+                    
 
                     ad9175.DAC9175_InitEngine(dac_ini_file);
                     labelFilePath9175.Text = $"DAC File Path: {dac_ini_file}";
@@ -1550,13 +1550,7 @@ namespace BringUp_Control
 
         private void Cmd_LoadCounter_Click(object sender, EventArgs e)
         {
-            if (selectedTab == tabFPGA)
-            {
-
-                string startaddress = "0x00001000";
-                string stopaddress = "0x00001020";
-                Load_FGPA_Register(HexStringToUInt(startaddress), HexStringToUInt(stopaddress));
-            }
+            
         }
 
         private void LogStatusFPGA(string message)
@@ -2106,7 +2100,7 @@ namespace BringUp_Control
             }
         }
 
-        private void Cmd_STP_Click(object sender, EventArgs e)
+        private void Cmd_STPL_Click(object sender, EventArgs e)
         {
             byte sampind = 0x00;
             ushort testdata = 0x0F;
@@ -2175,17 +2169,20 @@ namespace BringUp_Control
 
             // Step 10: Wait desired time
             double desiredTimeSec = 10.0; // Example: 1 GSPS, BER = 1e-10
-            Console.WriteLine("Waiting for test to complete...");
+            LogStatus("Waiting for test to complete...");
             Thread.Sleep((int)(desiredTimeSec * 1000)); // Convert seconds to ms
 
             // Step 11: Read result
             byte result = ad9175.ReadRegister(REG_SHORT_TPL_TEST_3);
             bool fail = (result & 0x01) != 0;
 
+            LogStatus($"Result value: 0x{result:X2}");
+
             if (fail)
-                Console.WriteLine("STPL Test FAILED.");
+                LogStatus("STPL Test FAILED.");                
             else
-                Console.WriteLine("STPL Test PASSED.");
+                LogStatus("STPL Test PASSED.");
+            
         }
 
         private void Cmd_StartSweep_Click(object sender, EventArgs e)
@@ -2467,7 +2464,7 @@ namespace BringUp_Control
 
         private void Cmd_FPGA_Tests_Click(object sender, EventArgs e)
         {
-            uint deft = fpga.SpiReadByName("dsp_cfg_ul_i2_gain");
+            uint deft = fpga.SpiReadByName("container_version");
         }
 
         private void Cmd_DAQ_Reg_Read_Click(object sender, EventArgs e)
@@ -2515,9 +2512,6 @@ namespace BringUp_Control
 
                 fpga.StreamNum = ExtractTrailingNumber(test_mode);
                 fpga.DebugMode = ExtractLinkModePrefix(test_mode);
-
-
-
             }
         }
 
@@ -2530,6 +2524,8 @@ namespace BringUp_Control
         {
             fpga.StopPlayer(fpga.DebugMode);
         }
+
+        
     }
 }
 

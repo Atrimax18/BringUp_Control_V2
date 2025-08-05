@@ -58,7 +58,7 @@
             this.label44 = new System.Windows.Forms.Label();
             this.textRegDAC9175 = new System.Windows.Forms.TextBox();
             this.Cmd_Link_Status = new System.Windows.Forms.Button();
-            this.Cmd_STP = new System.Windows.Forms.Button();
+            this.Cmd_STPL = new System.Windows.Forms.Button();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.Cmd_UpdateFS_Ioutfs = new System.Windows.Forms.Button();
             this.label42 = new System.Windows.Forms.Label();
@@ -89,8 +89,6 @@
             this.ComboDAC_index = new System.Windows.Forms.ComboBox();
             this.label25 = new System.Windows.Forms.Label();
             this.Cmd_DAC_Init = new System.Windows.Forms.Button();
-            this.Cmd_WriteDAC9175 = new System.Windows.Forms.Button();
-            this.Cmd_ReadDAC9175 = new System.Windows.Forms.Button();
             this.Cmd_WriteReg9175 = new System.Windows.Forms.Button();
             this.textDAC9175_Value = new System.Windows.Forms.TextBox();
             this.comboRegisters9175 = new System.Windows.Forms.ComboBox();
@@ -98,7 +96,6 @@
             this.labelFilePath9175 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridViewAD9175 = new System.Windows.Forms.DataGridView();
-            this.Cmd_Export9175_file = new System.Windows.Forms.Button();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
             this.Cmd_Burn_SkyPLL = new System.Windows.Forms.Button();
             this.Cmd_Config = new System.Windows.Forms.Button();
@@ -140,7 +137,6 @@
             this.Cmd_WriteFPGA = new System.Windows.Forms.Button();
             this.label22 = new System.Windows.Forms.Label();
             this.Cmd_Read_Registers = new System.Windows.Forms.Button();
-            this.Cmd_LoadCounter = new System.Windows.Forms.Button();
             this.Cmd_FPGA_Read = new System.Windows.Forms.Button();
             this.textFPGA_Value = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
@@ -490,21 +486,18 @@
             this.tabAD9175.Controls.Add(this.label44);
             this.tabAD9175.Controls.Add(this.textRegDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_Link_Status);
-            this.tabAD9175.Controls.Add(this.Cmd_STP);
+            this.tabAD9175.Controls.Add(this.Cmd_STPL);
             this.tabAD9175.Controls.Add(this.groupBox7);
             this.tabAD9175.Controls.Add(this.groupBox6);
             this.tabAD9175.Controls.Add(this.Cmd_ReadRegAD9175);
             this.tabAD9175.Controls.Add(this.groupBox5);
             this.tabAD9175.Controls.Add(this.Cmd_DAC_Init);
-            this.tabAD9175.Controls.Add(this.Cmd_WriteDAC9175);
-            this.tabAD9175.Controls.Add(this.Cmd_ReadDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_WriteReg9175);
             this.tabAD9175.Controls.Add(this.textDAC9175_Value);
             this.tabAD9175.Controls.Add(this.comboRegisters9175);
             this.tabAD9175.Controls.Add(this.labelDAC9175_Register);
             this.tabAD9175.Controls.Add(this.labelFilePath9175);
             this.tabAD9175.Controls.Add(this.groupBox2);
-            this.tabAD9175.Controls.Add(this.Cmd_Export9175_file);
             this.tabAD9175.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabAD9175.Location = new System.Drawing.Point(4, 25);
             this.tabAD9175.Name = "tabAD9175";
@@ -550,15 +543,15 @@
             this.Cmd_Link_Status.Text = "Link Status";
             this.Cmd_Link_Status.UseVisualStyleBackColor = true;
             // 
-            // Cmd_STP
+            // Cmd_STPL
             // 
-            this.Cmd_STP.Location = new System.Drawing.Point(724, 529);
-            this.Cmd_STP.Name = "Cmd_STP";
-            this.Cmd_STP.Size = new System.Drawing.Size(113, 45);
-            this.Cmd_STP.TabIndex = 27;
-            this.Cmd_STP.Text = "STPL";
-            this.Cmd_STP.UseVisualStyleBackColor = true;
-            this.Cmd_STP.Click += new System.EventHandler(this.Cmd_STP_Click);
+            this.Cmd_STPL.Location = new System.Drawing.Point(724, 529);
+            this.Cmd_STPL.Name = "Cmd_STPL";
+            this.Cmd_STPL.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_STPL.TabIndex = 27;
+            this.Cmd_STPL.Text = "STPL";
+            this.Cmd_STPL.UseVisualStyleBackColor = true;
+            this.Cmd_STPL.Click += new System.EventHandler(this.Cmd_STPL_Click);
             // 
             // groupBox7
             // 
@@ -897,26 +890,6 @@
             this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
             this.Cmd_DAC_Init.Click += new System.EventHandler(this.Cmd_DAC_Init_Click);
             // 
-            // Cmd_WriteDAC9175
-            // 
-            this.Cmd_WriteDAC9175.Location = new System.Drawing.Point(725, 290);
-            this.Cmd_WriteDAC9175.Name = "Cmd_WriteDAC9175";
-            this.Cmd_WriteDAC9175.Size = new System.Drawing.Size(114, 58);
-            this.Cmd_WriteDAC9175.TabIndex = 12;
-            this.Cmd_WriteDAC9175.Text = "Write To Device";
-            this.Cmd_WriteDAC9175.UseVisualStyleBackColor = true;
-            this.Cmd_WriteDAC9175.Click += new System.EventHandler(this.Cmd_WriteDAC9175_Click);
-            // 
-            // Cmd_ReadDAC9175
-            // 
-            this.Cmd_ReadDAC9175.Location = new System.Drawing.Point(725, 226);
-            this.Cmd_ReadDAC9175.Name = "Cmd_ReadDAC9175";
-            this.Cmd_ReadDAC9175.Size = new System.Drawing.Size(114, 58);
-            this.Cmd_ReadDAC9175.TabIndex = 11;
-            this.Cmd_ReadDAC9175.Text = "Read From Device";
-            this.Cmd_ReadDAC9175.UseVisualStyleBackColor = true;
-            this.Cmd_ReadDAC9175.Click += new System.EventHandler(this.Cmd_ReadDAC9175_Click);
-            // 
             // Cmd_WriteReg9175
             // 
             this.Cmd_WriteReg9175.Location = new System.Drawing.Point(256, 17);
@@ -938,7 +911,7 @@
             // comboRegisters9175
             // 
             this.comboRegisters9175.FormattingEnabled = true;
-            this.comboRegisters9175.Location = new System.Drawing.Point(676, 37);
+            this.comboRegisters9175.Location = new System.Drawing.Point(708, 19);
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
@@ -984,17 +957,6 @@
             this.dataGridViewAD9175.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dataGridViewAD9175.Size = new System.Drawing.Size(700, 223);
             this.dataGridViewAD9175.TabIndex = 0;
-            // 
-            // Cmd_Export9175_file
-            // 
-            this.Cmd_Export9175_file.Enabled = false;
-            this.Cmd_Export9175_file.Location = new System.Drawing.Point(725, 138);
-            this.Cmd_Export9175_file.Name = "Cmd_Export9175_file";
-            this.Cmd_Export9175_file.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Export9175_file.TabIndex = 1;
-            this.Cmd_Export9175_file.Text = "Export File";
-            this.Cmd_Export9175_file.UseVisualStyleBackColor = true;
-            this.Cmd_Export9175_file.Click += new System.EventHandler(this.Cmd_Export9175_file_Click);
             // 
             // tabSi5518
             // 
@@ -1351,7 +1313,6 @@
             this.tabFPGA.Controls.Add(this.Cmd_WriteFPGA);
             this.tabFPGA.Controls.Add(this.label22);
             this.tabFPGA.Controls.Add(this.Cmd_Read_Registers);
-            this.tabFPGA.Controls.Add(this.Cmd_LoadCounter);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Read);
             this.tabFPGA.Controls.Add(this.textFPGA_Value);
             this.tabFPGA.Controls.Add(this.label21);
@@ -1398,7 +1359,7 @@
             // 
             // Cmd_Stop_Player
             // 
-            this.Cmd_Stop_Player.Location = new System.Drawing.Point(666, 503);
+            this.Cmd_Stop_Player.Location = new System.Drawing.Point(666, 232);
             this.Cmd_Stop_Player.Name = "Cmd_Stop_Player";
             this.Cmd_Stop_Player.Size = new System.Drawing.Size(145, 45);
             this.Cmd_Stop_Player.TabIndex = 16;
@@ -1408,7 +1369,7 @@
             // 
             // Cmd_Activate_Player
             // 
-            this.Cmd_Activate_Player.Location = new System.Drawing.Point(666, 452);
+            this.Cmd_Activate_Player.Location = new System.Drawing.Point(666, 181);
             this.Cmd_Activate_Player.Name = "Cmd_Activate_Player";
             this.Cmd_Activate_Player.Size = new System.Drawing.Size(145, 45);
             this.Cmd_Activate_Player.TabIndex = 15;
@@ -1428,9 +1389,9 @@
             // 
             // Cmd_FPGA_Tests
             // 
-            this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(666, 350);
+            this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(666, 283);
             this.Cmd_FPGA_Tests.Name = "Cmd_FPGA_Tests";
-            this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(145, 29);
+            this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(145, 45);
             this.Cmd_FPGA_Tests.TabIndex = 13;
             this.Cmd_FPGA_Tests.Text = "FPGA Tests";
             this.Cmd_FPGA_Tests.UseVisualStyleBackColor = true;
@@ -1438,7 +1399,7 @@
             // 
             // Cmd_WriteFPGA
             // 
-            this.Cmd_WriteFPGA.Location = new System.Drawing.Point(666, 314);
+            this.Cmd_WriteFPGA.Location = new System.Drawing.Point(666, 518);
             this.Cmd_WriteFPGA.Name = "Cmd_WriteFPGA";
             this.Cmd_WriteFPGA.Size = new System.Drawing.Size(145, 30);
             this.Cmd_WriteFPGA.TabIndex = 12;
@@ -1457,23 +1418,13 @@
             // 
             // Cmd_Read_Registers
             // 
-            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 281);
+            this.Cmd_Read_Registers.Location = new System.Drawing.Point(666, 482);
             this.Cmd_Read_Registers.Name = "Cmd_Read_Registers";
-            this.Cmd_Read_Registers.Size = new System.Drawing.Size(145, 27);
+            this.Cmd_Read_Registers.Size = new System.Drawing.Size(145, 30);
             this.Cmd_Read_Registers.TabIndex = 10;
             this.Cmd_Read_Registers.Text = "Read from FPGA";
             this.Cmd_Read_Registers.UseVisualStyleBackColor = true;
             this.Cmd_Read_Registers.Click += new System.EventHandler(this.Cmd_Read_Registers_Click);
-            // 
-            // Cmd_LoadCounter
-            // 
-            this.Cmd_LoadCounter.Location = new System.Drawing.Point(666, 579);
-            this.Cmd_LoadCounter.Name = "Cmd_LoadCounter";
-            this.Cmd_LoadCounter.Size = new System.Drawing.Size(145, 54);
-            this.Cmd_LoadCounter.TabIndex = 9;
-            this.Cmd_LoadCounter.Text = "Load Counter";
-            this.Cmd_LoadCounter.UseVisualStyleBackColor = true;
-            this.Cmd_LoadCounter.Click += new System.EventHandler(this.Cmd_LoadCounter_Click);
             // 
             // Cmd_FPGA_Read
             // 
@@ -1876,7 +1827,6 @@
         private System.Windows.Forms.Button Cmd_PowerONOFF;
         private System.Windows.Forms.Label labelFilePath9175;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Cmd_Export9175_file;
         private System.Windows.Forms.CheckBox checkRFLOCK;
         private System.Windows.Forms.RadioButton radioRF_POWER_Status;
         private System.Windows.Forms.DataGridView dataGridViewAD9175;
@@ -1914,8 +1864,6 @@
         private System.Windows.Forms.Button Cmd_RF_Temp_Read;
         private System.Windows.Forms.TextBox textLog;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Button Cmd_WriteDAC9175;
-        private System.Windows.Forms.Button Cmd_ReadDAC9175;
         private System.Windows.Forms.Button Cmd_UpdateTX_Values;
         private System.Windows.Forms.Button Cmd_Read_ADC;
         private System.Windows.Forms.Button Cmd_DAC_Init;
@@ -1930,7 +1878,6 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button Cmd_FPGA_Read;
-        private System.Windows.Forms.Button Cmd_LoadCounter;
         private System.Windows.Forms.Button Cmd_Read_Registers;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox textI2C_Val;
@@ -1985,7 +1932,7 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.NumericUpDown numericDAC_FS;
         private System.Windows.Forms.Button Cmd_UpdateFS_Ioutfs;
-        private System.Windows.Forms.Button Cmd_STP;
+        private System.Windows.Forms.Button Cmd_STPL;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.NumericUpDown numericTime;
