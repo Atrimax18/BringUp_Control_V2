@@ -1668,45 +1668,13 @@ namespace BringUp_Control
 
 
 
-        // test fpga register logics
-        private void TestRegister()
-        {
-            uint startaddress = 0x00001000;
-            uint stopaaddress = 0x00001FFF;
-            uint prevAlignAddress = 0xFFFFFFFF;
+        
 
-            uint counter = 0x0;
-            for (uint addr = startaddress; addr < stopaaddress; addr++)
-            {
-                uint alignaddress = addr & 0xFFFFFFFC;
+        
 
-                if (alignaddress != prevAlignAddress)
-                {
-                    LogStatusFPGA($"The FPGA register address 0x{alignaddress:X8} received value [0x{counter++:X8}]");
-                    //counter++;
-                    prevAlignAddress = alignaddress;
-                }
-                else
-                {
-                    LogStatusFPGA($"FGPA Alignment register address [0x{alignaddress:X8}] of regular address 0x{addr:X8}");
-                }
-            }
-        }
+        
 
-        private void Cmd_Led_Test_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Cmd_Led_ON_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Cmd_Led_OFF_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void ComboDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1717,10 +1685,7 @@ namespace BringUp_Control
             }
         }
 
-        private void Cmd_FPGA_Export_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void Cmd_UpdateTX_Values_Click(object sender, EventArgs e)
         {
