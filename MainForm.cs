@@ -45,7 +45,9 @@ namespace BringUp_Control
         private const int REG_SHORT_TPL_TEST_3 = 0x032F;
 
 
+        private CancellationTokenSource _playbackCancelToken;
 
+        private CancellationTokenSource _stplCancelToken;
 
         public const int GPIO3 = 3;
 
@@ -2433,12 +2435,15 @@ namespace BringUp_Control
         }
 
 
+
+
+
         public static string ExtractLinkModePrefix(string input)
         {
             input = input.ToLower();
 
             // Match either "uplink modem" or "downlink modem" (ignore trailing digits)
-            var match = Regex.Match(input, @"(uplink|downlink)\s+modem");
+            var match = Regex.Match(input, @"^(uplink|downlink)\s+(modem|dac)");     //Regex.Match(input, @"(uplink|downlink)\s+modem");
             if (match.Success)
             {
                 // Replace space with underscore to normalize the format
@@ -2470,15 +2475,62 @@ namespace BringUp_Control
 
         private void Cmd_Activate_Player_Click(object sender, EventArgs e)
         {
-            fpga.ActivatePlayer(fpga.DebugMode, true);
+            // Disable the button to prevent duplicate clicks
+            Cmd_Activate_Player.Enabled = false;
+            Cmd_Stop_Player.Enabled = true; // Enable the stop button
+
+            _playbackCancelToken = new CancellationTokenSource();
+            var token = _playbackCancelToken.Token;
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    fpga.ActivatePlayer(fpga.DebugMode, true);
+
+                    // Polling for cancel request inside long-running method
+                    while (!token.IsCancellationRequested)
+                    {
+                        Thread.Sleep(100); // or do something useful
+                    }
+
+                    fpga.ActivatePlayer(fpga.DebugMode, false); // Stop playback safely
+                }
+                catch (Exception ex)
+                {
+                    // Optionally log or report the error on UI thread
+                    BeginInvoke(new Action(() =>
+                    {
+                        MessageBox.Show($"Error: {ex.Message}", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }));
+                }
+                finally
+                {
+                    // Re-enable the button on the UI thread
+                    BeginInvoke(new Action(() =>
+                    {
+                        Cmd_Activate_Player.Enabled = true;
+                        Cmd_Stop_Player.Enabled = false;
+                    }));
+                }
+            }, token);
         }
 
         private void Cmd_Stop_Player_Click(object sender, EventArgs e)
         {
+            if (_playbackCancelToken != null && !_playbackCancelToken.IsCancellationRequested)
+            {
+                _playbackCancelToken.Cancel();
+            }
+
             fpga.StopPlayer(fpga.DebugMode);
+            Cmd_Stop_Player.Enabled = false;
         }
 
-        
+        private void Cmd_Link_Status_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

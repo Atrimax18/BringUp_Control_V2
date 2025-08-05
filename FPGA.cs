@@ -262,7 +262,7 @@ namespace BringUp_Control
         public Dictionary<string, DebuggerInstance> Debuggers = new Dictionary<string, DebuggerInstance>
         {
             ["uplink_modem"] = new DebuggerInstance("debugger_i0_", 4, 8, 1024),
-            ["uplink_DAC"] = new DebuggerInstance("debugger_i1_", 2, 8, 1024),
+            ["uplink_dac"] = new DebuggerInstance("debugger_i1_", 2, 8, 1024),
             ["downlink_modem"] = new DebuggerInstance("debugger_i2_", 4, 8, 1024),
             ["downlink_ADC"] = new DebuggerInstance("debugger_i3_", 1, 20, 1024)
         };

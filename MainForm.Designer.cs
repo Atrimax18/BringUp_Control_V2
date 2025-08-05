@@ -168,6 +168,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.Cmd_Stop_STPL = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -482,6 +483,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.Cmd_Stop_STPL);
             this.tabAD9175.Controls.Add(this.Cmd_DAQ_Reg_Read);
             this.tabAD9175.Controls.Add(this.label44);
             this.tabAD9175.Controls.Add(this.textRegDAC9175);
@@ -509,7 +511,7 @@
             // 
             // Cmd_DAQ_Reg_Read
             // 
-            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 468);
+            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 413);
             this.Cmd_DAQ_Reg_Read.Name = "Cmd_DAQ_Reg_Read";
             this.Cmd_DAQ_Reg_Read.Size = new System.Drawing.Size(113, 45);
             this.Cmd_DAQ_Reg_Read.TabIndex = 31;
@@ -542,14 +544,15 @@
             this.Cmd_Link_Status.TabIndex = 28;
             this.Cmd_Link_Status.Text = "Link Status";
             this.Cmd_Link_Status.UseVisualStyleBackColor = true;
+            this.Cmd_Link_Status.Click += new System.EventHandler(this.Cmd_Link_Status_Click);
             // 
             // Cmd_STPL
             // 
-            this.Cmd_STPL.Location = new System.Drawing.Point(724, 529);
+            this.Cmd_STPL.Location = new System.Drawing.Point(724, 464);
             this.Cmd_STPL.Name = "Cmd_STPL";
             this.Cmd_STPL.Size = new System.Drawing.Size(113, 45);
             this.Cmd_STPL.TabIndex = 27;
-            this.Cmd_STPL.Text = "STPL";
+            this.Cmd_STPL.Text = "RUN STPL";
             this.Cmd_STPL.UseVisualStyleBackColor = true;
             this.Cmd_STPL.Click += new System.EventHandler(this.Cmd_STPL_Click);
             // 
@@ -1359,6 +1362,7 @@
             // 
             // Cmd_Stop_Player
             // 
+            this.Cmd_Stop_Player.Enabled = false;
             this.Cmd_Stop_Player.Location = new System.Drawing.Point(666, 232);
             this.Cmd_Stop_Player.Name = "Cmd_Stop_Player";
             this.Cmd_Stop_Player.Size = new System.Drawing.Size(145, 45);
@@ -1741,6 +1745,16 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // Cmd_Stop_STPL
+            // 
+            this.Cmd_Stop_STPL.Enabled = false;
+            this.Cmd_Stop_STPL.Location = new System.Drawing.Point(725, 513);
+            this.Cmd_Stop_STPL.Name = "Cmd_Stop_STPL";
+            this.Cmd_Stop_STPL.Size = new System.Drawing.Size(112, 45);
+            this.Cmd_Stop_STPL.TabIndex = 32;
+            this.Cmd_Stop_STPL.Text = "STOP STPL";
+            this.Cmd_Stop_STPL.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1946,6 +1960,7 @@
         private System.Windows.Forms.Button Cmd_Link_Status;
         private System.Windows.Forms.Button Cmd_DAQ_Reg_Read;
         private System.Windows.Forms.DataGridView dataGridFPGA;
+        private System.Windows.Forms.Button Cmd_Stop_STPL;
     }
 }
 
