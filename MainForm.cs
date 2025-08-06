@@ -2060,24 +2060,63 @@ namespace BringUp_Control
             byte sampind = 0x00;
             ushort testdata = 0x0F;
 
+            Cmd_STPL.Enabled = false; // Disable the button to prevent multiple clicks during the test
+            _stplCancelToken = new CancellationTokenSource();
+            Cmd_Stop_STPL.Enabled = true;
+            var token = _stplCancelToken.Token;
+
             if (selectedTab == tabAD9175)
             {
                 if (ad9175 != null)
                 {
-                    // Run STPL test with default parameters
-                    //RunSTPLTest(0x0F, 0, 0, 0, 15); // Example: 0x0F = 15 in decimal, linkSel = 0 (DAC0), channelSel = 0 (Ch0), iqSel = 0 (I path), sampleIndex = from 0 to 15
-                    for (int k = 0; k < 2; k++) // linksel DAC0 - 0, DAC1 - 1
-                    {
-                        for (int i = 0; i < 4; i++) //chanelselect 0 - 4
-                        {
-                            for (int j = 0; j < 2; j++) //iqsel I -0 , Q - 1
-                            {
-                                RunSTPLTest(testdata, (byte)k, (byte)(i), (byte)j, sampind);
 
-                                LogStatus($"Sample Index: 0x{sampind:X2}");
-                            }                            
+                    Task.Run(() =>
+                    {
+                        try
+                        {
+                            // Run STPL test with default parameters
+                            //RunSTPLTest(0x0F, 0, 0, 0, 15); // Example: 0x0F = 15 in decimal, linkSel = 0 (DAC0), channelSel = 0 (Ch0), iqSel = 0 (I path), sampleIndex = from 0 to 15
+                            for (int k = 0; k < 2; k++) // linksel DAC0 - 0, DAC1 - 1
+                            {
+                                for (int i = 0; i < 4; i++) //chanelselect 0 - 4
+                                {
+                                    for (int j = 0; j < 2; j++) //iqsel I -0 , Q - 1
+                                    {
+                                        if (token.IsCancellationRequested)
+                                            return;
+
+                                        RunSTPLTest(testdata, (byte)k, (byte)(i), (byte)j, sampind);
+
+                                        // LogStatus must run on the UI thread
+                                        BeginInvoke(new Action(() =>
+                                        {
+                                            LogStatus($"STPL Test completed for Link: {k}, Channel: {i}, IQ Path: {j}, Sample Index: 0x{sampind:X2}");
+                                        }));
+
+                                    }
+                                }
+                            }
+
                         }
-                    }
+                        catch (Exception ex)
+                        {
+                            BeginInvoke(new Action(() =>
+                            {
+                                LogStatus($"STPL Test failed with error: {ex.Message}");
+                            }));
+
+                        }
+                        finally
+                        {
+                            BeginInvoke(new Action(() =>
+                            {
+
+                                Cmd_STPL.Enabled = true; // Re-enable the button after the test completes
+                                Cmd_Stop_STPL.Enabled = false; // Disable the stop button
+                            }));
+                        }                            
+                        
+                    }, token);                   
                     
                 }
                 else
@@ -2530,6 +2569,17 @@ namespace BringUp_Control
         private void Cmd_Link_Status_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void Cmd_Stop_STPL_Click(object sender, EventArgs e)
+        {
+            if (_stplCancelToken != null && !_stplCancelToken.IsCancellationRequested)
+            {
+                _stplCancelToken.Cancel();
+            }
+
+            Cmd_Stop_STPL.Enabled = false;
+            Cmd_STPL.Enabled = true;
         }
     }
 }

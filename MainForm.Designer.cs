@@ -518,6 +518,7 @@
             this.Cmd_Stop_STPL.TabIndex = 32;
             this.Cmd_Stop_STPL.Text = "STOP STPL";
             this.Cmd_Stop_STPL.UseVisualStyleBackColor = true;
+            this.Cmd_Stop_STPL.Click += new System.EventHandler(this.Cmd_Stop_STPL_Click);
             // 
             // Cmd_DAQ_Reg_Read
             // 
