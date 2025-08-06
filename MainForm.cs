@@ -2074,7 +2074,7 @@ namespace BringUp_Control
                             {
                                 RunSTPLTest(testdata, (byte)k, (byte)(i), (byte)j, sampind);
 
-                                LogStatus($"Sample Index: {sampind:X4}");
+                                LogStatus($"Sample Index: 0x{sampind:X2}");
                             }                            
                         }
                     }
