@@ -2604,11 +2604,9 @@ namespace BringUp_Control
                 else
                 {
                     LogStatus("AD9175 Handle is not initialized.");
-                }
+                }   
 
                 
-
-                textDAC9175_Value.Focus();
             }
         }
 
