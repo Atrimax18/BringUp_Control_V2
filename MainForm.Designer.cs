@@ -55,7 +55,7 @@
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
             this.Cmd_Stop_STPL = new System.Windows.Forms.Button();
-            this.Cmd_DAQ_Reg_Read = new System.Windows.Forms.Button();
+            this.Cmd_DAC_Reg_Read = new System.Windows.Forms.Button();
             this.label44 = new System.Windows.Forms.Label();
             this.textRegDAC9175 = new System.Windows.Forms.TextBox();
             this.Cmd_Link_Status = new System.Windows.Forms.Button();
@@ -169,6 +169,9 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.comboMAINDAC = new System.Windows.Forms.ComboBox();
+            this.label46 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -483,8 +486,11 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.label46);
+            this.tabAD9175.Controls.Add(this.comboMAINDAC);
+            this.tabAD9175.Controls.Add(this.label45);
             this.tabAD9175.Controls.Add(this.Cmd_Stop_STPL);
-            this.tabAD9175.Controls.Add(this.Cmd_DAQ_Reg_Read);
+            this.tabAD9175.Controls.Add(this.Cmd_DAC_Reg_Read);
             this.tabAD9175.Controls.Add(this.label44);
             this.tabAD9175.Controls.Add(this.textRegDAC9175);
             this.tabAD9175.Controls.Add(this.Cmd_Link_Status);
@@ -512,7 +518,7 @@
             // Cmd_Stop_STPL
             // 
             this.Cmd_Stop_STPL.Enabled = false;
-            this.Cmd_Stop_STPL.Location = new System.Drawing.Point(725, 513);
+            this.Cmd_Stop_STPL.Location = new System.Drawing.Point(723, 534);
             this.Cmd_Stop_STPL.Name = "Cmd_Stop_STPL";
             this.Cmd_Stop_STPL.Size = new System.Drawing.Size(112, 45);
             this.Cmd_Stop_STPL.TabIndex = 32;
@@ -520,15 +526,15 @@
             this.Cmd_Stop_STPL.UseVisualStyleBackColor = true;
             this.Cmd_Stop_STPL.Click += new System.EventHandler(this.Cmd_Stop_STPL_Click);
             // 
-            // Cmd_DAQ_Reg_Read
+            // Cmd_DAC_Reg_Read
             // 
-            this.Cmd_DAQ_Reg_Read.Location = new System.Drawing.Point(724, 413);
-            this.Cmd_DAQ_Reg_Read.Name = "Cmd_DAQ_Reg_Read";
-            this.Cmd_DAQ_Reg_Read.Size = new System.Drawing.Size(113, 45);
-            this.Cmd_DAQ_Reg_Read.TabIndex = 31;
-            this.Cmd_DAQ_Reg_Read.Text = "Read Registers";
-            this.Cmd_DAQ_Reg_Read.UseVisualStyleBackColor = true;
-            this.Cmd_DAQ_Reg_Read.Click += new System.EventHandler(this.Cmd_DAQ_Reg_Read_Click);
+            this.Cmd_DAC_Reg_Read.Location = new System.Drawing.Point(723, 399);
+            this.Cmd_DAC_Reg_Read.Name = "Cmd_DAC_Reg_Read";
+            this.Cmd_DAC_Reg_Read.Size = new System.Drawing.Size(112, 45);
+            this.Cmd_DAC_Reg_Read.TabIndex = 31;
+            this.Cmd_DAC_Reg_Read.Text = "Read Registers";
+            this.Cmd_DAC_Reg_Read.UseVisualStyleBackColor = true;
+            this.Cmd_DAC_Reg_Read.Click += new System.EventHandler(this.Cmd_DAC_Reg_Read_Click);
             // 
             // label44
             // 
@@ -549,9 +555,10 @@
             // 
             // Cmd_Link_Status
             // 
-            this.Cmd_Link_Status.Location = new System.Drawing.Point(724, 587);
+            this.Cmd_Link_Status.Enabled = false;
+            this.Cmd_Link_Status.Location = new System.Drawing.Point(723, 583);
             this.Cmd_Link_Status.Name = "Cmd_Link_Status";
-            this.Cmd_Link_Status.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_Link_Status.Size = new System.Drawing.Size(112, 45);
             this.Cmd_Link_Status.TabIndex = 28;
             this.Cmd_Link_Status.Text = "Link Status";
             this.Cmd_Link_Status.UseVisualStyleBackColor = true;
@@ -559,7 +566,7 @@
             // 
             // Cmd_STPL
             // 
-            this.Cmd_STPL.Location = new System.Drawing.Point(725, 464);
+            this.Cmd_STPL.Location = new System.Drawing.Point(723, 483);
             this.Cmd_STPL.Name = "Cmd_STPL";
             this.Cmd_STPL.Size = new System.Drawing.Size(112, 45);
             this.Cmd_STPL.TabIndex = 27;
@@ -575,7 +582,7 @@
             this.groupBox7.Controls.Add(this.label41);
             this.groupBox7.Location = new System.Drawing.Point(384, 513);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(335, 115);
+            this.groupBox7.Size = new System.Drawing.Size(328, 115);
             this.groupBox7.TabIndex = 26;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "FULL SCALE (Ioutfs):";
@@ -643,7 +650,7 @@
             this.groupBox6.Controls.Add(this.Cmd_PRBS);
             this.groupBox6.Location = new System.Drawing.Point(384, 400);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(335, 61);
+            this.groupBox6.Size = new System.Drawing.Size(328, 61);
             this.groupBox6.TabIndex = 25;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "PRBS TEST:";
@@ -896,9 +903,9 @@
             // 
             // Cmd_DAC_Init
             // 
-            this.Cmd_DAC_Init.Location = new System.Drawing.Point(725, 87);
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(723, 140);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
-            this.Cmd_DAC_Init.Size = new System.Drawing.Size(113, 45);
+            this.Cmd_DAC_Init.Size = new System.Drawing.Size(112, 45);
             this.Cmd_DAC_Init.TabIndex = 13;
             this.Cmd_DAC_Init.Text = "DAC INIT";
             this.Cmd_DAC_Init.UseVisualStyleBackColor = true;
@@ -925,7 +932,7 @@
             // comboRegisters9175
             // 
             this.comboRegisters9175.FormattingEnabled = true;
-            this.comboRegisters9175.Location = new System.Drawing.Point(708, 19);
+            this.comboRegisters9175.Location = new System.Drawing.Point(708, 38);
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(129, 24);
             this.comboRegisters9175.TabIndex = 5;
@@ -1756,6 +1763,36 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(720, 350);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(124, 16);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "MAINDAC_PAGE";
+            // 
+            // comboMAINDAC
+            // 
+            this.comboMAINDAC.FormattingEnabled = true;
+            this.comboMAINDAC.Items.AddRange(new object[] {
+            "DAC0",
+            "DAC1"});
+            this.comboMAINDAC.Location = new System.Drawing.Point(723, 369);
+            this.comboMAINDAC.Name = "comboMAINDAC";
+            this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
+            this.comboMAINDAC.TabIndex = 34;
+            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(705, 17);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(98, 16);
+            this.label46.TabIndex = 35;
+            this.label46.Text = "Register List:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1959,9 +1996,12 @@
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.TextBox textRegDAC9175;
         private System.Windows.Forms.Button Cmd_Link_Status;
-        private System.Windows.Forms.Button Cmd_DAQ_Reg_Read;
+        private System.Windows.Forms.Button Cmd_DAC_Reg_Read;
         private System.Windows.Forms.DataGridView dataGridFPGA;
         private System.Windows.Forms.Button Cmd_Stop_STPL;
+        private System.Windows.Forms.ComboBox comboMAINDAC;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.Label label46;
     }
 }
 

@@ -2461,10 +2461,7 @@ namespace BringUp_Control
             uint deft = fpga.SpiReadByName("container_version");
         }
 
-        private void Cmd_DAQ_Reg_Read_Click(object sender, EventArgs e)
-        {
-            ad9175.ReadAllRegisters();
-        }
+        
 
         private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
@@ -2581,7 +2578,53 @@ namespace BringUp_Control
             Cmd_Stop_STPL.Enabled = false;
             Cmd_STPL.Enabled = true;
         }
+
+        private void comboMAINDAC_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabAD9175)
+            {
+                int MAIN_DAC = comboMAINDAC.SelectedIndex;
+                //int selectedHex = Convert.ToInt32(selectedRegisterAddress9175.Substring(2), 16); // Convert hex string to int
+
+                if (ad9175 != null && ftDev != null)
+                {
+
+                    if (MAIN_DAC == 0)
+                    {
+                        ad9175.WriteRegister(0x0008, 0x40 );
+                        LogStatus($"Main DAC set to DAC0");
+                    }
+                    else
+                    {
+                        ad9175.WriteRegister(0x0008, 0x80);
+                        LogStatus($"Main DAC set to DAC0");
+                    }
+                       
+                }
+                else
+                {
+                    LogStatus("AD9175 Handle is not initialized.");
+                }
+
+                
+
+                textDAC9175_Value.Focus();
+            }
+        }
+
+        private void Cmd_DAC_Reg_Read_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                ad9175.ReadAllRegisters();
+                int dac_num = comboMAINDAC.SelectedIndex; // Get the selected DAC index from the combo box
+
+                LogStatus($"DAC {dac_num} registers read successfully.");
+            }           
+            
+        }
     }
+    
 }
 
 
