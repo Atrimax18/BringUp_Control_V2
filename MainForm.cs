@@ -1858,66 +1858,6 @@ namespace BringUp_Control
                 }
             }
         }
-        //
-        private void Cmd_Load_SI_FW_Click(object sender, EventArgs e)
-        {
-            string fullpath = si5518.LoadConfigFile();
-
-
-            label30.Text = "PROD FW: " + fullpath; // Path.GetFullPath(path) + "\\prod_fw.boot.bin";
-
-            Prod_file_pll = fullpath;// label30.Text;
-        }
-        // user config 
-        private void Cmd_Import_SkyWorks_Click(object sender, EventArgs e)
-        {
-            string fullpath = si5518.LoadConfigFile();
-
-
-            label29.Text = "NVM FW: " + fullpath;// + Path.GetFullPath(path) + "\\nvm_burn_fw.boot.bin";
-            nvm_file_pll = fullpath;// label29.Text;
-
-        }
-
-        //test temperature button test readinfo , serial communcation 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //si5518.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize Si5518 with the current FTDI device
-
-            //si5518.SioTest();
-            si5518.ReadInfo();
-            
-
-        }
-
-        private void Cmd_Config_Click(object sender, EventArgs e)
-        {
-            string fullpath = si5518.LoadConfigFile();
-            string path = Path.GetDirectoryName(fullpath);
-            label27.Text = "User Conig: " + fullpath;// + "\\user_config.burn.hex";
-
-
-
-            config_file_pll = fullpath;// label27.Text;
-            Prod_file_pll = path + "\\prod_fw.boot.hex.txt";
-            label30.Text = "Prod file: " + Prod_file_pll;
-
-            nvm_file_pll = path + "\\nvm_burn_fw.boot.hex.txt";
-            label29.Text = "NVM file: " + nvm_file_pll;
-
-        }
-
-        private void Cmd_Export_SkyWorks_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Cmd_Burn_SkyPLL_Click(object sender, EventArgs e)
-        {
-            // si5518.BurnNvmPllSynth(nvm_file_pll,Prod_file_pll,config_file_pll);
-        }
-
-               
 
         private void Cmd_PRBS_Click(object sender, EventArgs e)
         {
@@ -2621,8 +2561,231 @@ namespace BringUp_Control
             }           
             
         }
+
+        private void Select_Dir_For_Burn_SkyPLL_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            {
+                try
+                {
+                    folderDialog.SelectedPath = Directory.GetCurrentDirectory();
+
+                    if (folderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string selectedFolder = folderDialog.SelectedPath;
+
+                        string prod_fw_path = Path.Combine(selectedFolder, "prod_fw.burn.hex.txt");
+                        string nvm_burn_path = Path.Combine(selectedFolder, "nvm_burn_fw.boot.hex.txt");
+                        string user_config_path = Path.Combine(selectedFolder, "user_config.burn.hex.txt");
+
+                        try
+                        {
+                            using (FileStream fs_prod_fw = File.OpenRead(prod_fw_path)) { }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File not found: {prod_fw_path}", "Error");
+                            return;
+                        }
+
+                        try
+                        {
+                            using (FileStream fs_nvm_burn = File.OpenRead(nvm_burn_path)) { }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File not found: {nvm_burn_path}", "Error");
+                            return;
+                        }
+
+                        try
+                        {
+                            using (FileStream fs_user_config = File.OpenRead(user_config_path)) { }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File not found: {user_config_path}", "Error");
+                            return;
+                        }
+
+                        // All files are present
+                        config_file_pll = user_config_path;
+                        nvm_file_pll = nvm_burn_path;
+                        Prod_file_pll = prod_fw_path;
+                        label_UserConfigSi55XX.Text = "User Conig: " + user_config_path;
+                        label_NvmFwSi55XX.Text = "NVM FW: " + nvm_burn_path;
+                        label_ProdFwSi55XX.Text = "Prod FW: " + prod_fw_path;
+
+                        Btn_Burn_SkyPLL.Enabled = true;
+                        Btn_Load_SkyPLL.Enabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Warning");
+                }
+            }
+        }
+
+        private void Select_Dir_For_Load_SkyPLL_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+            {
+                try
+                {
+                    folderDialog.SelectedPath = Directory.GetCurrentDirectory();
+
+                    if (folderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string selectedFolder = folderDialog.SelectedPath;
+
+                        string prod_fw_path = Path.Combine(selectedFolder, "prod_fw.boot.hex.txt");
+                        string user_config_path = Path.Combine(selectedFolder, "user_config.boot.hex.txt");
+
+                        try
+                        {
+                            using (FileStream fs_prod_fw = File.OpenRead(prod_fw_path)) { }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File not found: {prod_fw_path}", "Error");
+                            return;
+                        }
+
+                        try
+                        {
+                            using (FileStream fs_user_config = File.OpenRead(user_config_path)) { }
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show($"File not found: {user_config_path}", "Error");
+                            return;
+                        }
+
+                        // All files are present
+                        config_file_pll = user_config_path;
+                        Prod_file_pll = prod_fw_path;
+                        label_UserConfigSi55XX.Text = "User Conig: " + user_config_path;
+                        label_NvmFwSi55XX.Text = "NVM FW: N/A";
+                        label_ProdFwSi55XX.Text = "Prod FW: " + prod_fw_path;
+
+                        Btn_Load_SkyPLL.Enabled = true;
+                        Btn_Burn_SkyPLL.Enabled = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Warning");
+                }
+            }
+        }
+
+        private void button_GetInfo_Click(object sender, EventArgs e)
+        {
+            double temp_skyworks;
+            string info_skyworks;
+
+            if ((si5518.SioTest() != SI55XX.ResiltCode.OK))
+            {
+                label_SioTest.Text = "SioTest: Failed";
+            }
+            else
+            {
+                label_SioTest.Text = "SioTest: Passed";
+            }
+
+            if ((si5518.ReadTemperature(out temp_skyworks) != SI55XX.ResiltCode.OK))
+            {
+                MessageBox.Show("Failed to read temperature!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            label_Temp.Text = $"Temp: {temp_skyworks:F1} °C"; // Format the temperature
+
+            if ((si5518.ReadInfo(out info_skyworks) != SI55XX.ResiltCode.OK))
+            {
+                MessageBox.Show("Failed to read device info!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            label_DevInfo.Text = $"DevInfo: {info_skyworks}";
+        }
+
+        private void button_CheckRefStat_Click(object sender, EventArgs e)
+        {
+            bool ref_stat;
+
+            if ((si5518.CheckReferenceStatus(out ref_stat) != SI55XX.ResiltCode.OK))
+            {
+                MessageBox.Show("Failed to read the reference status!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                label_RefStat.Text = "RefStat: Failed";
+                return;
+            }
+
+            string status = ref_stat ? "Locked" : "Unlocked";
+            label_RefStat.Text = $"RefStat: {status}";
+        }
+
+        private void Btn_Load_SkyPLL_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(Prod_file_pll))
+            {
+                MessageBox.Show("Prod FW file path is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(config_file_pll))
+            {
+                MessageBox.Show("User Config file path is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if ((si5518.InitPllSynth(Prod_file_pll, config_file_pll) != SI55XX.ResiltCode.OK))
+            {
+                MessageBox.Show("Failed to load RAM!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MessageBox.Show("FW boot finished and user config loaded, check the lock status.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Btn_Burn_SkyPLL_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(nvm_file_pll))
+            {
+                MessageBox.Show("NVM file path is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(Prod_file_pll))
+            {
+                MessageBox.Show("Prod FW file path is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(config_file_pll))
+            {
+                MessageBox.Show("User Config file path is not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var result = MessageBox.Show(
+                "This is one-time process, are you sure?",
+                "Warning",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.No)
+                return;
+
+            MessageBox.Show("NVM burn process will take several seconds, please wait.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            if ((si5518.BurnNvmPllSynth(nvm_file_pll, Prod_file_pll, config_file_pll) != SI55XX.ResiltCode.OK))
+            {
+                MessageBox.Show("Failed to burn NVM!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MessageBox.Show("NVM burn finished, please perform a power cycle.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
-    
 }
 
 
