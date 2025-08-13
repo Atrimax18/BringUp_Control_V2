@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using FTD2XX_NET;
@@ -355,9 +356,11 @@ namespace BringUp_Control
 
                 string str = Encoding.ASCII.GetString(sn).TrimEnd('\0');
 
-               
+                string strvalue = new string (str.TakeWhile(char.IsLetterOrDigit).ToArray());
 
-                if(str.Contains(serialnum))
+
+                //retrun locId if the serial number matches
+                if (strvalue.Equals(serialnum))
                     return locId;
             }
 
