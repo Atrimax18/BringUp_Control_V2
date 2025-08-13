@@ -54,6 +54,9 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.label46 = new System.Windows.Forms.Label();
+            this.comboMAINDAC = new System.Windows.Forms.ComboBox();
+            this.label45 = new System.Windows.Forms.Label();
             this.Cmd_Stop_STPL = new System.Windows.Forms.Button();
             this.Cmd_DAC_Reg_Read = new System.Windows.Forms.Button();
             this.label44 = new System.Windows.Forms.Label();
@@ -98,16 +101,19 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dataGridViewAD9175 = new System.Windows.Forms.DataGridView();
             this.tabSi5518 = new System.Windows.Forms.TabPage();
-            this.Cmd_Burn_SkyPLL = new System.Windows.Forms.Button();
-            this.Cmd_Config = new System.Windows.Forms.Button();
-            this.label28 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label30 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.Cmd_Load_SI_FW = new System.Windows.Forms.Button();
-            this.Cmd_Export_SkyWorks = new System.Windows.Forms.Button();
-            this.Cmd_Import_SkyWorks = new System.Windows.Forms.Button();
-            this.label27 = new System.Windows.Forms.Label();
+            this.label_RefStat = new System.Windows.Forms.Label();
+            this.label_SioTest = new System.Windows.Forms.Label();
+            this.label_DevInfo = new System.Windows.Forms.Label();
+            this.label_Temp = new System.Windows.Forms.Label();
+            this.Select_Dir_For_Burn_SkyPLL = new System.Windows.Forms.Button();
+            this.Select_Dir_For_Load_SkyPLL = new System.Windows.Forms.Button();
+            this.Btn_Load_SkyPLL = new System.Windows.Forms.Button();
+            this.Btn_Burn_SkyPLL = new System.Windows.Forms.Button();
+            this.button_CheckRefStat = new System.Windows.Forms.Button();
+            this.label_ProdFwSi55XX = new System.Windows.Forms.Label();
+            this.label_NvmFwSi55XX = new System.Windows.Forms.Label();
+            this.label_UserConfigSi55XX = new System.Windows.Forms.Label();
+            this.button_GetInfo = new System.Windows.Forms.Button();
             this.tabRFLine = new System.Windows.Forms.TabPage();
             this.numericATT3 = new System.Windows.Forms.NumericUpDown();
             this.numericATT2 = new System.Windows.Forms.NumericUpDown();
@@ -169,9 +175,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label45 = new System.Windows.Forms.Label();
-            this.comboMAINDAC = new System.Windows.Forms.ComboBox();
-            this.label46 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -514,6 +517,36 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(705, 17);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(98, 16);
+            this.label46.TabIndex = 35;
+            this.label46.Text = "Register List:";
+            // 
+            // comboMAINDAC
+            // 
+            this.comboMAINDAC.FormattingEnabled = true;
+            this.comboMAINDAC.Items.AddRange(new object[] {
+            "DAC0",
+            "DAC1"});
+            this.comboMAINDAC.Location = new System.Drawing.Point(723, 369);
+            this.comboMAINDAC.Name = "comboMAINDAC";
+            this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
+            this.comboMAINDAC.TabIndex = 34;
+            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(720, 350);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(124, 16);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "MAINDAC_PAGE";
             // 
             // Cmd_Stop_STPL
             // 
@@ -981,16 +1014,19 @@
             // 
             // tabSi5518
             // 
-            this.tabSi5518.Controls.Add(this.Cmd_Burn_SkyPLL);
-            this.tabSi5518.Controls.Add(this.Cmd_Config);
-            this.tabSi5518.Controls.Add(this.label28);
-            this.tabSi5518.Controls.Add(this.button1);
-            this.tabSi5518.Controls.Add(this.label30);
-            this.tabSi5518.Controls.Add(this.label29);
-            this.tabSi5518.Controls.Add(this.Cmd_Load_SI_FW);
-            this.tabSi5518.Controls.Add(this.Cmd_Export_SkyWorks);
-            this.tabSi5518.Controls.Add(this.Cmd_Import_SkyWorks);
-            this.tabSi5518.Controls.Add(this.label27);
+            this.tabSi5518.Controls.Add(this.label_RefStat);
+            this.tabSi5518.Controls.Add(this.label_SioTest);
+            this.tabSi5518.Controls.Add(this.label_DevInfo);
+            this.tabSi5518.Controls.Add(this.label_Temp);
+            this.tabSi5518.Controls.Add(this.Select_Dir_For_Burn_SkyPLL);
+            this.tabSi5518.Controls.Add(this.Select_Dir_For_Load_SkyPLL);
+            this.tabSi5518.Controls.Add(this.Btn_Load_SkyPLL);
+            this.tabSi5518.Controls.Add(this.Btn_Burn_SkyPLL);
+            this.tabSi5518.Controls.Add(this.button_CheckRefStat);
+            this.tabSi5518.Controls.Add(this.label_ProdFwSi55XX);
+            this.tabSi5518.Controls.Add(this.label_NvmFwSi55XX);
+            this.tabSi5518.Controls.Add(this.label_UserConfigSi55XX);
+            this.tabSi5518.Controls.Add(this.button_GetInfo);
             this.tabSi5518.Location = new System.Drawing.Point(4, 25);
             this.tabSi5518.Name = "tabSi5518";
             this.tabSi5518.Size = new System.Drawing.Size(844, 655);
@@ -998,102 +1034,130 @@
             this.tabSi5518.Text = "Si55XX";
             this.tabSi5518.UseVisualStyleBackColor = true;
             // 
-            // Cmd_Burn_SkyPLL
+            // label_RefStat
             // 
-            this.Cmd_Burn_SkyPLL.Location = new System.Drawing.Point(717, 368);
-            this.Cmd_Burn_SkyPLL.Name = "Cmd_Burn_SkyPLL";
-            this.Cmd_Burn_SkyPLL.Size = new System.Drawing.Size(114, 46);
-            this.Cmd_Burn_SkyPLL.TabIndex = 10;
-            this.Cmd_Burn_SkyPLL.Text = "Burn Files";
-            this.Cmd_Burn_SkyPLL.UseVisualStyleBackColor = true;
-            this.Cmd_Burn_SkyPLL.Click += new System.EventHandler(this.Cmd_Burn_SkyPLL_Click);
+            this.label_RefStat.AutoSize = true;
+            this.label_RefStat.Location = new System.Drawing.Point(580, 438);
+            this.label_RefStat.Name = "label_RefStat";
+            this.label_RefStat.Size = new System.Drawing.Size(92, 16);
+            this.label_RefStat.TabIndex = 24;
+            this.label_RefStat.Text = "RefStat: N/A";
             // 
-            // Cmd_Config
+            // label_SioTest
             // 
-            this.Cmd_Config.Location = new System.Drawing.Point(717, 203);
-            this.Cmd_Config.Name = "Cmd_Config";
-            this.Cmd_Config.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Config.TabIndex = 9;
-            this.Cmd_Config.Text = "Import User Config";
-            this.Cmd_Config.UseVisualStyleBackColor = true;
-            this.Cmd_Config.Click += new System.EventHandler(this.Cmd_Config_Click);
+            this.label_SioTest.AutoSize = true;
+            this.label_SioTest.Location = new System.Drawing.Point(580, 290);
+            this.label_SioTest.Name = "label_SioTest";
+            this.label_SioTest.Size = new System.Drawing.Size(95, 16);
+            this.label_SioTest.TabIndex = 23;
+            this.label_SioTest.Text = "SioTest: N/A";
             // 
-            // label28
+            // label_DevInfo
             // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(603, 476);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(75, 16);
-            this.label28.TabIndex = 8;
-            this.label28.Text = "Temp: 0.0";
+            this.label_DevInfo.AutoSize = true;
+            this.label_DevInfo.Location = new System.Drawing.Point(580, 357);
+            this.label_DevInfo.Name = "label_DevInfo";
+            this.label_DevInfo.Size = new System.Drawing.Size(94, 16);
+            this.label_DevInfo.TabIndex = 22;
+            this.label_DevInfo.Text = "DevInfo: N/A";
             // 
-            // button1
+            // label_Temp
             // 
-            this.button1.Location = new System.Drawing.Point(717, 461);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(114, 47);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Get Temp";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.label_Temp.AutoSize = true;
+            this.label_Temp.Location = new System.Drawing.Point(580, 325);
+            this.label_Temp.Name = "label_Temp";
+            this.label_Temp.Size = new System.Drawing.Size(75, 16);
+            this.label_Temp.TabIndex = 21;
+            this.label_Temp.Text = "Temp: 0.0";
             // 
-            // label30
+            // Select_Dir_For_Burn_SkyPLL
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(12, 122);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(81, 16);
-            this.label30.TabIndex = 6;
-            this.label30.Text = "PROD FW:";
+            this.Select_Dir_For_Burn_SkyPLL.Location = new System.Drawing.Point(574, 210);
+            this.Select_Dir_For_Burn_SkyPLL.Name = "Select_Dir_For_Burn_SkyPLL";
+            this.Select_Dir_For_Burn_SkyPLL.Size = new System.Drawing.Size(114, 46);
+            this.Select_Dir_For_Burn_SkyPLL.TabIndex = 20;
+            this.Select_Dir_For_Burn_SkyPLL.Text = "Select Dir for Burn NVM";
+            this.Select_Dir_For_Burn_SkyPLL.UseVisualStyleBackColor = true;
+            this.Select_Dir_For_Burn_SkyPLL.Click += new System.EventHandler(this.Select_Dir_For_Burn_SkyPLL_Click);
             // 
-            // label29
+            // Select_Dir_For_Load_SkyPLL
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(12, 72);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(71, 16);
-            this.label29.TabIndex = 5;
-            this.label29.Text = "NVM FW:";
+            this.Select_Dir_For_Load_SkyPLL.Location = new System.Drawing.Point(574, 158);
+            this.Select_Dir_For_Load_SkyPLL.Name = "Select_Dir_For_Load_SkyPLL";
+            this.Select_Dir_For_Load_SkyPLL.Size = new System.Drawing.Size(114, 46);
+            this.Select_Dir_For_Load_SkyPLL.TabIndex = 19;
+            this.Select_Dir_For_Load_SkyPLL.Text = "Select Dir for Load RAM";
+            this.Select_Dir_For_Load_SkyPLL.UseVisualStyleBackColor = true;
+            this.Select_Dir_For_Load_SkyPLL.Click += new System.EventHandler(this.Select_Dir_For_Load_SkyPLL_Click);
             // 
-            // Cmd_Load_SI_FW
+            // Btn_Load_SkyPLL
             // 
-            this.Cmd_Load_SI_FW.Location = new System.Drawing.Point(717, 317);
-            this.Cmd_Load_SI_FW.Name = "Cmd_Load_SI_FW";
-            this.Cmd_Load_SI_FW.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Load_SI_FW.TabIndex = 4;
-            this.Cmd_Load_SI_FW.Text = "Import Prod FW";
-            this.Cmd_Load_SI_FW.UseVisualStyleBackColor = true;
-            this.Cmd_Load_SI_FW.Click += new System.EventHandler(this.Cmd_Load_SI_FW_Click);
+            this.Btn_Load_SkyPLL.Enabled = false;
+            this.Btn_Load_SkyPLL.Location = new System.Drawing.Point(694, 158);
+            this.Btn_Load_SkyPLL.Name = "Btn_Load_SkyPLL";
+            this.Btn_Load_SkyPLL.Size = new System.Drawing.Size(114, 46);
+            this.Btn_Load_SkyPLL.TabIndex = 18;
+            this.Btn_Load_SkyPLL.Text = "Load RAM";
+            this.Btn_Load_SkyPLL.UseVisualStyleBackColor = true;
+            this.Btn_Load_SkyPLL.Click += new System.EventHandler(this.Btn_Load_SkyPLL_Click);
             // 
-            // Cmd_Export_SkyWorks
+            // Btn_Burn_SkyPLL
             // 
-            this.Cmd_Export_SkyWorks.Enabled = false;
-            this.Cmd_Export_SkyWorks.Location = new System.Drawing.Point(15, 419);
-            this.Cmd_Export_SkyWorks.Name = "Cmd_Export_SkyWorks";
-            this.Cmd_Export_SkyWorks.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Export_SkyWorks.TabIndex = 3;
-            this.Cmd_Export_SkyWorks.Text = "Export File";
-            this.Cmd_Export_SkyWorks.UseVisualStyleBackColor = true;
-            this.Cmd_Export_SkyWorks.Click += new System.EventHandler(this.Cmd_Export_SkyWorks_Click);
+            this.Btn_Burn_SkyPLL.Enabled = false;
+            this.Btn_Burn_SkyPLL.Location = new System.Drawing.Point(694, 210);
+            this.Btn_Burn_SkyPLL.Name = "Btn_Burn_SkyPLL";
+            this.Btn_Burn_SkyPLL.Size = new System.Drawing.Size(114, 46);
+            this.Btn_Burn_SkyPLL.TabIndex = 17;
+            this.Btn_Burn_SkyPLL.Text = "Burn NVM";
+            this.Btn_Burn_SkyPLL.UseVisualStyleBackColor = true;
+            this.Btn_Burn_SkyPLL.Click += new System.EventHandler(this.Btn_Burn_SkyPLL_Click);
             // 
-            // Cmd_Import_SkyWorks
+            // button_CheckRefStat
             // 
-            this.Cmd_Import_SkyWorks.Location = new System.Drawing.Point(717, 266);
-            this.Cmd_Import_SkyWorks.Name = "Cmd_Import_SkyWorks";
-            this.Cmd_Import_SkyWorks.Size = new System.Drawing.Size(114, 45);
-            this.Cmd_Import_SkyWorks.TabIndex = 2;
-            this.Cmd_Import_SkyWorks.Text = "Import  NVM File";
-            this.Cmd_Import_SkyWorks.UseVisualStyleBackColor = true;
-            this.Cmd_Import_SkyWorks.Click += new System.EventHandler(this.Cmd_Import_SkyWorks_Click);
+            this.button_CheckRefStat.Location = new System.Drawing.Point(436, 423);
+            this.button_CheckRefStat.Name = "button_CheckRefStat";
+            this.button_CheckRefStat.Size = new System.Drawing.Size(114, 47);
+            this.button_CheckRefStat.TabIndex = 16;
+            this.button_CheckRefStat.Text = "Check Ref Status";
+            this.button_CheckRefStat.UseVisualStyleBackColor = true;
+            this.button_CheckRefStat.Click += new System.EventHandler(this.button_CheckRefStat_Click);
             // 
-            // label27
+            // label_ProdFwSi55XX
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(12, 21);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(92, 16);
-            this.label27.TabIndex = 0;
-            this.label27.Text = "User Config:";
+            this.label_ProdFwSi55XX.AutoSize = true;
+            this.label_ProdFwSi55XX.Location = new System.Drawing.Point(12, 79);
+            this.label_ProdFwSi55XX.Name = "label_ProdFwSi55XX";
+            this.label_ProdFwSi55XX.Size = new System.Drawing.Size(81, 16);
+            this.label_ProdFwSi55XX.TabIndex = 13;
+            this.label_ProdFwSi55XX.Text = "PROD FW:";
+            // 
+            // label_NvmFwSi55XX
+            // 
+            this.label_NvmFwSi55XX.AutoSize = true;
+            this.label_NvmFwSi55XX.Location = new System.Drawing.Point(12, 47);
+            this.label_NvmFwSi55XX.Name = "label_NvmFwSi55XX";
+            this.label_NvmFwSi55XX.Size = new System.Drawing.Size(71, 16);
+            this.label_NvmFwSi55XX.TabIndex = 12;
+            this.label_NvmFwSi55XX.Text = "NVM FW:";
+            // 
+            // label_UserConfigSi55XX
+            // 
+            this.label_UserConfigSi55XX.AutoSize = true;
+            this.label_UserConfigSi55XX.Location = new System.Drawing.Point(12, 16);
+            this.label_UserConfigSi55XX.Name = "label_UserConfigSi55XX";
+            this.label_UserConfigSi55XX.Size = new System.Drawing.Size(92, 16);
+            this.label_UserConfigSi55XX.TabIndex = 11;
+            this.label_UserConfigSi55XX.Text = "User Config:";
+            // 
+            // button_GetInfo
+            // 
+            this.button_GetInfo.Location = new System.Drawing.Point(436, 310);
+            this.button_GetInfo.Name = "button_GetInfo";
+            this.button_GetInfo.Size = new System.Drawing.Size(114, 47);
+            this.button_GetInfo.TabIndex = 7;
+            this.button_GetInfo.Text = "Get Info";
+            this.button_GetInfo.UseVisualStyleBackColor = true;
+            this.button_GetInfo.Click += new System.EventHandler(this.button_GetInfo_Click);
             // 
             // tabRFLine
             // 
@@ -1763,36 +1827,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(720, 350);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(124, 16);
-            this.label45.TabIndex = 33;
-            this.label45.Text = "MAINDAC_PAGE";
-            // 
-            // comboMAINDAC
-            // 
-            this.comboMAINDAC.FormattingEnabled = true;
-            this.comboMAINDAC.Items.AddRange(new object[] {
-            "DAC0",
-            "DAC1"});
-            this.comboMAINDAC.Location = new System.Drawing.Point(723, 369);
-            this.comboMAINDAC.Name = "comboMAINDAC";
-            this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
-            this.comboMAINDAC.TabIndex = 34;
-            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(705, 17);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(98, 16);
-            this.label46.TabIndex = 35;
-            this.label46.Text = "Register List:";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1947,17 +1981,8 @@
         private System.Windows.Forms.NumericUpDown numericATT1;
         private System.Windows.Forms.NumericUpDown numericATT3;
         private System.Windows.Forms.NumericUpDown numericATT2;
-        private System.Windows.Forms.Label label27;
-        private System.Windows.Forms.Button Cmd_Export_SkyWorks;
-        private System.Windows.Forms.Button Cmd_Import_SkyWorks;
         private System.Windows.Forms.Button Cmd_FPGA_Tests;
-        private System.Windows.Forms.Button Cmd_Load_SI_FW;
-        private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.Label label29;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.Button Cmd_Config;
-        private System.Windows.Forms.Button Cmd_Burn_SkyPLL;
+        private System.Windows.Forms.Button button_GetInfo;
         private System.Windows.Forms.TextBox textStep;
         private System.Windows.Forms.Button Cmd_PRBS;
         private System.Windows.Forms.ComboBox comboPRBS;
@@ -2002,6 +2027,18 @@
         private System.Windows.Forms.ComboBox comboMAINDAC;
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label label_ProdFwSi55XX;
+        private System.Windows.Forms.Label label_NvmFwSi55XX;
+        private System.Windows.Forms.Label label_UserConfigSi55XX;
+        private System.Windows.Forms.Button Select_Dir_For_Burn_SkyPLL;
+        private System.Windows.Forms.Button Select_Dir_For_Load_SkyPLL;
+        private System.Windows.Forms.Button Btn_Load_SkyPLL;
+        private System.Windows.Forms.Button Btn_Burn_SkyPLL;
+        private System.Windows.Forms.Button button_CheckRefStat;
+        private System.Windows.Forms.Label label_RefStat;
+        private System.Windows.Forms.Label label_SioTest;
+        private System.Windows.Forms.Label label_DevInfo;
+        private System.Windows.Forms.Label label_Temp;
     }
 }
 
