@@ -2009,7 +2009,7 @@ namespace BringUp_Control
             {
                 if (ad9175 != null)
                 {
-
+                    /*
                     Task.Run(() =>
                     {
                         try
@@ -2056,7 +2056,7 @@ namespace BringUp_Control
                             }));
                         }                            
                         
-                    }, token);                   
+                    }, token);  */                 
                     
                 }
                 else
