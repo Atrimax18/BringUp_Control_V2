@@ -485,7 +485,7 @@ namespace BringUp_Control
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
             Application.Exit();
         }
-
+        /*
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
@@ -528,7 +528,7 @@ namespace BringUp_Control
                     _usbDebounceTimer.Start();
                 }
             }
-        }
+        }*/
 
         private void Cmd_Exit_Click(object sender, EventArgs e) => SafeShutdown();
 
@@ -2070,6 +2070,9 @@ namespace BringUp_Control
                 if (ad9175 != null)
                 {
 
+
+
+                    /*
                     Task.Run(() =>
                     {
                         try
@@ -2116,7 +2119,7 @@ namespace BringUp_Control
                             }));
                         }                            
                         
-                    }, token);                   
+                    }, token);     */              
                     
                 }
                 else
