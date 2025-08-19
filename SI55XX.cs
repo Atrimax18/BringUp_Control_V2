@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,11 +22,21 @@ namespace BringUp_Control
         private const byte CMD_DEVICE_INFO = 0x08;
         private const byte CMD_TEMPERATURE_READOUT = 0x19;
         private const byte CMD_RESTART = 0xF0;
+        private const byte CTS_REPLY = 0x80;
 
         private SpiDriver _spi;
         private i2cDriver _i2c;
         private PCAL6416A _ioExp;
         private FtdiInterfaceManager _interfaceManager;
+
+        public enum ResiltCode
+        {
+            OK = 0,
+            Error = 1,
+            Timeout = 2,
+            InvalidData = 3,
+            InvalidResponse = 4,
+        }
 
         public void Init(SpiDriver spi, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
@@ -41,7 +52,7 @@ namespace BringUp_Control
             // Set the IO Expander TMUX1104 address pins to 0x03 to allow the FTDI CS to reach the Si5518
             //_ioExp.SetMuxSpiPin(PCAL6416A.MuxSpiIndex.MUX_SPI_CSn_SKY_PLL);
 
-           
+
 
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, true);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, true);
@@ -56,43 +67,59 @@ namespace BringUp_Control
             _spi = null;
         }
         // Private Methods
-
-        private void SendCommand_old(byte command, ReadOnlySpan<byte> data = default)
-        {
-            Span<byte> buffer = stackalloc byte[1 + data.Length];
-            buffer[0] = command;
-            data.CopyTo(buffer.Slice(1));
-
-            _spi.Write(buffer);
-            Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
-        }
-
         private void SendCommand(byte command, ReadOnlySpan<byte> data = default)
         {
             Span<byte> buffer = stackalloc byte[2 + data.Length];
             buffer[0] = 0xC0;
             buffer[1] = command;
-            
             data.CopyTo(buffer.Slice(2));
 
             _spi.Write(buffer);
             Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
         }
 
-        private void SendCommand_ONE(byte command)
+        private ResiltCode SendReceiveWaitCts(byte command, ReadOnlySpan<byte> data, Span<byte> r_buffer, int tout_ms)
         {
-            Span<byte> buffer = stackalloc byte[2];
-            buffer[0] = 0xC0;
-            buffer[1] = command;
+            Span<byte> cmd_buffer = stackalloc byte[2 + data.Length];
+            cmd_buffer[0] = 0xC0;
+            cmd_buffer[1] = command;
+            data.CopyTo(cmd_buffer.Slice(2));
 
-            //data.CopyTo(buffer.Slice(2));
+            Span<byte> reply_w_buffer = stackalloc byte[r_buffer.Length];
+            reply_w_buffer[0] = 0xD0;
+            reply_w_buffer.Slice(1).Clear();
 
-            _spi.Write(buffer);
-            Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(buffer.ToArray())}");
+            _spi.Write(cmd_buffer);
+
+            int startTime = Environment.TickCount;
+
+            while (true)
+            {
+                _spi.TransferFullDuplex(reply_w_buffer, r_buffer);
+                if ((r_buffer[1] & 0xF0) == CTS_REPLY)
+                {
+                    // CTS=1 with no Other Error bits
+                    break;
+                }
+
+                if (tout_ms > 0 && (Environment.TickCount - startTime) >= tout_ms)
+                {
+                    Console.WriteLine("Timeout waiting for CTS expired!");
+                    //throw new TimeoutException("Timeout waiting for CTS expired!");
+                    return ResiltCode.Timeout;
+                }
+            }
+
+            //Console.WriteLine($"Command 0x{command:X2} sent with data: {BitConverter.ToString(cmd_buffer.ToArray())}");
+            //Console.WriteLine($"Reply: {BitConverter.ToString(r_buffer.ToArray())}");
+
+            return ResiltCode.OK;
         }
 
-        private void LoadConfig(ReadOnlySpan<byte> data, bool toNvm)
+        private ResiltCode LoadConfig(ReadOnlySpan<byte> data, bool toNvm)
         {
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[2];
             byte command = toNvm ? CMD_NVM_LOAD_DATA : CMD_HOST_LOAD;
             int chunkSize = 500;
             Span<byte> chunk = stackalloc byte[chunkSize];
@@ -102,172 +129,261 @@ namespace BringUp_Control
             {
                 int size = Math.Min(chunkSize, data.Length - offset);
                 data.Slice(offset, size).CopyTo(chunk);
-                SendCommand(command, chunk.Slice(0, size));
+                result = SendReceiveWaitCts(command, chunk.Slice(0, size), rd_buffer, 1000);
+
+                if (result != ResiltCode.OK)
+                {
+                    Console.WriteLine($"Error sending command 0x{command:X2} at offset {offset}: {result}");
+                    return result;
+                }
+
                 offset += size;
             }
 
             Console.WriteLine($"Configuration loaded to {(toNvm ? "NVM" : "RAM")}.");
+            return ResiltCode.OK;
         }
 
-        private bool VerifyNvmBurn()
+        private ResiltCode VerifyNvmBurn()
         {
-            Span<byte> buffer = stackalloc byte[5];
+            ResiltCode result;
+            Span<byte> buffer = stackalloc byte[6];
+            Span<byte> parse_buffer = buffer.Slice(1);
             Span<byte> args = stackalloc byte[2] { 0xDE, 0xC0 };
 
-            SendCommand(CMD_NVM_BURN_VERIFY, args);
-            Read(CMD_NVM_BURN_VERIFY, buffer);
+            result = SendReceiveWaitCts(CMD_NVM_BURN_VERIFY, args, buffer, 15000);
 
-            bool success = (buffer[1] & 0x01) == 0x01 && buffer[4] == 0x00;
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                return result;
+            }
+
+            bool success = (parse_buffer[1] & 0x01) == 0x01 && parse_buffer[4] == 0x00;
             Console.WriteLine($"NVM Burn Verify: {(success ? "Success" : "Failure")}");
-            return success;
+
+            if (!success)
+            {
+                return ResiltCode.Error;
+            }
+
+            return ResiltCode.OK;
         }
 
-        private bool CheckReferenceStatus()
+        public ResiltCode CheckReferenceStatus(out bool ref_status)
         {
-            Span<byte> buffer = stackalloc byte[5];
-            Read(CMD_REFERENCE_STATUS, buffer);
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[5];
+            Span<byte> parse_buffer = rd_buffer.Slice(1);
+            byte[] emptyData = new byte[0];
 
-            bool clkValid = (buffer[1] & 0x03) == 0x00;
-            bool lossOfSignal = (buffer[2] & 0x01) == 0x00;
+            result = SendReceiveWaitCts(CMD_REFERENCE_STATUS, emptyData, rd_buffer, 500);
 
-            bool status = clkValid && lossOfSignal;
-            Console.WriteLine($"Reference Status: {(status ? "Valid" : "Invalid")}");
-            return status;
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                ref_status = false;
+                return result;
+            }
+
+            bool clkValid = (parse_buffer[1] & 0x03) == 0x00;
+            bool lossOfSignal = (parse_buffer[2] & 0x01) == 0x00;
+            ref_status = clkValid && lossOfSignal;
+            Console.WriteLine($"Reference Status: {(ref_status ? "Valid" : "Invalid")}");
+
+            return ResiltCode.OK;
         }
 
-        private double ReadTemperature()
+        public ResiltCode ReadTemperature(out double temperature)
         {
-            Span<byte> buffer = stackalloc byte[5];
-            Read(CMD_TEMPERATURE_READOUT, buffer);
-
-            int rawTemp = (buffer[4] << 23) | (buffer[3] << 16) | (buffer[2] << 8) | buffer[1];
-            double temperature = rawTemp / (double)(1 << 23);
-
-            Console.WriteLine($"Temperature: {temperature:F2} °C");
-            return temperature;
-        }
-
-        public string ReadInfo()
-        {
-            Span<byte> buffer = stackalloc byte[15];
-
-            
-            SendCommand_ONE(CMD_DEVICE_INFO);
-
-            Read(CMD_DEVICE_INFO, buffer);
-
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[7];
+            Span<byte> parse_buffer = rd_buffer.Slice(1);
+            Span<byte> buffer = rd_buffer.Slice(2);
+            byte[] emptyData = new byte[0];
             string device_info = string.Empty;
 
-            //int rawTemp = (buffer[4] << 23) | (buffer[3] << 16) | (buffer[2] << 8) | buffer[1];
-            //double temperature = rawTemp / (double)(1 << 23);
+            result = SendReceiveWaitCts(CMD_TEMPERATURE_READOUT, emptyData, rd_buffer, 500);
 
-            Console.WriteLine($"data: {buffer.ToString()}");
-            return device_info;
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                temperature = -100.0f; // Invalid temperature
+                return result;
+            }
+
+            int rawTemp = (parse_buffer[4] << 23) | (parse_buffer[3] << 16) | (parse_buffer[2] << 8) | parse_buffer[1];
+            temperature = rawTemp / (float)(1 << 23);
+
+            Console.WriteLine($"Temperature: {temperature:F2} °C");
+            return ResiltCode.OK;
         }
 
-        private void Read(byte command, Span<byte> buffer)
+        public ResiltCode ReadInfo(out string device_info)
         {
-            //Span<byte> writeBuffer = stackalloc byte[8];
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[8];
+            Span<byte> parse_buffer = rd_buffer.Slice(1);
+            Span<byte> info_buffer = rd_buffer.Slice(2);
+            byte[] emptyData = new byte[0];
 
-            Span<byte> writeBuffer = stackalloc byte[15];
+            result = SendReceiveWaitCts(CMD_DEVICE_INFO, emptyData, rd_buffer, 500);
 
-            writeBuffer[0] = 0xD0;
-            
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                device_info = string.Empty;
+                return result;
+            }
 
-
-            _spi.TransferFullDuplex(writeBuffer, buffer);
-            Console.WriteLine($"Read from command 0x{command:X2}: {BitConverter.ToString(buffer.ToArray())}");
+            device_info = BitConverter.ToString(info_buffer.ToArray());
+            Console.WriteLine($"DevInfo: {device_info}");
+            return ResiltCode.OK;
         }
 
         // Public Methods
 
-        public void LoadPllConfig(string filePath, bool isBinary, bool toNvm)
+        public ResiltCode InitPllSynth(string firmwarePath, string configPath)
         {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("Configuration file not found.", filePath);
-            }
-
-            byte[] data = isBinary ? File.ReadAllBytes(filePath) : ParseHexFile(filePath);
-            LoadConfig(data, toNvm);
-        }
-
-        public void InitPllSynth(string firmwarePath, string configPath)
-        {
+            ResiltCode result;
             byte[] firmware = ParseHexFile(firmwarePath);
             byte[] config = ParseHexFile(configPath);
 
             Console.WriteLine($"Firmware length: {firmware.Length}");
-            Console.WriteLine($"Config length: {config.Length}");
+            /*
+            Console.WriteLine("Firmware content:");
+            foreach (var b in firmware)
+            {
+                Console.WriteLine($"0x{b:X2}");
+            }
+            */
 
-            SioTest();
-            Restart();
-            LoadConfig(firmware, toNvm: false);
-            LoadConfig(config, toNvm: false);
-            Boot();
+            Console.WriteLine($"Config length: {config.Length}");
+            /*
+            Console.WriteLine("Config content:");
+            foreach (var b in config)
+            {
+                Console.WriteLine($"0x{b:X2}");
+            }
+            */
+
+            //return; // Early return for testing purposes
+
+            if ((result = SioTest()) != ResiltCode.OK) return result;
+            if ((result = Restart()) != ResiltCode.OK) return result;
+            if ((result = LoadConfig(firmware, toNvm: false)) != ResiltCode.OK) return result;
+            if ((result = LoadConfig(config, toNvm: false)) != ResiltCode.OK) return result;
+            if ((result = Boot()) != ResiltCode.OK) return result;
+
+            return ResiltCode.OK;
         }
 
-        public void BurnNvmPllSynth(string nvBootPath, string firmwarePath, string configPath)
+        public ResiltCode BurnNvmPllSynth(string nvBootPath, string firmwarePath, string configPath)
         {
+            ResiltCode result;
             byte[] nvBoot = ParseHexFile(nvBootPath);
             byte[] firmware = ParseHexFile(firmwarePath);
             byte[] config = ParseHexFile(configPath);
 
             Console.WriteLine($"NV Boot length: {nvBoot.Length}");
-            Console.WriteLine($"Firmware length: {firmware.Length}");
-            Console.WriteLine($"Config length: {config.Length}");
-
-            SioTest();
-            Restart();
-            LoadConfig(nvBoot, toNvm: false);
-            Boot();
-            LoadConfig(firmware, toNvm: true);
-            LoadConfig(config, toNvm: true);
-            VerifyNvmBurn();
-        }
-
-        public void SioTest()
-        {
-            Span<byte> testData = stackalloc byte[2] { 0xAB, 0xCD };
-            Span<byte> reply = stackalloc byte[8];
-
-            SendCommand(CMD_SIO_TEST, testData);
-            
-            Read(CMD_SIO_TEST, reply);
-
-            /*if (reply[1] != CMD_SIO_TEST || reply[2] != testData[0] || reply[3] != testData[1])
+            /*
+            Console.WriteLine("NV Boot content:");
+            foreach (var b in nvBoot)
             {
-                throw new InvalidOperationException("SIO Test failed: Echo response mismatch.");
-            }*/
+                Console.WriteLine($"0x{b:X2}");
+            }
+            */
 
-            Console.WriteLine("SIO Test passed.");
+            Console.WriteLine($"Firmware length: {firmware.Length}");
+            /*
+            Console.WriteLine("Firmware content:");
+            foreach (var b in firmware)
+            {
+                Console.WriteLine($"0x{b:X2}");
+            }
+            */
+
+            Console.WriteLine($"Config length: {config.Length}");
+            /*
+            Console.WriteLine("Config content:");
+            foreach (var b in config)
+            {
+                Console.WriteLine($"0x{b:X2}");
+            }
+            */
+
+            //return; // Early return for testing purposes
+
+            if ((result = SioTest()) != ResiltCode.OK) return result;
+            if ((result = Restart()) != ResiltCode.OK) return result;
+            if ((result = LoadConfig(nvBoot, toNvm: false)) != ResiltCode.OK) return result;
+            if ((result = Boot()) != ResiltCode.OK) return result;
+            if ((result = LoadConfig(firmware, toNvm: true)) != ResiltCode.OK) return result;
+            if ((result = LoadConfig(config, toNvm: true)) != ResiltCode.OK) return result;
+            if ((result = VerifyNvmBurn()) != ResiltCode.OK) return result;
+
+            return ResiltCode.OK;
         }
 
-        public void Restart()
+        public ResiltCode SioTest()
         {
-            SendCommand(CMD_RESTART);
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[5];
+            Span<byte> parse_buffer = rd_buffer.Slice(1);
+            Span<byte> testData = stackalloc byte[2] { 0xAB, 0xCD };
+
+            result = SendReceiveWaitCts(CMD_SIO_TEST, testData, rd_buffer, 500);
+
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                return result;
+            }
+
+            if ((parse_buffer[0] != CTS_REPLY) || (parse_buffer[1] != CMD_SIO_TEST) || (parse_buffer[2] != testData[0]) || (parse_buffer[3] != testData[1]))
+            {
+                Console.WriteLine("SIO Test failed!");
+                return ResiltCode.InvalidResponse;
+            }
+
+            Console.WriteLine("SIO Test passed!");
+            return ResiltCode.OK;
+        }
+
+        public ResiltCode Restart()
+        {
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[2];
+            Span<byte> testData = stackalloc byte[1] { 0x00 };
+
+            result = SendReceiveWaitCts(CMD_RESTART, testData, rd_buffer, 5000);
+
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                return result;
+            }
+
             Console.WriteLine("Device restarted.");
+            return ResiltCode.OK;
         }
 
-        public void Boot()
+        public ResiltCode Boot()
         {
-            SendCommand(CMD_BOOT);
+            ResiltCode result;
+            Span<byte> rd_buffer = stackalloc byte[2];
+            byte[] emptyData = new byte[0];
+
+            result = SendReceiveWaitCts(CMD_BOOT, emptyData, rd_buffer, 1000);
+
+            if (result != ResiltCode.OK)
+            {
+                Console.WriteLine($"SendReceive error: {result}");
+                return result;
+            }
+
             Console.WriteLine("Device boot command sent.");
-        }
-
-        public bool VerifyNvm()
-        {
-            return VerifyNvmBurn();
-        }
-
-        public bool CheckRefStatus()
-        {
-            return CheckReferenceStatus();
-        }
-
-        public double GetTemperature()
-        {
-            return ReadTemperature();
+            return ResiltCode.OK;
         }
 
         // Helper Methods
@@ -286,7 +402,7 @@ namespace BringUp_Control
                         line = line.Substring(1); // Remove the colon
                     }
 
-                    
+
 
                     if (line.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                         line = line.Substring(2);
@@ -299,33 +415,6 @@ namespace BringUp_Control
                 return memoryStream.ToArray();
             }
         }
-
-
-        public string LoadConfigFile()
-        {
-            string filepath = string.Empty;
-            using (OpenFileDialog ftfile = new OpenFileDialog())
-            {
-                try
-                {
-                    ftfile.InitialDirectory = Directory.GetCurrentDirectory();
-                    ftfile.Filter = "Hex Files (*.hex)|*.hex|Bin Files (*.bin)|*.bin|All files (*.*)|*.*";
-                    ftfile.FilterIndex = 3;
-
-                    if (ftfile.ShowDialog() == DialogResult.OK)
-                    {                      
-
-                        filepath = ftfile.FileName;                        
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Warning");
-
-                }
-
-                return filepath;
-            }
-        }
     }
 }
+
