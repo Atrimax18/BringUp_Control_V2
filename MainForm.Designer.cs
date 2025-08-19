@@ -54,9 +54,6 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
-            this.label46 = new System.Windows.Forms.Label();
-            this.comboMAINDAC = new System.Windows.Forms.ComboBox();
-            this.label45 = new System.Windows.Forms.Label();
             this.Cmd_Stop_STPL = new System.Windows.Forms.Button();
             this.Cmd_DAC_Reg_Read = new System.Windows.Forms.Button();
             this.label44 = new System.Windows.Forms.Label();
@@ -172,16 +169,9 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label48 = new System.Windows.Forms.Label();
-            this.label49 = new System.Windows.Forms.Label();
-            this.label50 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.label51 = new System.Windows.Forms.Label();
+            this.label45 = new System.Windows.Forms.Label();
+            this.comboMAINDAC = new System.Windows.Forms.ComboBox();
+            this.label46 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -496,16 +486,6 @@
             // 
             // tabAD9175
             // 
-            this.tabAD9175.Controls.Add(this.label51);
-            this.tabAD9175.Controls.Add(this.comboBox5);
-            this.tabAD9175.Controls.Add(this.comboBox4);
-            this.tabAD9175.Controls.Add(this.label50);
-            this.tabAD9175.Controls.Add(this.label49);
-            this.tabAD9175.Controls.Add(this.label48);
-            this.tabAD9175.Controls.Add(this.label47);
-            this.tabAD9175.Controls.Add(this.comboBox3);
-            this.tabAD9175.Controls.Add(this.comboBox2);
-            this.tabAD9175.Controls.Add(this.comboBox1);
             this.tabAD9175.Controls.Add(this.label46);
             this.tabAD9175.Controls.Add(this.comboMAINDAC);
             this.tabAD9175.Controls.Add(this.label45);
@@ -534,36 +514,6 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(705, 17);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(98, 16);
-            this.label46.TabIndex = 35;
-            this.label46.Text = "Register List:";
-            // 
-            // comboMAINDAC
-            // 
-            this.comboMAINDAC.FormattingEnabled = true;
-            this.comboMAINDAC.Items.AddRange(new object[] {
-            "DAC0",
-            "DAC1"});
-            this.comboMAINDAC.Location = new System.Drawing.Point(723, 369);
-            this.comboMAINDAC.Name = "comboMAINDAC";
-            this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
-            this.comboMAINDAC.TabIndex = 34;
-            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
-            // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(720, 350);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(124, 16);
-            this.label45.TabIndex = 33;
-            this.label45.Text = "MAINDAC_PAGE";
             // 
             // Cmd_Stop_STPL
             // 
@@ -616,7 +566,7 @@
             // 
             // Cmd_STPL
             // 
-            this.Cmd_STPL.Location = new System.Drawing.Point(723, 465);
+            this.Cmd_STPL.Location = new System.Drawing.Point(723, 483);
             this.Cmd_STPL.Name = "Cmd_STPL";
             this.Cmd_STPL.Size = new System.Drawing.Size(112, 45);
             this.Cmd_STPL.TabIndex = 27;
@@ -630,18 +580,18 @@
             this.groupBox7.Controls.Add(this.label42);
             this.groupBox7.Controls.Add(this.numericDAC_FS);
             this.groupBox7.Controls.Add(this.label41);
-            this.groupBox7.Location = new System.Drawing.Point(384, 524);
+            this.groupBox7.Location = new System.Drawing.Point(384, 513);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(328, 104);
+            this.groupBox7.Size = new System.Drawing.Size(328, 115);
             this.groupBox7.TabIndex = 26;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "FULL SCALE (Ioutfs):";
             // 
             // Cmd_UpdateFS_Ioutfs
             // 
-            this.Cmd_UpdateFS_Ioutfs.Location = new System.Drawing.Point(82, 59);
+            this.Cmd_UpdateFS_Ioutfs.Location = new System.Drawing.Point(82, 63);
             this.Cmd_UpdateFS_Ioutfs.Name = "Cmd_UpdateFS_Ioutfs";
-            this.Cmd_UpdateFS_Ioutfs.Size = new System.Drawing.Size(100, 37);
+            this.Cmd_UpdateFS_Ioutfs.Size = new System.Drawing.Size(100, 46);
             this.Cmd_UpdateFS_Ioutfs.TabIndex = 27;
             this.Cmd_UpdateFS_Ioutfs.Text = "Set Value";
             this.Cmd_UpdateFS_Ioutfs.UseVisualStyleBackColor = true;
@@ -1813,141 +1763,35 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // comboBox1
+            // label45
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "0x00",
-            "0x01",
-            "0x02",
-            "0x03",
-            "0x04",
-            "0x05",
-            "0x06",
-            "0x07",
-            "0x08",
-            "0x09",
-            "0x0A",
-            "0x0B",
-            "0x0C",
-            "0x0D",
-            "0x0E",
-            "0x0F",
-            "0x10",
-            "0x11",
-            "0x12",
-            "0x13",
-            "0x14",
-            "0x15"});
-            this.comboBox1.Location = new System.Drawing.Point(393, 480);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(58, 24);
-            this.comboBox1.TabIndex = 36;
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(720, 350);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(124, 16);
+            this.label45.TabIndex = 33;
+            this.label45.Text = "MAINDAC_PAGE";
             // 
-            // comboBox2
+            // comboMAINDAC
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
-            "0",
-            "1"});
-            this.comboBox2.Location = new System.Drawing.Point(466, 480);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(44, 24);
-            this.comboBox2.TabIndex = 37;
+            this.comboMAINDAC.FormattingEnabled = true;
+            this.comboMAINDAC.Items.AddRange(new object[] {
+            "DAC0",
+            "DAC1"});
+            this.comboMAINDAC.Location = new System.Drawing.Point(723, 369);
+            this.comboMAINDAC.Name = "comboMAINDAC";
+            this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
+            this.comboMAINDAC.TabIndex = 34;
+            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
             // 
-            // comboBox3
+            // label46
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3"});
-            this.comboBox3.Location = new System.Drawing.Point(516, 480);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(41, 24);
-            this.comboBox3.TabIndex = 38;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(390, 461);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(42, 16);
-            this.label47.TabIndex = 39;
-            this.label47.Text = "data:";
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(463, 461);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(35, 16);
-            this.label48.TabIndex = 40;
-            this.label48.Text = "link:";
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(513, 461);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(27, 16);
-            this.label49.TabIndex = 41;
-            this.label49.Text = "ch:";
-            // 
-            // label50
-            // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(563, 461);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(24, 16);
-            this.label50.TabIndex = 42;
-            this.label50.Text = "iq:";
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Items.AddRange(new object[] {
-            "0",
-            "1"});
-            this.comboBox4.Location = new System.Drawing.Point(566, 480);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(44, 24);
-            this.comboBox4.TabIndex = 43;
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15"});
-            this.comboBox5.Location = new System.Drawing.Point(630, 480);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(51, 24);
-            this.comboBox5.TabIndex = 44;
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(627, 461);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(62, 16);
-            this.label51.TabIndex = 45;
-            this.label51.Text = "sample:";
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(705, 17);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(98, 16);
+            this.label46.TabIndex = 35;
+            this.label46.Text = "Register List:";
             // 
             // MainForm
             // 
@@ -2158,16 +2002,6 @@
         private System.Windows.Forms.ComboBox comboMAINDAC;
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label46;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Label label47;
-        private System.Windows.Forms.Label label48;
-        private System.Windows.Forms.Label label49;
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.Label label50;
-        private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.Label label51;
     }
 }
 
