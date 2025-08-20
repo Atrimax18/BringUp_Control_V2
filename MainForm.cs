@@ -1593,13 +1593,14 @@ namespace BringUp_Control
                     return;
                 }
 
-                string fpgavector_file = fpga.LoadVectorDataCsv();
+                string fpgavector_file = fpga.LoadVectorDataCsv(); //load vector file
                 LogStatus($"FPGA Vectors file loaded");
 
                 if (!string.IsNullOrEmpty(fpgavector_file))
                 {
                     try
                     {
+                        // load data from vector file
                         fpga.LoadVectorFile(fpgavector_file);
                         LogStatusFPGA($"FPGA vector file loaded: {fpgavector_file}");
                     }
