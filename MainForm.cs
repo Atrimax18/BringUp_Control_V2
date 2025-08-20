@@ -2130,7 +2130,7 @@ namespace BringUp_Control
             )
         {
             // Step 3: Set expected reference sample (shift left by 4 bits)
-            ushort shiftedSample = (ushort)(expectedSample << 4);
+            ushort shiftedSample = (ushort)expectedSample;// (ushort)(expectedSample << 4);
             byte refMSB = (byte)((shiftedSample >> 8) & 0xFF);
             byte refLSB = (byte)(shiftedSample & 0xFF);
             ad9175.WriteRegister(REG_SHORT_TPL_TEST_2, refMSB);
