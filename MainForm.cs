@@ -1794,7 +1794,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabRFLine)
             {
-                hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
+                 hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                 if (checkAmp2.CheckState == CheckState.Checked)
                 {
