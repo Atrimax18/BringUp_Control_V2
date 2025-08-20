@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static BringUp_Control.AD9175_DAC;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
@@ -63,7 +64,9 @@ namespace BringUp_Control
         Ft4222Native FTDriver = new Ft4222Native();
         FtdiInterfaceManager InterfaceManager; // FTDI SPI interface manager
         FtdiInterfaceManager InterfaceManagerFPGA; // FTDI SPI interface manager for FPGA
-
+                                                   // Regex to match 0x... hex values
+        
+        string stpl_data = string.Empty; // STPL data 
 
 
         DataTable DT4368 = new DataTable();
@@ -75,7 +78,7 @@ namespace BringUp_Control
 
         bool driverflag = false;    // SPI Driver FLAG, FTDI init
         bool usbflag = false;       // USB CONNECTED FLAG
-        
+
         bool TXline_flag = false;   // TX line up values upload flag
         private bool _disposed;
 
@@ -106,8 +109,8 @@ namespace BringUp_Control
         private string start_freq = string.Empty; // Start frequency for DAQ
         private string stop_freq = string.Empty;  // Stop frequency for DAQ
         private string step_freq = string.Empty;  // Step frequency for DAQ
-        
 
+        private static readonly Regex HexRegex = new Regex(@"^0x[0-9A-Fa-f]+$", RegexOptions.Compiled);
         private static readonly Regex HexBytePattern = new Regex(@"^0x[0-9A-Fa-f]{2}$");
         private static readonly Regex HexU16Pattern = new Regex(@"^0x[0-9A-Fa-f]{4}$");
         private static readonly Regex HexU32Pattern = new Regex(@"^0x[0-9A-Fa-f]{8}$");
@@ -336,13 +339,13 @@ namespace BringUp_Control
                     _spiLocId = locfirst;    //INTERFACE FT4222 A bringup board
                     _gpioLocId = locsecond;  //INTERFACE FT4222 B bringup board
 
-                    
+
                     InterfaceManager = new FtdiInterfaceManager(_spiLocId); // Initialize FTDI interface manager
                     InterfaceManager.BusModeChanged += OnBusModeChanged;
 
 
 
-                    
+
                     // ************************* Dispose if already has init ******************************************
 
                     fpga?.Dispose();
@@ -483,7 +486,7 @@ namespace BringUp_Control
 
             //InterfaceManager.Dispose();
             // 5) close the app – use Exit() so Application.Run() unwinds cleanly
-            Application.Exit();
+            System.Windows.Forms.Application.Exit();
         }
         /*
         protected override void WndProc(ref Message m)
@@ -550,6 +553,14 @@ namespace BringUp_Control
             string hexPart = input.Substring(4);
             return ushort.TryParse(hexPart, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
 
+        }
+
+        public static ushort HexStringToUShort(string hexString)
+        {
+            if (hexString.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                hexString = hexString.Substring(2); // remove "0x"
+
+            return Convert.ToUInt16(hexString, 16); // base 16 = hex
         }
 
         private static bool TryParseHexU16_sec(string input, out ushort value)
@@ -646,7 +657,7 @@ namespace BringUp_Control
 
                 textAD4368_Value.Focus();
             }
-            
+
         }
 
         private void Cmd_WriteReg_AD4368_Click(object sender, EventArgs e)
@@ -689,7 +700,7 @@ namespace BringUp_Control
                         // If the register is the power register, check its status
                         CheckPowerRegister(RF_PLL_POWER_REG);
                         RFLockSampling(RF_PLL_LKDET_REG, 0);
-                    }                   
+                    }
 
                 }
                 else
@@ -802,7 +813,7 @@ namespace BringUp_Control
 
                 foreach (DataRow row in DT4368.Rows)
                 {
-                    if (row["Register"].ToString() == "0x002B")                    
+                    if (row["Register"].ToString() == "0x002B")
                     {
                         row["Value"] = $"0x{powerreturn:X2}";
                         row["Value byte"] = powerreturn;
@@ -816,7 +827,7 @@ namespace BringUp_Control
 
         private void Cmd_PowerONOFF_Click(object sender, EventArgs e)
         {
-            if(selectedTab == tabAD4368)
+            if (selectedTab == tabAD4368)
             {
                 if (Cmd_PowerONOFF.Text.Equals("RF POWER ON"))
                 {
@@ -832,7 +843,7 @@ namespace BringUp_Control
                     CheckPowerRegister(RF_PLL_POWER_REG);
                     RFLockSampling(RF_PLL_LKDET_REG, 0);
                 }
-            }            
+            }
         }
 
         private void Cmd_ReadAll_AD4368_Click(object sender, EventArgs e)
@@ -903,7 +914,7 @@ namespace BringUp_Control
                 }
 
 
-                
+
             }
         }
 
@@ -949,7 +960,7 @@ namespace BringUp_Control
 
             }
             return bitValue;
-        }         
+        }
 
         private void Cmd_Export9175_file_Click(object sender, EventArgs e)
         {
@@ -1043,10 +1054,10 @@ namespace BringUp_Control
                 gpio_control.Write(GPIO3, true);
                 //fpga.Init(ftDev, InterfaceManager);
                 fpga.Init(ftFPGA, InterfaceManagerFPGA); // Initialize FPGA with the current FTDI device
-                
-                if(DTFPGA.Rows.Count > 0)
+
+                if (DTFPGA.Rows.Count > 0)
                 {
-                    
+
                 }
                 else if (DTFPGA.Rows.Count == 0)
                 {
@@ -1056,7 +1067,7 @@ namespace BringUp_Control
                     LogStatusFPGA($"JESD204B register file loaded: {jesd_file}");
 
                 }
-                
+
                 textFPGA_Address.Focus();
             }
             else if (selectedTab == tabAD9175)
@@ -1066,13 +1077,13 @@ namespace BringUp_Control
                 ComboDAC_index.SelectedIndex = 0; // Set default index to 0
                 comboPRBS.SelectedIndex = 0; // Set default index to 0
 
-                
+
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 ad9175.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
 
                 if (DT9175.Rows.Count > 0)
-                { 
+                {
                     ad9175.ReadAllRegisters();
                 }
                 else if (DT9175.Rows.Count == 0)
@@ -1080,9 +1091,9 @@ namespace BringUp_Control
                     DT9175 = ad9175.InitDataTableDAC();
                     dataGridViewAD9175.DataSource = DT9175;
                     ad9175.LoadRegisterFile(daq_reg_file);
-                }         
-                
-                
+                }
+
+
                 comboRegisters9175.Focus();
             }
             else if (selectedTab == tabAD4368)
@@ -1098,7 +1109,7 @@ namespace BringUp_Control
                     Cmd_ReadAll_AD4368.Enabled = false;
                     Cmd_Export_AD4368_File.Enabled = false;
                 }
-                
+
 
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
@@ -1111,7 +1122,7 @@ namespace BringUp_Control
             }
             else if (selectedTab == tabSi5518)
             {
-                
+
                 gpio_control.Write(GPIO3, false);
                 ftDev = InterfaceManager.GetSpi();
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
@@ -1123,10 +1134,10 @@ namespace BringUp_Control
                 //gpio_control.Write(GPIO3, false);
                 //ftDev = InterfaceManager.GetSpi(); // Get current SPI interface
                 ad4368.Init(ftDev, i2cBus, IO_Exp, InterfaceManager); // Initialize AD4368 with the current FTDI device
-            }        
-            
-            
-            
+            }
+
+
+
         }
 
         // textBox for PLL4368 specific register value update, after pressing Enter focus will change to Write Register button
@@ -1151,7 +1162,7 @@ namespace BringUp_Control
 
         }
 
-        
+
 
         private void Cmd_Export_AD4368_File_Click(object sender, EventArgs e)
         {
@@ -1161,10 +1172,10 @@ namespace BringUp_Control
 
         private void Cmd_WriteAll_AD4368_Click(object sender, EventArgs e)
         {
-            
+
             if (selectedTab == tabAD4368)
                 WriteToRFPLL();
-             
+
         }
 
 
@@ -1208,7 +1219,7 @@ namespace BringUp_Control
 
                     comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
                     LogStatus("DAC9175 reinitialized on SPI CS1");
-                    
+
 
                     ad9175.DAC9175_InitEngine(dac_ini_file);
                     labelFilePath9175.Text = $"DAC File Path: {dac_ini_file}";
@@ -1302,8 +1313,8 @@ namespace BringUp_Control
                 else
                 {
                     double voltdata;
-                   
-                    
+
+
                     ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
                     Thread.Sleep(10);
                     ad7091.Init(ftDev, i2cBus, IO_Exp, InterfaceManager, out voltdata);
@@ -1400,7 +1411,7 @@ namespace BringUp_Control
                 }
 
                 try
-                {                   
+                {
                     uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
                     LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                     textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
@@ -1413,13 +1424,13 @@ namespace BringUp_Control
             }
         }
 
-        public static uint  HexStringToUInt(string hex)
+        public static uint HexStringToUInt(string hex)
         {
             if (hex.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 hex = hex.Substring(2);
 
             return Convert.ToUInt32(hex, 16);
-        }        
+        }
 
         public static byte[] BuildSpiWriteBuffer(byte[] addressBytes, byte[] valueBytes)
         {
@@ -1482,7 +1493,7 @@ namespace BringUp_Control
                 }
             }
         }
-                
+
 
         private void TextFPGA_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -1490,8 +1501,8 @@ namespace BringUp_Control
             {
                 if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
-                    
-                    if(IsValidHex(textFPGA_Value.Text))
+
+                    if (IsValidHex(textFPGA_Value.Text))
                     {
                         fpga_data = textFPGA_Value.Text;
                         Cmd_FPGA_Write.Focus();
@@ -1550,10 +1561,7 @@ namespace BringUp_Control
 
         }
 
-        private void Cmd_LoadCounter_Click(object sender, EventArgs e)
-        {
-            
-        }
+        
 
         private void LogStatusFPGA(string message)
         {
@@ -1579,7 +1587,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                if(fpga == null)
+                if (fpga == null)
                 {
                     MessageBox.Show("FPGA interface not initialized. Please reconnect the FTDI device.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -1605,9 +1613,6 @@ namespace BringUp_Control
                 {
                     LogStatusFPGA("No FPGA vector file selected.");
                 }
-
-
-
             }
 
         }
@@ -1664,7 +1669,7 @@ namespace BringUp_Control
                 Read_FPGA_Registers(HexStringToUInt(startaddress), HexStringToUInt(stopaaddress));
             }*/
 
-        }        
+        }
 
         private void ComboDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1675,7 +1680,7 @@ namespace BringUp_Control
             }
         }
 
-        
+
 
         private void Cmd_UpdateTX_Values_Click(object sender, EventArgs e)
         {
@@ -1868,12 +1873,9 @@ namespace BringUp_Control
             ad9175.PRBS_Test(prmbs_value);
         }
 
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         
+
+
         private void Cmd_I2C_Write_Click(object sender, EventArgs e)
         {
 
@@ -1916,7 +1918,7 @@ namespace BringUp_Control
 
                     labelFilePathAD4368.Text = $"File Path: {rf_pll_ini_file}";
                     try
-                    {                       
+                    {
 
                         ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF
                         LogStatus("AD4368 RF PLL reinitialized on SPI CS1");
@@ -1984,7 +1986,7 @@ namespace BringUp_Control
 
 
 
-                if(numericDAC_FS.Value == numericDAC_FS.Minimum)
+                if (numericDAC_FS.Value == numericDAC_FS.Minimum)
                 {
                     MessageBox.Show("Status: MAX VALUE REACHED!", "Warning");
                     dac_fs_value = (float)numericDAC_FS.Minimum; // set dac fs value for 25.977 mA
@@ -1997,8 +1999,8 @@ namespace BringUp_Control
 
         private void Cmd_STPL_Click(object sender, EventArgs e)
         {
-            byte sampind = 0x00;
-            ushort testdata = 0x0F;
+            //byte sampind = 0x00;
+            //ushort testdata = 0x0F;
 
             Cmd_STPL.Enabled = false; // Disable the button to prevent multiple clicks during the test
             _stplCancelToken = new CancellationTokenSource();
@@ -2009,6 +2011,59 @@ namespace BringUp_Control
             {
                 if (ad9175 != null)
                 {
+
+                    if (stpl_data != string.Empty && comboBox2.SelectedIndex > -1 && comboBox3.SelectedIndex > -1 && comboBox4.SelectedIndex > -1 && comboBox5.SelectedIndex > -1)
+                    {
+                        // Step 1: Initialize STPL test parameters
+                        ushort testdata = HexStringToUShort(stpl_data); // Example: 0x0F = 15 in decimal, will be shifted by 4 bits (x16)
+                        byte link = (byte)comboBox2.SelectedIndex;
+                        byte ch = (byte)comboBox3.SelectedIndex;
+                        byte iq = (byte)comboBox4.SelectedIndex;
+                        byte sampind = (byte)comboBox5.SelectedIndex;
+
+
+
+                        Task.Run(() =>
+                        {
+                            try
+                            {
+                                if (token.IsCancellationRequested)
+                                    return;
+
+                                RunSTPLTest(testdata, link, ch, iq, sampind);
+                                // LogStatus must run on the UI thread
+                                BeginInvoke(new Action(() =>
+                                {
+                                    LogStatus($"STPL Test completed for Link: {link}, Channel: {ch}, IQ Path: {iq}, Sample Index: 0x{sampind:X2}");
+                                }));
+
+                            }
+                            catch (Exception ex)
+                            {
+                                BeginInvoke(new Action(() =>
+                                {
+                                    LogStatus($"STPL Test failed with error: {ex.Message}");
+                                }));
+
+                            }
+                            finally
+                            {
+                                BeginInvoke(new Action(() =>
+                                {
+
+                                    Cmd_STPL.Enabled = true; // Re-enable the button after the test completes
+                                    Cmd_Stop_STPL.Enabled = false; // Disable the stop button
+                                }));
+                            }
+                        }, token);
+
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("CHECK IF All values are correct and not empty!!!", "Warning");
+                    }
                     /*
                     Task.Run(() =>
                     {
@@ -2056,14 +2111,14 @@ namespace BringUp_Control
                             }));
                         }                            
                         
-                    }, token);  */                 
-                    
+                    }, token);  */
+
                 }
                 else
-                {                    
+                {
                     LogStatus("DAC Handle is not initialized.");
                 }
-            }            
+            }
         }
 
         void RunSTPLTest(
@@ -2113,10 +2168,10 @@ namespace BringUp_Control
             LogStatus($"Result value: 0x{result:X2}");
 
             if (fail)
-                LogStatus("STPL Test FAILED.");                
+                LogStatus("STPL Test FAILED.");
             else
                 LogStatus("STPL Test PASSED.");
-            
+
         }
 
         private void Cmd_StartSweep_Click(object sender, EventArgs e)
@@ -2191,11 +2246,11 @@ namespace BringUp_Control
                             ad9175.Calibration_NCO(ComboDAC_index.SelectedIndex, freq, (int)numericTone_Amplitude.Value);
                             Thread.Sleep((int)numericTime.Value); // milliseconds
                         }
-                        
+
                     }
 
 
-                        
+
                 }
                 else
                 {
@@ -2222,7 +2277,7 @@ namespace BringUp_Control
                 numericTone_Amplitude.Enabled = true;
                 numericTime.Enabled = true;
             }
-                
+
         }
 
         //daq combobox for dac0/1
@@ -2301,7 +2356,7 @@ namespace BringUp_Control
                 //string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
                 int selectedHex = Convert.ToInt32(daq_address.Substring(2), 16); // Convert hex string to int
                 byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
-                textDAC9175_Value.Text = $"0x{valbyte:X2}";                
+                textDAC9175_Value.Text = $"0x{valbyte:X2}";
             }
         }
 
@@ -2324,7 +2379,7 @@ namespace BringUp_Control
                             // If sweep is enabled, focus on stop frequency control
                             textStop.Focus();
                         }
-                        
+
                     }
                     else
                     {
@@ -2401,11 +2456,11 @@ namespace BringUp_Control
             uint deft = fpga.SpiReadByName("container_version");
         }
 
-        
+
 
         private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
-            
+
 
             fpga.WriteReadFPGA();
         }
@@ -2531,7 +2586,7 @@ namespace BringUp_Control
 
                     if (MAIN_DAC == 0)
                     {
-                        ad9175.WriteRegister(0x0008, 0x40 );
+                        ad9175.WriteRegister(0x0008, 0x40);
                         LogStatus($"Main DAC set to DAC0");
                     }
                     else
@@ -2539,14 +2594,14 @@ namespace BringUp_Control
                         ad9175.WriteRegister(0x0008, 0x80);
                         LogStatus($"Main DAC set to DAC0");
                     }
-                       
+
                 }
                 else
                 {
                     LogStatus("AD9175 Handle is not initialized.");
-                }   
+                }
 
-                
+
             }
         }
 
@@ -2558,8 +2613,8 @@ namespace BringUp_Control
                 int dac_num = comboMAINDAC.SelectedIndex; // Get the selected DAC index from the combo box
 
                 LogStatus($"DAC {dac_num} registers read successfully.");
-            }           
-            
+            }
+
         }
 
         private void Select_Dir_For_Burn_SkyPLL_Click(object sender, EventArgs e)
@@ -2784,6 +2839,56 @@ namespace BringUp_Control
             }
 
             MessageBox.Show("NVM burn finished, please perform a power cycle.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static bool RegexIsValidHex(string input)
+        {
+            return HexRegex.IsMatch(input);
+        }
+
+        private void textSTPL_Data_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+
+            if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textSTPL_Data.Text))
+            {
+                // If it's the first char, only '0' is allowed
+                if (textSTPL_Data.Text.Length == 0 && e.KeyChar != '0')
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                // If it's the second char, only 'x' or 'X' is allowed
+                if (textSTPL_Data.Text.Length == 1 && (e.KeyChar != 'x' && e.KeyChar != 'X'))
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                // After "0x", allow hex digits only
+                if (textSTPL_Data.Text.Length >= 2 && !Uri.IsHexDigit(e.KeyChar))
+                {
+                    e.Handled = true;
+                }
+
+                if (RegexIsValidHex(textSTPL_Data.Text))
+                {
+                    stpl_data = textSTPL_Data.Text;
+                    comboBox2.Focus(); // Move focus to the next control
+                }                   
+                else
+                {
+                    textSTPL_Data.Clear();
+                    textSTPL_Data.Focus();
+                    stpl_data = string.Empty;
+                    MessageBox.Show("The STPL data is not correct!", "Warning");
+                }
+
+
+
+                
+            }
         }
     }
 }
