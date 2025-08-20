@@ -1035,8 +1035,7 @@ namespace BringUp_Control
                     hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
 
                     hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass1);
-
-                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, txLineData.bypass2);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP2, txLineData.bypass2);
                     TXline_flag = true; // Set flag to true after initialization
                 }
                 else
@@ -1046,7 +1045,7 @@ namespace BringUp_Control
                     // Reinitialize HMC8414 if already initialized
                     hmc8414.Init(i2cBus, IO_Exp, InterfaceManager);
                     hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, checkAmp1.Checked);
-                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP1, checkAmp2.Checked);
+                    hmc8414.SetAmplifier(HMC8414.ChipIndex.HMC8414_CHIP2, checkAmp2.Checked);
                 }
             }
             else if (selectedTab == tabFPGA)
