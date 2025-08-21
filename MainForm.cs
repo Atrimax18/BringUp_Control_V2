@@ -40,10 +40,10 @@ namespace BringUp_Control
 
 
         // Define register addresses
-        private const int REG_SHORT_TPL_TEST_0 = 0x032C;
-        private const int REG_SHORT_TPL_TEST_1 = 0x032D;
-        private const int REG_SHORT_TPL_TEST_2 = 0x032E;
-        private const int REG_SHORT_TPL_TEST_3 = 0x032F;
+        private const int REG_SHORT_TPL_TEST_0 = 0x032C; // SHORT_TPL_CHAN_SEL - bits [3:2] - channel, SHORT_TPL_SP_SEL - bits [7:4] - select sample, SHORT_TPL_TEST_EN -bit 0, SHORT_TPL_TEST_RESET - bit 1[0/1]
+        private const int REG_SHORT_TPL_TEST_1 = 0x032D; // SHORT_TPL_REF_SP_LSB
+        private const int REG_SHORT_TPL_TEST_2 = 0x032E; // SHORT_TPL_REF_SP_MSB
+        private const int REG_SHORT_TPL_TEST_3 = 0x032F; // SHORT_TPL_LINK_SEL bit 7 DAC0/DAC1, SHORT_TPL_IQ_PATH_SEL - bit 6 IQ stream
 
 
         private CancellationTokenSource _playbackCancelToken;
