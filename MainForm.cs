@@ -2157,7 +2157,7 @@ namespace BringUp_Control
             ad9175.WriteRegister(REG_SHORT_TPL_TEST_0, tplTest0);
 
             // Step 10: Wait desired time
-            double desiredTimeSec = 10.0; // Example: 1 GSPS, BER = 1e-10
+            double desiredTimeSec = 1.0; // Example: 1 GSPS, BER = 1e-10
             LogStatus("Waiting for test to complete...");
             Thread.Sleep((int)(desiredTimeSec * 1000)); // Convert seconds to ms
 
