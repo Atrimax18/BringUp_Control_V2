@@ -2609,8 +2609,14 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD9175)
             {
-                ad9175.ReadAllRegisters();
                 int dac_num = comboMAINDAC.SelectedIndex; // Get the selected DAC index from the combo box
+
+                if (dac_num == 0)
+                    ad9175.WriteRegister(0x0008, 0x40); // Select DAC0
+                else
+                    ad9175.WriteRegister(0x0008, 0x80); // Select DAC1
+                
+                ad9175.ReadAllRegisters();               
 
                 LogStatus($"DAC {dac_num} registers read successfully.");
             }
