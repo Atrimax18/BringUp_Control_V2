@@ -363,8 +363,8 @@ namespace BringUp_Control
 
                 case OperationType.Sleep:
                     int timeval = cmd.Data;
-                    Console.WriteLine($"Sleeping for {timeval} milisecond(s)...");
-                    Thread.Sleep(timeval); //miliseconds
+                    Console.WriteLine($"Sleeping for {timeval*100} millisecond(s)...");
+                    Thread.Sleep(timeval * 100); //miliseconds
                     break;
 
                 case OperationType.Skip:
