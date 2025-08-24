@@ -352,6 +352,7 @@ namespace BringUp_Control
                     break;
 
                 case OperationType.Read:
+                    //Thread.Sleep(5000); // Delay to ensure the device is ready for reading
                     var result = ReadRegister(cmd.Address);
                     if (result == ErrorValue)
                     {
@@ -359,12 +360,17 @@ namespace BringUp_Control
                             $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
                         return -1;
                     }
+                    else
+                    {
+                        Console.WriteLine(
+                            $"Read value 0x{result:X2} at address 0x{cmd.Address:X4} - Read Function.");
+                    }
                     break;
 
                 case OperationType.Sleep:
                     int timeval = cmd.Data;
                     Console.WriteLine($"Sleeping for {timeval*100} millisecond(s)...");
-                    Thread.Sleep(timeval * 100); //miliseconds
+                    Thread.Sleep(timeval * 100); //milliseconds
                     break;
 
                 case OperationType.Skip:
