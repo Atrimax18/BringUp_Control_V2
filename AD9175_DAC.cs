@@ -613,6 +613,7 @@ namespace BringUp_Control
                     regDump.Rows.Add(reg, $"0x{val:X2}", val);
                     
                 }
+                Thread.Sleep(10); // Delay to ensure the device is ready for next reading
             }
 
             var sb = new StringBuilder();
