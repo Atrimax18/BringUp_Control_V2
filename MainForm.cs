@@ -1081,6 +1081,8 @@ namespace BringUp_Control
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 ad9175.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
 
+                ad9175.IO_DAC_IO_Reset();
+
                 if (DT9175.Rows.Count > 0)
                 {
                     ad9175.ReadAllRegisters();

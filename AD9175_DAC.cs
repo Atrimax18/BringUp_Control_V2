@@ -125,7 +125,7 @@ namespace BringUp_Control
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
             Thread.Sleep(10);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, true);
-
+            Thread.Sleep(10);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN0, true);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN1, true);
 
