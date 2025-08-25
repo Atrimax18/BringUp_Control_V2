@@ -595,6 +595,42 @@ namespace BringUp_Control
             return regaddresslist9175;
         }
 
+        public void Read_Dump(List<string> registers, string filepath)
+        {
+            //create datatable with 2 columns register, value
+            DataTable regDump = new DataTable();
+            regDump.Columns.Add("Register", typeof(string));
+            regDump.Columns.Add("Value", typeof(string));
+            regDump.Columns.Add("Value byte", typeof(byte));
+
+            //read all registers from the list
+            foreach (var reg in registers)
+            {
+                if (reg.StartsWith("0x") &&
+                    ushort.TryParse(reg.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out ushort regAddr))
+                {
+                    byte val = ReadRegister(regAddr);  // <-- Replace this with your actual SPI read method
+                    regDump.Rows.Add(reg, $"0x{val:X2}", val);
+                    
+                }
+            }
+
+            var sb = new StringBuilder();
+
+            // Write header
+            string[] columnNames = regDump.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray();
+            sb.AppendLine(string.Join(",", columnNames));
+
+            // Write rows
+            foreach (DataRow row in regDump.Rows)
+            {
+                string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
+                sb.AppendLine(string.Join(",", fields));
+            }
+
+            File.WriteAllText(filepath, sb.ToString());
+        }
+
 
         // DAC_Full scale measurement and output value calculation
         public int DAC_FullScale(int dac_index, float IOUTFS_mA)

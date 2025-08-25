@@ -1218,7 +1218,11 @@ namespace BringUp_Control
                     ad9175.IO_DAC_IO_Reset();
 
 
-                    comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
+                    //comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
+                    List<string> regDumpData = ad9175.LoadComboRegister9175();
+
+                    comboRegisters9175.DataSource = regDumpData;
+
                     LogStatus("DAC9175 reinitialized on SPI CS1");
 
 
@@ -1239,6 +1243,13 @@ namespace BringUp_Control
                         LogStatus($"DAC9175 initialization failed with error code: {code}");
                         MessageBox.Show($"DAC9175 initialization failed with error code: {code}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+
+                    // DUMP AREA for register
+                    string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
+                    string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+                    string filePath = Path.Combine(exeFolder, $"regDump_{timestamp}.csv");
+
+                    ad9175.Read_Dump(regDumpData, filePath);
 
 
                 }
