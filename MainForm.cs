@@ -1216,7 +1216,7 @@ namespace BringUp_Control
 
                     //Tested
                     ad9175.IO_DAC_IO_Reset();
-                    //Thread.Sleep(1000);
+                    
 
 
                     //comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();

@@ -357,10 +357,12 @@ namespace BringUp_Control
                 case OperationType.Read:
                     //Thread.Sleep(5000); // Delay to ensure the device is ready for reading
                     var result = ReadRegister(cmd.Address);
-                    if (result == ErrorValue)
+                    if (result != cmd.Data)
                     {
                         Console.Error.WriteLine(
                             $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
+
+                        MainForm.Instance.LogStatus($"DAC INIT FAILED!");
                         return -1;
                     }
                     else
@@ -373,7 +375,7 @@ namespace BringUp_Control
                 case OperationType.Sleep:
                     int timeval = cmd.Data;
                     Console.WriteLine($"Sleeping for {timeval*100} millisecond(s)...");
-                    Thread.Sleep(timeval * 100); //milliseconds
+                    Thread.Sleep(timeval * 10); //milliseconds
                     break;
 
                 case OperationType.Skip:

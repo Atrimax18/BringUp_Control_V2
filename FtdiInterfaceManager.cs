@@ -69,7 +69,7 @@ namespace BringUp_Control
             /*if (status == FTDI.FT_STATUS.FT_OK)
                 throw new InvalidOperationException($"Failed to open FTDI device{status}.");*/
 
-            _spi = new SpiDriver(_ftHandle, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_64, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01, false);
+            _spi = new SpiDriver(_ftHandle, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01, false);
             
             _currentMode = BusMode.SPI;
             BusModeChanged?.Invoke(this, "SPI Driver initialized"); 
