@@ -54,6 +54,7 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.textSTPL_Data = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
@@ -180,7 +181,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.textSTPL_Data = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -495,6 +496,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.button1);
             this.tabAD9175.Controls.Add(this.textSTPL_Data);
             this.tabAD9175.Controls.Add(this.label27);
             this.tabAD9175.Controls.Add(this.comboBox5);
@@ -529,6 +531,14 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // textSTPL_Data
+            // 
+            this.textSTPL_Data.Location = new System.Drawing.Point(389, 493);
+            this.textSTPL_Data.Name = "textSTPL_Data";
+            this.textSTPL_Data.Size = new System.Drawing.Size(58, 22);
+            this.textSTPL_Data.TabIndex = 42;
+            this.textSTPL_Data.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textSTPL_Data_KeyPress);
             // 
             // label27
             // 
@@ -1908,13 +1918,15 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // textSTPL_Data
+            // button1
             // 
-            this.textSTPL_Data.Location = new System.Drawing.Point(389, 493);
-            this.textSTPL_Data.Name = "textSTPL_Data";
-            this.textSTPL_Data.Size = new System.Drawing.Size(58, 22);
-            this.textSTPL_Data.TabIndex = 42;
-            this.textSTPL_Data.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textSTPL_Data_KeyPress);
+            this.button1.Location = new System.Drawing.Point(723, 229);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(112, 78);
+            this.button1.TabIndex = 43;
+            this.button1.Text = "REG DUMP";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MainForm
             // 
@@ -2134,6 +2146,7 @@
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.TextBox textSTPL_Data;
+        private System.Windows.Forms.Button button1;
     }
 }
 

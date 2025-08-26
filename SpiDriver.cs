@@ -59,15 +59,13 @@ namespace BringUp_Control
             _clkDiv = clkDiv;
 
             // open by USB‑location ID
-
             _ftHandle = handle;
             _ownsHandle = ownsHandle;
+            
+            byte ssoMap = 0x01; // use CS0
 
-
-            byte csPol = csActiveHigh;// (byte)(csActiveHigh ? 1 : 0);
-
-            Check(Ft4222Native.FT4222_SPIMaster_Init(_ftHandle, _spiMode, _clkDiv, _cpol, _cpha, csPol));
-            //_ownsHandle = ownsHandle;
+            Check(Ft4222Native.FT4222_SPIMaster_Init(_ftHandle, _spiMode, _clkDiv, _cpol, _cpha, ssoMap));
+            
         }
 
         public void Dispose()

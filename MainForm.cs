@@ -1081,7 +1081,7 @@ namespace BringUp_Control
                 i2cBus = InterfaceManager.GetI2c(); // Get current I²C interface
                 ad9175.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
 
-                ad9175.IO_DAC_IO_Reset();
+                //ad9175.IO_DAC_IO_Reset(); not relevant
 
                 if (DT9175.Rows.Count > 0)
                 {
@@ -1216,6 +1216,7 @@ namespace BringUp_Control
 
                     //Tested
                     ad9175.IO_DAC_IO_Reset();
+                    //Thread.Sleep(1000);
 
 
                     //comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
@@ -1230,12 +1231,13 @@ namespace BringUp_Control
                     labelFilePath9175.Text = $"DAC File Path: {dac_ini_file}";
 
                     int code;
-
+                    
                     try
                     {
                         code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
 
                         ad9175.ReadAllRegisters();
+                        LogStatus($"DAC9175 initialization completed!");
                     }
                     catch (Exception ex)
                     {
@@ -1243,15 +1245,6 @@ namespace BringUp_Control
                         LogStatus($"DAC9175 initialization failed with error code: {code}");
                         MessageBox.Show($"DAC9175 initialization failed with error code: {code}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-                    // DUMP AREA for register
-                    string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
-                    string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
-                    string filePath = Path.Combine(exeFolder, $"regDump_{timestamp}.csv");
-
-                    ad9175.Read_Dump(regDumpData, filePath);
-
-
                 }
             }
         }
@@ -1909,10 +1902,7 @@ namespace BringUp_Control
 
         }
 
-        private void Cmd_ReadDAC9175_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void Cmd_RFPLL_Init_Click(object sender, EventArgs e)
         {
@@ -2478,10 +2468,6 @@ namespace BringUp_Control
             fpga.WriteReadFPGA();
         }
 
-
-
-
-
         public static string ExtractLinkModePrefix(string input)
         {
             input = input.ToLower();
@@ -2908,6 +2894,22 @@ namespace BringUp_Control
 
                 
             }
+        }
+        //test button for DAC tests
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            List<string> register_list = new List<string>();
+            register_list = ad9175.LoadComboRegister9175();
+
+
+            // DUMP AREA for register
+            string exeFolder = AppDomain.CurrentDomain.BaseDirectory;
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmmss");
+            string filePath = Path.Combine(exeFolder, $"regDump_{timestamp}.csv");
+
+            ad9175.Read_Dump(register_list, filePath);
+            LogStatus($"Register dump saved to {filePath}");
         }
     }
 }

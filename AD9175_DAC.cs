@@ -88,6 +88,8 @@ namespace BringUp_Control
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, false);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
 
+            
+
             // Now direct CS from FTDI to the AD9175 is enabled and ready for SPI communication
 
             _ft = _interfaceManager.GetSpi(); // Get current SPI interface
@@ -120,12 +122,13 @@ namespace BringUp_Control
             _i2c = _interfaceManager.GetI2c(); // Get current I2C interface
             _ioExp.Init(_i2c); // Re-initialize IO Expander with the current I2C device
 
-            _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
+           // _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
 
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, false);
             Thread.Sleep(10);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_RSTn, true);
             Thread.Sleep(10);
+
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN0, true);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_DAC_TXEN1, true);
 
@@ -614,7 +617,7 @@ namespace BringUp_Control
                     regDump.Rows.Add(reg, $"0x{val:X2}", val);
                     
                 }
-                Thread.Sleep(10); // Delay to ensure the device is ready for next reading
+                //Thread.Sleep(10); // Delay to ensure the device is ready for next reading
             }
 
             var sb = new StringBuilder();
