@@ -67,7 +67,7 @@ namespace BringUp_Control
         private string _csvPath;
         private const byte ErrorValue = 0xFF; // error value from readregister function ???? check it !!!!
 
-        List<string> regaddresslist9175 = new List<string>();
+        
         DataTable dtAD9175 = new DataTable();
 
         public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
@@ -441,6 +441,7 @@ namespace BringUp_Control
 
         public List<string> LoadComboRegister9175()
         {
+            List<string> regaddresslist9175 = new List<string>();
             for (int i = 0x0000; i <= 0x07B5; i++)
             {
                 if (i == 0x0007 || i == 0x0009 || i == 0x0092 || i == 0x0093)
