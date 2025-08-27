@@ -38,9 +38,6 @@ namespace BringUp_Control
             if (_currentMode != BusMode.SPI)
             {
                 SwitchToSpi();
-                //MainForm.Instance.LogStatus("SPI Driver Loaded");
-                
-
             }
             return _spi;
         }
@@ -49,9 +46,7 @@ namespace BringUp_Control
         {
             if (_currentMode != BusMode.I2C)
             {
-                SwitchToI2c();
-                //MainForm.Instance.LogStatus("I2C Driver Loaded");
-                
+                SwitchToI2c();                                
             }
             return _i2c;
         }
@@ -65,9 +60,7 @@ namespace BringUp_Control
 
             if (status != FTDI.FT_STATUS.FT_OK || _ftHandle == IntPtr.Zero)
                 throw new IOException($"FT_OpenEx failed: {status}, Handle: {_ftHandle}");
-
-            /*if (status == FTDI.FT_STATUS.FT_OK)
-                throw new InvalidOperationException($"Failed to open FTDI device{status}.");*/
+            
 
             _spi = new SpiDriver(_ftHandle, Ft4222Native.FT4222_SPI_Mode.SPI_IO_SINGLE, Ft4222Native.FT4222_CLK.CLK_DIV_16, Ft4222Native.FT4222_SPICPOL.CLK_IDLE_LOW, Ft4222Native.FT4222_SPICPHA.CLK_LEADING, 0x01, false);
             
@@ -83,9 +76,7 @@ namespace BringUp_Control
             if (status != FTDI.FT_STATUS.FT_OK || _ftHandle == IntPtr.Zero)
                 throw new IOException($"FT_OpenEx failed: {status}, Handle: {_ftHandle}");
 
-
-            /*if (status == FTDI.FT_STATUS.FT_OK)
-                throw new InvalidOperationException($"Failed to open FTDI device{status}.");*/
+            
             _i2c = new i2cDriver(_ftHandle, 400, true);
             _currentMode = BusMode.I2C;
             BusModeChanged?.Invoke(this, "I2C Driver initialized");

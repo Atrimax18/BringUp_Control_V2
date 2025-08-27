@@ -182,6 +182,7 @@
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -496,6 +497,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.button2);
             this.tabAD9175.Controls.Add(this.button1);
             this.tabAD9175.Controls.Add(this.textSTPL_Data);
             this.tabAD9175.Controls.Add(this.label27);
@@ -1920,13 +1922,22 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(723, 229);
+            this.button1.Location = new System.Drawing.Point(723, 206);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 78);
+            this.button1.Size = new System.Drawing.Size(112, 45);
             this.button1.TabIndex = 43;
             this.button1.Text = "REG DUMP";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(723, 276);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(112, 39);
+            this.button2.TabIndex = 44;
+            this.button2.Text = "TEST FREQ";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -2147,6 +2158,7 @@
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.TextBox textSTPL_Data;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
