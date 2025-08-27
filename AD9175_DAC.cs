@@ -357,6 +357,7 @@ namespace BringUp_Control
                 case OperationType.Read:
                     //Thread.Sleep(5000); // Delay to ensure the device is ready for reading
                     var result = ReadRegister(cmd.Address);
+                    result &= 0x01;
                     if (result != cmd.Data)
                     {
                         Console.Error.WriteLine(
@@ -373,9 +374,9 @@ namespace BringUp_Control
                     break;
 
                 case OperationType.Sleep:
-                    int timeval = cmd.Data;
-                    Console.WriteLine($"Sleeping for {timeval*100} millisecond(s)...");
-                    Thread.Sleep(timeval * 10); //milliseconds
+                    int timeval = cmd.Data * 100; // LSB = 100 mSec
+                    Console.WriteLine($"Sleeping for {timeval} millisecond(s)...");
+                    Thread.Sleep(timeval); //milliseconds
                     break;
 
                 case OperationType.Skip:
