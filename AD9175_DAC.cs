@@ -248,30 +248,54 @@ namespace BringUp_Control
                             return_error = 0;
                         break;
                     case FunctionGroup.DLL_CONFIG:
-                        if (ProcessDllConfig(cmd) != 0) return return_error; // If DLL_CONFIG fails, return -1
+                        if (ProcessDllConfig(cmd) != 0) 
+                            return return_error; // If DLL_CONFIG fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.CALIBRATION:
-                        if (ProcessCalibration(cmd) != 0) return return_error; // If CALIBRATION fails, return -1 
+                        if (ProcessCalibration(cmd) != 0) 
+                            return return_error; // If CALIBRATION fails, return -1 
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.JESD204:
-                        if (ProcessJESD204(cmd) != 0) return return_error; // If JESD204 fails, return -1
+                        if (ProcessJESD204(cmd) != 0) 
+                            return return_error; // If JESD204 fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.CHANNEL_DATAPATH:
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DAC0:
-                        if (ProcessMainDacDatapathDac0(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DAC0 fails, return -1
+                        if (ProcessMainDacDatapathDac0(cmd) != 0) 
+                            return return_error; // If MAINDAC_DATAPATH_DAC0 fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC0:
-                        if (ProcessMainDac_DDCM_DAC0(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DDCM_DAC0  fails, return -1
+                        if (ProcessMainDac_DDCM_DAC0(cmd) != 0) 
+                            return return_error; // If MAINDAC_DATAPATH_DDCM_DAC0  fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DAC1:
-                        if (ProcessMainDacDatapathDac1(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DAC1 fails, return -1
+                        if (ProcessMainDacDatapathDac1(cmd) != 0) 
+                            return return_error; // If MAINDAC_DATAPATH_DAC1 fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC1:
-                        if (ProcessMainDac_DDCM_DAC1(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DDCM_DAC1  fails, return -1
+                        if (ProcessMainDac_DDCM_DAC1(cmd) != 0) 
+                            return return_error; // If MAINDAC_DATAPATH_DDCM_DAC1  fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.JESD204_SERDES:
-                        if (ProcessJESD204Serdes(cmd) != 0) return return_error;
+                        if (ProcessJESD204Serdes(cmd) != 0) 
+                            return return_error;
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.TRANSPORT_LAYER:
                         if (ProcessTransportLayer(cmd) != 0) 
