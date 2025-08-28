@@ -35,7 +35,8 @@ namespace BringUp_Control
             Read,
             Write,
             Sleep,
-            Skip
+            Skip,
+            Poll
         }
 
         public enum FunctionGroup
@@ -58,10 +59,17 @@ namespace BringUp_Control
 
         public class Command
         {
+            //minilal old fields
             public ushort Address { get; set; }
             public byte Data { get; set; }
             public OperationType OpType { get; set; }
             public FunctionGroup Group { get; set; }
+
+            // optional fields for future use
+            public byte Mask { get; set; } = 0xFF; // Default mask is 0xFF (all bits)
+            public byte CompareValue { get; set; } = 0x00; // Default compare value is 0x00
+            public int MaxRetries { get; set; } = 0; // Default max retries for polling 0 
+            public int DelayMs { get; set; } = 100; // Default delay between retries in milliseconds
         }        
 
         private string _csvPath;
@@ -219,59 +227,78 @@ namespace BringUp_Control
 
             var commands = LoadCommands(_csvPath);
 
+            int return_error = -1;
+            
+
             foreach (var cmd in commands)
             {
                 switch (cmd.Group)
                 {
 
                     case FunctionGroup.POWER_UP:
-                        if (ProcessPowerUp(cmd) != 0) return -1; // If PowerUp fails, return -1
+                        if (ProcessPowerUp(cmd) != 0) 
+                            return return_error; // If PowerUp fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.DAC_PLL:
-                        if (ProcessDacPll(cmd) != 0) return -1; // If DAC_PLL fails, return -1
+                        if (ProcessDacPll(cmd) != 0) 
+                            return return_error; // If DAC_PLL fails, return -1
+                        else
+                            return_error = 0;
                         break;
                     case FunctionGroup.DLL_CONFIG:
-                        if (ProcessDllConfig(cmd) != 0) return -1; // If DLL_CONFIG fails, return -1
+                        if (ProcessDllConfig(cmd) != 0) return return_error; // If DLL_CONFIG fails, return -1
                         break;
                     case FunctionGroup.CALIBRATION:
-                        if (ProcessCalibration(cmd) != 0) return -1; // If CALIBRATION fails, return -1 
+                        if (ProcessCalibration(cmd) != 0) return return_error; // If CALIBRATION fails, return -1 
                         break;
                     case FunctionGroup.JESD204:
-                        if (ProcessJESD204(cmd) != 0) return -1; // If JESD204 fails, return -1
+                        if (ProcessJESD204(cmd) != 0) return return_error; // If JESD204 fails, return -1
                         break;
                     case FunctionGroup.CHANNEL_DATAPATH:
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DAC0:
-                        if (ProcessMainDacDatapathDac0(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC0 fails, return -1
+                        if (ProcessMainDacDatapathDac0(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DAC0 fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC0:
-                        if (ProcessMainDac_DDCM_DAC0(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DDCM_DAC0  fails, return -1
+                        if (ProcessMainDac_DDCM_DAC0(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DDCM_DAC0  fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DAC1:
-                        if (ProcessMainDacDatapathDac1(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DAC1 fails, return -1
+                        if (ProcessMainDacDatapathDac1(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DAC1 fails, return -1
                         break;
                     case FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC1:
-                        if (ProcessMainDac_DDCM_DAC1(cmd) != 0) return -1; // If MAINDAC_DATAPATH_DDCM_DAC1  fails, return -1
+                        if (ProcessMainDac_DDCM_DAC1(cmd) != 0) return return_error; // If MAINDAC_DATAPATH_DDCM_DAC1  fails, return -1
                         break;
                     case FunctionGroup.JESD204_SERDES:
-                        if (ProcessJESD204Serdes(cmd) != 0) return -1;
+                        if (ProcessJESD204Serdes(cmd) != 0) return return_error;
                         break;
                     case FunctionGroup.TRANSPORT_LAYER:
-                        if (ProcessTransportLayer(cmd) != 0) return -1; // If TRANSPORT_LAYER fails, return -1
-                        break;
+                        if (ProcessTransportLayer(cmd) != 0) 
+                            return return_error; // If TRANSPORT_LAYER fails, return -1
+                        else
+                            return_error = 0;
+                            break;
                     case FunctionGroup.CLEANUP:
-                        if (ProcessCleanup(cmd) != 0) return -1; // If CLEANUP fails, return -1
+                        if (ProcessCleanup(cmd) != 0) return return_error; // If CLEANUP fails, return -1
                         break;
                     default:
                         //throw new InvalidOperationException($"Unknown function group: {cmd.Group}");
-                        return -99;
+                        return return_error;
 
                 }
             }
-            return 0; // Return 0 if all commands processed successfully
 
+            return return_error; // Return -1 if any command failed
+            
         }
 
+
+        // CSV TEMPLATE
+        // Address, Data, Operation, FunctionGroup
+        // 0x0000, 0x01, W, POWER_UP
+        // New Command format with optional fields for polling (P - polling Operational Type)
+        // Address, Data, Operation, FunctionGroup, Mask, MaxRetries, DelayMs
         private List<Command> LoadCommands(string path)
         {
             var list = new List<Command>();
@@ -363,13 +390,14 @@ namespace BringUp_Control
                         Console.Error.WriteLine(
                             $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
 
-                        MainForm.Instance.LogStatus($"DAC INIT FAILED!");
+                        MainForm.Instance.LogStatus($"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
                         return -1;
                     }
                     else
                     {
                         Console.WriteLine(
                             $"Read value 0x{result:X2} at address 0x{cmd.Address:X4} - Read Function.");
+                        MainForm.Instance.LogStatus($"Read value 0x{result:X2} at address 0x{cmd.Address:X4} - Read Function.");
                     }
                     break;
 
@@ -381,6 +409,9 @@ namespace BringUp_Control
 
                 case OperationType.Skip:
                     // do nothing
+                    break;
+                case OperationType.Poll:
+
                     break;
             }
             return 0;

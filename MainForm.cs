@@ -1237,7 +1237,11 @@ namespace BringUp_Control
                         code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
 
                         ad9175.ReadAllRegisters();
-                        LogStatus($"DAC9175 initialization completed!");
+                        if (code == 0)
+                            LogStatus($"DAC9175 initialization completed!");
+                        else
+                            LogStatus($"DAC9175 initialization failed with error code: {code}");
+
                     }
                     catch (Exception ex)
                     {

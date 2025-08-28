@@ -497,7 +497,6 @@
             // 
             // tabAD9175
             // 
-            this.tabAD9175.Controls.Add(this.button2);
             this.tabAD9175.Controls.Add(this.button1);
             this.tabAD9175.Controls.Add(this.textSTPL_Data);
             this.tabAD9175.Controls.Add(this.label27);
@@ -815,6 +814,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.button2);
             this.groupBox5.Controls.Add(this.label43);
             this.groupBox5.Controls.Add(this.numericTime);
             this.groupBox5.Controls.Add(this.label31);
@@ -923,9 +923,9 @@
             // 
             this.Cmd_StartSweep.Location = new System.Drawing.Point(254, 47);
             this.Cmd_StartSweep.Name = "Cmd_StartSweep";
-            this.Cmd_StartSweep.Size = new System.Drawing.Size(97, 39);
+            this.Cmd_StartSweep.Size = new System.Drawing.Size(97, 56);
             this.Cmd_StartSweep.TabIndex = 25;
-            this.Cmd_StartSweep.Text = "Start";
+            this.Cmd_StartSweep.Text = "MAIN NCO Start";
             this.Cmd_StartSweep.UseVisualStyleBackColor = true;
             this.Cmd_StartSweep.Click += new System.EventHandler(this.Cmd_StartSweep_Click);
             // 
@@ -1932,11 +1932,11 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(723, 276);
+            this.button2.Location = new System.Drawing.Point(254, 125);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 39);
+            this.button2.Size = new System.Drawing.Size(97, 63);
             this.button2.TabIndex = 44;
-            this.button2.Text = "TEST FREQ";
+            this.button2.Text = "CH NCO START";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // MainForm
