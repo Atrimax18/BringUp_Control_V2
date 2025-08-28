@@ -2899,6 +2899,7 @@ namespace BringUp_Control
                 
             }
         }
+        
         //test button for DAC tests
         private void button1_Click(object sender, EventArgs e)
         {
@@ -2914,6 +2915,80 @@ namespace BringUp_Control
 
             ad9175.Read_Dump(register_list, filePath);
             LogStatus($"Register dump saved to {filePath}");
+        }
+
+        // TEST Channel NCO button
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if(selectedTab == tabAD9175)
+            {
+                if (ad9175 != null)
+                {
+                    
+                    if (ComboDAC_index.SelectedIndex < 0)
+                    {
+                        MessageBox.Show("Please select a DAC from the combo box.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (comboCh_NCO.SelectedIndex < 0) 
+                    {
+                        MessageBox.Show("Please select a Channel from the combo box.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(textStart.Text))
+                    {
+                        MessageBox.Show("Please enter valid start frequency.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                        // FIX: Convert start_freq (string) to float before passing to Calibration_NCO
+                    if (!float.TryParse(textStart.Text, out float startFreqFloat))
+                    {
+                        MessageBox.Show("Start frequency must be a valid number.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    //ad9175.Calibration_NCO(ComboDAC_index.SelectedIndex, startFreqFloat, (int)numericTone_Amplitude.Value);
+                    ad9175.Channel_NCO(ComboDAC_index.SelectedIndex, comboCh_NCO.SelectedIndex, startFreqFloat, (int)numericTone_Amplitude.Value);
+
+                    LogStatus("Channel NCO Done.");
+                }
+                else
+                {
+                    LogStatus("DAC Handle is not initialized.");
+                }                
+            }
+            
+        }
+
+        private void comboCh_NCO_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            button2.Enabled = false;
+            int ch_num = comboCh_NCO.SelectedIndex;
+            int MAIN_DAC = ComboDAC_index.SelectedIndex;
+
+            if (ch_num > 2 && MAIN_DAC == 0)
+            {
+                MessageBox.Show($"For DAC{MAIN_DAC} the channels must be from 0 to 2");
+                ch_num = -1;                
+                comboCh_NCO.Focus();
+                return;
+            }
+            else if(ch_num < 3 && MAIN_DAC == 1)
+            {
+                MessageBox.Show($"For DAC{MAIN_DAC} the channels must be from 3 to 5");
+                ch_num = -1;
+                comboCh_NCO.Focus();
+                return;
+            }
+
+            if (ch_num == -1)
+                button2.Enabled = false;
+            else
+                button2.Enabled = true;
+
         }
     }
 }

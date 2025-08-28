@@ -1008,6 +1008,39 @@ namespace BringUp_Control
             MainForm.Instance?.LogStatus($"NCO Calib DDSM_CAL:{DDSM_CAL_FTW}, Tone Value: {ToneValue} ");
         }
 
+        public void Channel_NCO(int dac_index, int channels, float NCO_Freq, int ToneAmp)
+        {
+            // MAIN DAC PAGE for DAC0 or DAC1
+            WriteRegister(0x0008, (byte)(1 << (6 + dac_index))); // Optimized calibration setting register
+
+            // Calibration NCO used instead of Main NCO calibration Register 0x01E6, Bit 0 =1
+            WriteRegister(0x01E6, 0x05);
+
+            // set channel page for channle 0 to 5
+            WriteRegister(0x0008, (byte)(0 << channels));
+
+            // Enable NCO + DC injection 0b0100 0101
+            WriteRegister(0x0130, 0x45);
+
+            // Calibration NCO FTW
+            int DDSM_CAL_FTW = (int)(1.0 * (NCO_Freq / 11700) * Math.Pow(2, 48)); 
+            for (int i = 0; i < 6; i++)
+            {
+                WriteRegister((ushort)(0x0132 + i), (byte)((DDSM_CAL_FTW >> (8 * i)) & 0xFF));
+            }
+
+            WriteRegister(0x0131, 0x00);
+            WriteRegister(0x0131, 0x01);
+
+            int Value_ToneAmp = (int)(0x50FF * 1.0 * ToneAmp/100.0);
+
+            for (int i = 0; i < 2; i++)
+            {
+
+                WriteRegister((ushort)(0x0148 + i),(byte)((Value_ToneAmp >> (8 * i) & 0xFF)));
+            }
+        }
+
         public void Dispose()
         {
             //_ft?.Dispose();
