@@ -6,6 +6,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,6 +59,7 @@ namespace BringUp_Control
             // … add any others you have
         }
 
+
         public class Command
         {
             //minilal old fields
@@ -67,10 +70,17 @@ namespace BringUp_Control
 
             // optional fields for future use
             public byte Mask { get; set; } = 0xFF; // Default mask is 0xFF (all bits)
-            public byte CompareValue { get; set; } = 0x00; // Default compare value is 0x00
             public int MaxRetries { get; set; } = 0; // Default max retries for polling 0 
             public int DelayMs { get; set; } = 100; // Default delay between retries in milliseconds
-        }        
+        }
+
+        public static class Err
+        {
+            public const int Ok = 0;
+            public const int PollTimeout = -30;
+            public const int PollInvalidArgs = -31;
+            public const int IoReadFailed = -32;
+        }
 
         private string _csvPath;
         private const byte ErrorValue = 0xFF; // error value from readregister function ???? check it !!!!
@@ -218,6 +228,48 @@ namespace BringUp_Control
             _csvPath = csvPath;
         }
 
+        public int RUN_Engine()
+        {
+            if (!File.Exists(_csvPath))
+                throw new FileNotFoundException($"Initialization file not found: {_csvPath}");
+
+            var commands = LoadCommands_New(_csvPath);
+
+            var group_handler = new Dictionary<FunctionGroup, Func<Command, int>>
+            {
+                [FunctionGroup.POWER_UP] = ProcessPowerUp,
+                [FunctionGroup.DAC_PLL] = ProcessDacPll,
+                [FunctionGroup.DLL_CONFIG] = ProcessDllConfig,
+                [FunctionGroup.CALIBRATION] = ProcessCalibration,
+                [FunctionGroup.JESD204] = ProcessJESD204,
+                [FunctionGroup.CHANNEL_DATAPATH] = _ => 0, // no-op (or plug in when ready)
+                [FunctionGroup.MAINDAC_DATAPATH_DAC0] = ProcessMainDacDatapathDac0,
+                [FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC0] = ProcessMainDac_DDCM_DAC0,
+                [FunctionGroup.MAINDAC_DATAPATH_DAC1] = ProcessMainDacDatapathDac1,
+                [FunctionGroup.MAINDAC_DATAPATH_DDCM_DAC1] = ProcessMainDac_DDCM_DAC1,
+                [FunctionGroup.JESD204_SERDES] = ProcessJESD204Serdes,
+                [FunctionGroup.TRANSPORT_LAYER] = ProcessTransportLayer,
+                [FunctionGroup.CLEANUP] = ProcessCleanup,
+
+            };
+
+            foreach (var cmd in commands)
+            {
+                if (!group_handler.TryGetValue(cmd.Group, out var handler))
+                {
+                    // Unknown/unsupported group — return a distinct error code
+                    return -98;
+                }
+
+                int rc = handler(cmd);
+                if (rc != 0)
+                    return rc;   // Fail fast on first error
+            }
+
+            return 0;
+
+        }
+
 
         public int RUN_CSV()
         {
@@ -227,7 +279,8 @@ namespace BringUp_Control
 
             var commands = LoadCommands(_csvPath);
 
-            int return_error = -1;
+            int return_error = -99;
+            
             
 
             foreach (var cmd in commands)
@@ -236,19 +289,25 @@ namespace BringUp_Control
                 {
 
                     case FunctionGroup.POWER_UP:
-                        if (ProcessPowerUp(cmd) != 0) 
+                        return_error = ProcessPowerUp(cmd);
+
+                        if (return_error != 0)
+                        {
                             return return_error; // If PowerUp fails, return -1
+                        }                            
                         else
                             return_error = 0;
                         break;
                     case FunctionGroup.DAC_PLL:
-                        if (ProcessDacPll(cmd) != 0) 
+                        return_error = ProcessDacPll(cmd);
+                        if (return_error != 0) 
                             return return_error; // If DAC_PLL fails, return -1
                         else
                             return_error = 0;
                         break;
                     case FunctionGroup.DLL_CONFIG:
-                        if (ProcessDllConfig(cmd) != 0) 
+                        return_error = ProcessDllConfig(cmd);
+                        if (return_error != 0) 
                             return return_error; // If DLL_CONFIG fails, return -1
                         else
                             return_error = 0;
@@ -318,14 +377,87 @@ namespace BringUp_Control
         }
 
 
+
+        private List<Command> LoadCommands_New(string path)
+        {
+            List<Command> list = new List<Command>();
+            int LineNumber = 0;
+
+            foreach (var raw in File.ReadAllLines(path))
+            {
+                var line = raw.Split(new[] { '#', ';' }, 2)[0].Split(new[] { "//" }, StringSplitOptions.None)[0].Trim();
+
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                var parts = line.Split(',').Select(p => p.Trim()).Where(p => p.Length > 0).ToArray();
+
+                if (parts.Length < 4)
+                    throw new InvalidDataException($"Line {LineNumber}: expected at east 4 columns, got {parts.Length}");
+
+                var addrHex = parts[0].Trim();
+                var dataHex = parts[1].Trim();
+                var opCode = parts[2].Trim().ToUpperInvariant();
+                var groupName = parts[3].Trim();
+
+                if (!Enum.TryParse(groupName, ignoreCase: true, out FunctionGroup group))
+                    throw new InvalidDataException($"Line {LineNumber}: unknown function group '{groupName}'");
+
+                OperationType opType;
+                switch (opCode)
+                {
+                    case "W":
+                        opType = OperationType.Write;
+                        break;
+                    case "R":
+                        opType = OperationType.Read;
+                        break;
+                    case "SLEEP":
+                        opType = OperationType.Sleep;
+                        break;
+                    case "SKIP":
+                        opType = OperationType.Skip;
+                        break;
+                    case "P":
+                        opType = OperationType.Poll;
+                        break;
+                    default:
+                        throw new InvalidDataException($"Unknown operation '{opCode}'");
+                }
+
+                var cmd = new Command
+                {
+                    Address = HexStringToUshort(addrHex),
+                    Data = byte.Parse(dataHex.StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? dataHex.Substring(2) : dataHex, NumberStyles.HexNumber),
+                    OpType = opType,
+                    Group = group
+                };
+
+                if (opType == OperationType.Poll)
+                {
+                    if(parts.Length < 7)
+                        throw new InvalidDataException($"Line {LineNumber}: POLL requires 7 columns: addr,data,P,group,mask,retries,delaymS");
+
+                    cmd.Mask = byte.Parse(parts[4].StartsWith("0x", StringComparison.OrdinalIgnoreCase) ? parts[4].Substring(2) : parts[4], NumberStyles.HexNumber);//ParseToByte(parts[4]);
+                    cmd.MaxRetries = int.Parse(parts[5]);
+                    cmd.DelayMs = int.Parse(parts[6]);
+                }
+
+                list.Add(cmd);
+            }
+
+            return list;
+        }
+
         // CSV TEMPLATE
         // Address, Data, Operation, FunctionGroup
-        // 0x0000, 0x01, W, POWER_UP
+        // 0x0000, 0x01,     W,         POWER_UP
         // New Command format with optional fields for polling (P - polling Operational Type)
         // Address, Data, Operation, FunctionGroup, Mask, MaxRetries, DelayMs
+        // 0x0000,  0x01,    W,         POWER_UP    0x01,      3,       1
         private List<Command> LoadCommands(string path)
         {
             var list = new List<Command>();
+
             foreach (var line in File.ReadAllLines(path))
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
@@ -355,6 +487,9 @@ namespace BringUp_Control
                     case "SKIP":
                         opType = OperationType.Skip;
                         break;
+                    case "P":
+                        opType = OperationType.Poll;
+                        break;
                     default:
                         throw new InvalidDataException($"Unknown operation '{opCode}'");
                 }
@@ -374,31 +509,33 @@ namespace BringUp_Control
         #region Group Processors
 
         //POWER_UP
-        private int ProcessPowerUp(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessPowerUp(Command cmd) { return ProcessGeneric(cmd); }
         //DAC_PLL
-        private int ProcessDacPll(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessDacPll(Command cmd) { return ProcessGeneric(cmd); }
         //DLL_CONFIG
-        private int ProcessDllConfig(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessDllConfig(Command cmd) { return ProcessGeneric(cmd); }
+
         //CALLIBRATION
-        private int ProcessCalibration(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessCalibration(Command cmd) { return ProcessGeneric(cmd); }
         //JESD204
-        private int ProcessJESD204(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessJESD204(Command cmd) { return ProcessGeneric(cmd); }
         //MAINDATAPATH_DAC0
-        private int ProcessMainDacDatapathDac0(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessMainDacDatapathDac0(Command cmd) { return ProcessGeneric(cmd); }
         //MAINDATAPATH_DAC1 
-        private int ProcessMainDacDatapathDac1(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessMainDacDatapathDac1(Command cmd) { return ProcessGeneric(cmd); }
         //MAINDAC_DATAPATH_DDCM_DAC0
-        private int ProcessMainDac_DDCM_DAC0(Command cmd) => ProcessSpecific(cmd);
+        private int ProcessMainDac_DDCM_DAC0(Command cmd) { return ProcessSpecific(cmd); }
         //MAINDAC_DATAPATH_DDCM_DAC1
-        private int ProcessMainDac_DDCM_DAC1(Command cmd) => ProcessSpecific(cmd);
+        private int ProcessMainDac_DDCM_DAC1(Command cmd) { return ProcessSpecific(cmd); }
         //TRANSPORT_LAYER
-        private int ProcessTransportLayer(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessTransportLayer(Command cmd) { return ProcessGeneric(cmd); }
         //JESD204_SERDES
-        private int ProcessJESD204Serdes(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessJESD204Serdes(Command cmd) { return ProcessGeneric(cmd); }
         //CLEANUP
-        private int ProcessCleanup(Command cmd) => ProcessGeneric(cmd);
+        private int ProcessCleanup(Command cmd) { return ProcessGeneric(cmd); }
         private int ProcessGeneric(Command cmd)
         {
+            int return_value = 0;
             switch (cmd.OpType)
             {
                 case OperationType.Write:
@@ -415,7 +552,7 @@ namespace BringUp_Control
                             $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
 
                         MainForm.Instance.LogStatus($"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
-                        return -1;
+                        return return_value = -1;
                     }
                     else
                     {
@@ -435,10 +572,27 @@ namespace BringUp_Control
                     // do nothing
                     break;
                 case OperationType.Poll:
+                    if (cmd.MaxRetries == 0 || cmd.DelayMs == 0)
+                        return Err.PollInvalidArgs;
 
+                    for (int attemp = 0; attemp < cmd.MaxRetries; attemp++)
+                    {
+                        int retval = ReadRegister(cmd.Address);
+
+                        if ((retval & cmd.Mask) == cmd.Data)
+                            return Err.Ok;
+
+                        if (cmd.DelayMs > 0)
+                        {
+                            Thread.Sleep(cmd.DelayMs);
+                            MainForm.Instance.LogStatus($"Delay Time is {cmd.DelayMs} milliSec");
+                        }
+                    }
+
+                    
                     break;
             }
-            return 0;
+            return return_value;
         }
 
         private int ProcessSpecific(Command cmd)
@@ -717,7 +871,8 @@ namespace BringUp_Control
             return FSC_Ctrl;
         }
         
-        public void DAC_DT_Clear()        {
+        public void DAC_DT_Clear()
+        {
             
             dtAD9175.Clear();
         }
@@ -1060,7 +1215,6 @@ namespace BringUp_Control
 
             for (int i = 0; i < 2; i++)
             {
-
                 WriteRegister((ushort)(0x0148 + i),(byte)((Value_ToneAmp >> (8 * i) & 0xFF)));
             }
         }
@@ -1077,6 +1231,24 @@ namespace BringUp_Control
                 hex = hex.Substring(2);
 
             return Convert.ToUInt16(hex, 16);
+        }
+
+        private static byte ParseToByte(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                throw new ArgumentException("Empty field where byte expected.");
+
+            var s = text.Trim();
+
+            // allow 0x prefixed hex
+            if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                s = s.Substring(2);
+
+            // otherwise, try hex first (e.g. "FF"), then decimal ("255")
+            if (byte.TryParse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var bHex))
+                return bHex;
+
+            return byte.Parse(s, NumberStyles.Integer, CultureInfo.InvariantCulture);
         }
     }
 }

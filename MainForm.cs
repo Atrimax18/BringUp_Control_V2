@@ -1234,7 +1234,9 @@ namespace BringUp_Control
                     
                     try
                     {
-                        code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
+                        //code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
+
+                        code = ad9175.RUN_Engine();
 
                         ad9175.ReadAllRegisters();
                         if (code == 0)
