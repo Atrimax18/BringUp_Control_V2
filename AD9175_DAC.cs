@@ -575,9 +575,13 @@ namespace BringUp_Control
                     if (cmd.MaxRetries == 0 || cmd.DelayMs == 0)
                         return Err.PollInvalidArgs;
 
+                    DateTime now = DateTime.Now;
+
                     for (int attemp = 0; attemp < cmd.MaxRetries; attemp++)
                     {
                         int retval = ReadRegister(cmd.Address);
+
+                        MainForm.Instance.LogStatus($"delay between read register command {now: ss.fff} milliSec");
 
                         if ((retval & cmd.Mask) == cmd.Data)
                             return Err.Ok;
