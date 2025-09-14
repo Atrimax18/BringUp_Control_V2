@@ -394,6 +394,8 @@ namespace BringUp_Control
                 if (parts.Length < 4)
                     throw new InvalidDataException($"Line {LineNumber}: expected at east 4 columns, got {parts.Length}");
 
+
+                //addition updates for this type of csv file
                 var addrHex = parts[0].Trim();
                 var dataHex = parts[1].Trim();
                 var opCode = parts[2].Trim().ToUpperInvariant();
