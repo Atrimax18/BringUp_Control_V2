@@ -547,7 +547,7 @@ namespace BringUp_Control
                 case OperationType.Read:
                     //Thread.Sleep(5000); // Delay to ensure the device is ready for reading
                     var result = ReadRegister(cmd.Address);
-                    //result &= 0x01;
+                    //result &= 0x01;// check it
                     if (result != cmd.Data)
                     {
                         Console.Error.WriteLine(
