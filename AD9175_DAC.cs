@@ -1159,7 +1159,7 @@ namespace BringUp_Control
             }
         }
 
-        public void PRBS_NEW(int lane, string pattern, int waitMs = 500)
+        public void PRBS_NEW(int lane, string pattern, int waitMs = 100)
         {
 
             byte prbs_byte;
@@ -1170,11 +1170,18 @@ namespace BringUp_Control
             else
                 prbs_byte = 0x02;
 
+            byte PRBS_Err_Threshold = 0x00; // Error threshold for PRBS test
+
+            WriteRegister(0x317, (byte)((PRBS_Err_Threshold >> 0) & 0xFF));
+            WriteRegister(0x318, (byte)((PRBS_Err_Threshold >> 8) & 0xFF));
+            WriteRegister(0x319, (byte)((PRBS_Err_Threshold >> 16) & 0xFF));
+
 
             WriteRegister(0x316, (byte)(prbs_byte << 2));
 
             // 2. Enable PRBS on given lane
-            WriteRegister(0x315, (byte)(1 << lane));
+            //WriteRegister(0x315, (byte)(1 << lane));
+            WriteRegister(0x315, 0xFF); // All lanes
 
             // 3. Reset status
             WriteRegister(0x316, 0x01); // Bit0 = 1
