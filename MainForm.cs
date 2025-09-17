@@ -1882,7 +1882,9 @@ namespace BringUp_Control
 
             string prmbs_value = comboPRBS.SelectedItem?.ToString();
 
-            ad9175.PRBS_Test(prmbs_value);
+            //ad9175.PRBS_Test(prmbs_value);
+            for (int dacline = 0; dacline <= 7; dacline++)
+                ad9175.PRBS_NEW(dacline, prmbs_value);
         }
 
         

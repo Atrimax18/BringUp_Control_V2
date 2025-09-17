@@ -1159,6 +1159,55 @@ namespace BringUp_Control
             }
         }
 
+        public void PRBS_NEW(int lane, string pattern, int waitMs = 500)
+        {
+
+            byte prbs_byte;
+            if (pattern.Equals("PRBS7"))
+                prbs_byte = 0x00;
+            else if (pattern.Equals("PRBS15"))
+                prbs_byte = 0x01;
+            else
+                prbs_byte = 0x02;
+
+
+            WriteRegister(0x316, (byte)(prbs_byte << 2));
+
+            // 2. Enable PRBS on given lane
+            WriteRegister(0x315, (byte)(1 << lane));
+
+            // 3. Reset status
+            WriteRegister(0x316, 0x01); // Bit0 = 1
+            WriteRegister(0x316, 0x00); // Back to 0
+
+            // 4. Start test
+            WriteRegister(0x316, 0x02); // Bit1 = 1
+            Thread.Sleep(waitMs);
+
+            // 5. Stop test
+            WriteRegister(0x316, 0x00);
+
+            // 6. Read pass/fail
+            byte status = ReadRegister(0x31D);
+            bool pass = ((status >> lane) & 0x01) == 1;
+
+            // 7. Optionally read error count
+
+            byte set_value = (byte)((lane & 0x07) << 4);   //must be bits 6:4]
+            WriteRegister(0x316, set_value);
+            int errCount1 = ReadRegister(0x31A); 
+            int errCount2 = ReadRegister(0x31B);
+            int errCount3 = ReadRegister(0x31C);
+
+            Console.WriteLine($"Lane {lane}, Pattern {pattern}, Pass={pass}, Errors={errCount1} , {errCount2} , {errCount3}");
+
+            MainForm.Instance?.LogStatus($"Lane {lane}, Pattern {pattern}, RESULT={pass}, Errors=0x{errCount1:X2} , 0x{errCount2:X2} , 0x{errCount3:X2}");
+
+        }
+
+        
+
+
         // TODO - QA tests
         public void Calibration_NCO(int dac_index, float NCO_Freq, int ToneAmp_PR)
         {
