@@ -913,7 +913,7 @@ namespace BringUp_Control
             if (regHex.StartsWith("0x") &&
                 ushort.TryParse(regHex.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out ushort reg))
             {
-                byte val = ReadRegister(reg);  // <-- Replace this with your actual SPI read method
+                byte val = ReadRegister(reg);  
                 row["Value"] = $"0x{val:X2}";
                 row["Value byte"] = val;
             }
@@ -1112,7 +1112,7 @@ namespace BringUp_Control
 
 
             double PRBS_LaneRate = 14.625e9;
-            float PRBS_TestTime = 1.0f; //1 second
+            float PRBS_TestTime = 2.0f; //1 second
             byte PRBS_Lanes_Bits = 0xFF; // All lanes enabled
 
             WriteRegister(0x0315, PRBS_Lanes_Bits); // select all lines to be tested  (each bit = lane (0 to 7))

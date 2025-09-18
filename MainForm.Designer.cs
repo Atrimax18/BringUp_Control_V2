@@ -80,6 +80,8 @@
             this.Cmd_PRBS = new System.Windows.Forms.Button();
             this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.comboCh_NCO = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label43 = new System.Windows.Forms.Label();
             this.numericTime = new System.Windows.Forms.NumericUpDown();
@@ -183,8 +185,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.comboCh_NCO = new System.Windows.Forms.ComboBox();
-            this.label28 = new System.Windows.Forms.Label();
+            this.Cmd_QBD = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -783,6 +784,7 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.Cmd_QBD);
             this.groupBox6.Controls.Add(this.comboPRBS);
             this.groupBox6.Controls.Add(this.Cmd_PRBS);
             this.groupBox6.Location = new System.Drawing.Point(384, 400);
@@ -806,7 +808,7 @@
             // 
             // Cmd_PRBS
             // 
-            this.Cmd_PRBS.Location = new System.Drawing.Point(131, 13);
+            this.Cmd_PRBS.Location = new System.Drawing.Point(110, 13);
             this.Cmd_PRBS.Name = "Cmd_PRBS";
             this.Cmd_PRBS.Size = new System.Drawing.Size(97, 38);
             this.Cmd_PRBS.TabIndex = 17;
@@ -854,6 +856,31 @@
             this.groupBox5.TabIndex = 19;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Calib NCO Freq:";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(251, 124);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(32, 16);
+            this.label28.TabIndex = 46;
+            this.label28.Text = "CH:";
+            // 
+            // comboCh_NCO
+            // 
+            this.comboCh_NCO.FormattingEnabled = true;
+            this.comboCh_NCO.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5"});
+            this.comboCh_NCO.Location = new System.Drawing.Point(289, 121);
+            this.comboCh_NCO.Name = "comboCh_NCO";
+            this.comboCh_NCO.Size = new System.Drawing.Size(50, 24);
+            this.comboCh_NCO.TabIndex = 45;
+            this.comboCh_NCO.SelectedIndexChanged += new System.EventHandler(this.comboCh_NCO_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -1945,30 +1972,15 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // comboCh_NCO
+            // Cmd_QBD
             // 
-            this.comboCh_NCO.FormattingEnabled = true;
-            this.comboCh_NCO.Items.AddRange(new object[] {
-            "0",
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.comboCh_NCO.Location = new System.Drawing.Point(289, 121);
-            this.comboCh_NCO.Name = "comboCh_NCO";
-            this.comboCh_NCO.Size = new System.Drawing.Size(50, 24);
-            this.comboCh_NCO.TabIndex = 45;
-            this.comboCh_NCO.SelectedIndexChanged += new System.EventHandler(this.comboCh_NCO_SelectedIndexChanged);
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(251, 124);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(32, 16);
-            this.label28.TabIndex = 46;
-            this.label28.Text = "CH:";
+            this.Cmd_QBD.Location = new System.Drawing.Point(213, 13);
+            this.Cmd_QBD.Name = "Cmd_QBD";
+            this.Cmd_QBD.Size = new System.Drawing.Size(109, 38);
+            this.Cmd_QBD.TabIndex = 19;
+            this.Cmd_QBD.Text = "QBD SET";
+            this.Cmd_QBD.UseVisualStyleBackColor = true;
+            this.Cmd_QBD.Click += new System.EventHandler(this.Cmd_QBD_Click);
             // 
             // MainForm
             // 
@@ -2192,6 +2204,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboCh_NCO;
         private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Button Cmd_QBD;
     }
 }
 

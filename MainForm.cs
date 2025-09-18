@@ -2994,6 +2994,34 @@ namespace BringUp_Control
                 button2.Enabled = true;
 
         }
+
+        private void Cmd_QBD_Click(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD9175)
+            {
+                int dac_num = comboMAINDAC.SelectedIndex; // Get the selected DAC index from the combo box
+                //-------------------------------------------------------
+                if (dac_num == 0)
+                {
+                    // Set QBD bit for DAC0
+                    byte regVal = ad9175.ReadRegister(0x0300);
+                    regVal = (byte)(regVal & ~0x04);  //clears bit 2
+                    ad9175.WriteRegister(0x0300, regVal); 
+                }
+                else
+                {
+                    // Set QBD bit for DAC0
+                    byte regVal = ad9175.ReadRegister(0x0300);
+                    regVal = (byte)(regVal | 0x04);  //set bit 2 to 1
+                    ad9175.WriteRegister(0x0300, regVal); 
+                }
+                   
+                //-------------------------------------------------------
+                ad9175.ReadAllRegisters();
+
+                LogStatus($"DAC {dac_num} registers read successfully.");
+            }
+        }
     }
 }
 
