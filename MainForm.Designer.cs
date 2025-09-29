@@ -76,6 +76,7 @@
             this.numericDAC_FS = new System.Windows.Forms.NumericUpDown();
             this.label41 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.Cmd_QBD = new System.Windows.Forms.Button();
             this.comboPRBS = new System.Windows.Forms.ComboBox();
             this.Cmd_PRBS = new System.Windows.Forms.Button();
             this.Cmd_ReadRegAD9175 = new System.Windows.Forms.Button();
@@ -185,7 +186,7 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.Cmd_QBD = new System.Windows.Forms.Button();
+            this.Cmd_Load_DAC = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -500,6 +501,7 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.Cmd_Load_DAC);
             this.tabAD9175.Controls.Add(this.button1);
             this.tabAD9175.Controls.Add(this.textSTPL_Data);
             this.tabAD9175.Controls.Add(this.label27);
@@ -538,7 +540,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(723, 206);
+            this.button1.Location = new System.Drawing.Point(723, 271);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(112, 45);
             this.button1.TabIndex = 43;
@@ -793,6 +795,16 @@
             this.groupBox6.TabIndex = 25;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "PRBS TEST:";
+            // 
+            // Cmd_QBD
+            // 
+            this.Cmd_QBD.Location = new System.Drawing.Point(213, 13);
+            this.Cmd_QBD.Name = "Cmd_QBD";
+            this.Cmd_QBD.Size = new System.Drawing.Size(109, 38);
+            this.Cmd_QBD.TabIndex = 19;
+            this.Cmd_QBD.Text = "QBD SET";
+            this.Cmd_QBD.UseVisualStyleBackColor = true;
+            this.Cmd_QBD.Click += new System.EventHandler(this.Cmd_QBD_Click);
             // 
             // comboPRBS
             // 
@@ -1081,7 +1093,7 @@
             // 
             // Cmd_DAC_Init
             // 
-            this.Cmd_DAC_Init.Location = new System.Drawing.Point(723, 140);
+            this.Cmd_DAC_Init.Location = new System.Drawing.Point(723, 220);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
             this.Cmd_DAC_Init.Size = new System.Drawing.Size(112, 45);
             this.Cmd_DAC_Init.TabIndex = 13;
@@ -1972,15 +1984,15 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // Cmd_QBD
+            // Cmd_Load_DAC
             // 
-            this.Cmd_QBD.Location = new System.Drawing.Point(213, 13);
-            this.Cmd_QBD.Name = "Cmd_QBD";
-            this.Cmd_QBD.Size = new System.Drawing.Size(109, 38);
-            this.Cmd_QBD.TabIndex = 19;
-            this.Cmd_QBD.Text = "QBD SET";
-            this.Cmd_QBD.UseVisualStyleBackColor = true;
-            this.Cmd_QBD.Click += new System.EventHandler(this.Cmd_QBD_Click);
+            this.Cmd_Load_DAC.Location = new System.Drawing.Point(723, 140);
+            this.Cmd_Load_DAC.Name = "Cmd_Load_DAC";
+            this.Cmd_Load_DAC.Size = new System.Drawing.Size(112, 45);
+            this.Cmd_Load_DAC.TabIndex = 44;
+            this.Cmd_Load_DAC.Text = "LOAD DAC";
+            this.Cmd_Load_DAC.UseVisualStyleBackColor = true;
+            this.Cmd_Load_DAC.Click += new System.EventHandler(this.Cmd_Load_DAC_Click);
             // 
             // MainForm
             // 
@@ -2205,6 +2217,7 @@
         private System.Windows.Forms.ComboBox comboCh_NCO;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button Cmd_QBD;
+        private System.Windows.Forms.Button Cmd_Load_DAC;
     }
 }
 

@@ -1259,24 +1259,27 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD9175)
             {
-                string selectedRegisterAddress9175 = comboRegisters9175.SelectedItem.ToString();
-                int selectedHex = Convert.ToInt32(selectedRegisterAddress9175.Substring(2), 16); // Convert hex string to int
-
-                // Disable the button for values 0x0002 to 0x000D
-                if (driverflag)
+                if (comboRegisters9175.DataSource != null)
                 {
-                    //Cmd_WriteReg9175.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
-                    //textDAC9175_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                    string selectedRegisterAddress9175 = comboRegisters9175.SelectedItem.ToString();
+                    int selectedHex = Convert.ToInt32(selectedRegisterAddress9175.Substring(2), 16); // Convert hex string to int
+
+                    // Disable the button for values 0x0002 to 0x000D
+                    if (driverflag)
+                    {
+                        //Cmd_WriteReg9175.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                        //textDAC9175_Value.Enabled = !((selectedHex >= 0x0002 && selectedHex <= 0x000D) || (selectedHex >= 0x0054 && selectedHex <= 0x0063));
+                    }
+
+
+                    if (driverflag && usbflag)
+                    {
+                        byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
+                        textDAC9175_Value.Text = $"0x{valbyte:X2}";
+                    }
+
+                    textDAC9175_Value.Focus();
                 }
-
-
-                if (driverflag && usbflag)
-                {
-                    byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
-                    textDAC9175_Value.Text = $"0x{valbyte:X2}";
-                }
-
-                textDAC9175_Value.Focus();
             }
 
         }
@@ -2471,9 +2474,12 @@ namespace BringUp_Control
 
         private void Cmd_Load_JESD204_Click(object sender, EventArgs e)
         {
+            if (tabControl1.SelectedTab == tabFPGA )
+            {
+                fpga.WriteReadFPGA();
+            }
 
-
-            fpga.WriteReadFPGA();
+            
         }
 
         public static string ExtractLinkModePrefix(string input)
@@ -2599,7 +2605,7 @@ namespace BringUp_Control
                     else
                     {
                         ad9175.WriteRegister(0x0008, 0x80);
-                        LogStatus($"Main DAC set to DAC0");
+                        LogStatus($"Main DAC set to DAC1");
                     }
 
                 }
@@ -3021,6 +3027,70 @@ namespace BringUp_Control
 
                 LogStatus($"DAC {dac_num} registers read successfully.");
             }
+        }
+
+        private void Cmd_Load_DAC_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabAD9175)
+            {
+                if (ad9175 != null)
+                {
+
+                    //Tested
+                    ad9175.IO_DAC_IO_Reset();
+                    LogStatus("DAC9175 reinitialized on SPI CS1");
+
+                    comboRegisters9175.DataSource = null; // Clear existing data source
+
+                    //comboRegisters9175.DataSource = ad9175.LoadComboRegister9175();
+                    List<string> regDumpData = ad9175.LoadComboRegister9175();
+
+                    comboRegisters9175.DataSource = regDumpData; // Set new data source
+
+                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                        openFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+                        openFileDialog.Title = "Select DAC9175 csv Configuration File";
+                        if (openFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            dac_ini_file = Path.Combine(openFileDialog.FileName);
+                        }
+                        else
+                        {
+                            LogStatus("DAC9175 initialization canceled by user.");
+                            return;
+                        }
+                    }
+
+
+                    ad9175.DAC9175_InitEngine(dac_ini_file);
+                    labelFilePath9175.Text = $"DAC File Path: {dac_ini_file}";
+
+                    int code;
+
+                    try
+                    {
+                        //code = ad9175.RUN_CSV(); // Run the CSV initialization for DAC9175
+
+                        code = ad9175.RUN_Engine();
+
+                        ad9175.ReadAllRegisters();
+                        if (code == 0)
+                            LogStatus($"DAC9175 initialization completed!");
+                        else
+                            LogStatus($"DAC9175 initialization failed with error code: {code}");
+
+                    }
+                    catch (Exception ex)
+                    {
+                        code = ex.HResult; // Get the error code from the exception
+                        LogStatus($"DAC9175 initialization failed with error code: {code}");
+                        MessageBox.Show($"DAC9175 initialization failed with error code: {code}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+
         }
     }
 }
