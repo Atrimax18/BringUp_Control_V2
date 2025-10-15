@@ -135,7 +135,7 @@ namespace BringUp_Control
 
         AD7091 ad7091; // ADC for RF Power measurement
 
-
+        string ftdi_fpganame = string.Empty;
         string nvm_file_pll = string.Empty;
         string config_file_pll = string.Empty;
         string Prod_file_pll = string.Empty;
@@ -211,11 +211,12 @@ namespace BringUp_Control
                         txLineData.att3 = float.Parse(configuration["HMC1119:ATT3"]);
 
 
-                        // set init files for RF PLL and DAC
+                        // set init files for RF PLL and DAC new adaptation
                         rf_pll_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["PLL4368:INIT_FILE"]);
                         dac_ini_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:INIT_FILE"]);
                         daq_reg_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:REG_FILE"]);
                         jesd_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["FPGA:JESD204_FILE"]);
+                        ftdi_fpganame = configuration["FPGA:FTDI_ID"];
 
                         if (File.Exists(dac_ini_file))
                         {
@@ -306,7 +307,7 @@ namespace BringUp_Control
                     uint fpganum = 0;
                     if (num > 2)
                     {
-                        fpganum = FTDriver.FindSpiInterfaceLocId("SATIXFY2A");
+                        fpganum = FTDriver.FindSpiInterfaceLocId(ftdi_fpganame);
 
                         _spiLocId_FPGA = fpganum; // INTERFACE FT4222 FPGA
                         InterfaceManagerFPGA = new FtdiInterfaceManager(_spiLocId_FPGA); // Initialize FTDI interface manager for FPGA

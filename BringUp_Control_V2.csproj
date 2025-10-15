@@ -206,6 +206,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="FTDI2XX.xml" />
+    <Content Include="Readme.txt" />
     <None Include="Resources\TX_FEM.jpg" />
     <None Include="Resources\satixfy-logo-hg.jpg" />
   </ItemGroup>
