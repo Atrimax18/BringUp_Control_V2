@@ -3077,7 +3077,14 @@ namespace BringUp_Control
 
                         ad9175.ReadAllRegisters();
                         if (code == 0)
+                        {
                             LogStatus($"DAC9175 initialization completed!");
+                            if (dac_ini_file.Contains("DAC0"))
+                                LogStatus("DAC0 configuration loaded");
+                            else
+                                LogStatus("DAC1 configuration loaded");
+                        }
+                            
                         else
                             LogStatus($"DAC9175 initialization failed with error code: {code}");
 
