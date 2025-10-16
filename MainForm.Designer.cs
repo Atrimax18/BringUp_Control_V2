@@ -54,6 +54,7 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.Cmd_Load_DAC = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textSTPL_Data = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -186,7 +187,8 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.Cmd_Load_DAC = new System.Windows.Forms.Button();
+            this.comboDAC_Power = new System.Windows.Forms.ComboBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -501,6 +503,8 @@
             // 
             // tabAD9175
             // 
+            this.tabAD9175.Controls.Add(this.label29);
+            this.tabAD9175.Controls.Add(this.comboDAC_Power);
             this.tabAD9175.Controls.Add(this.Cmd_Load_DAC);
             this.tabAD9175.Controls.Add(this.button1);
             this.tabAD9175.Controls.Add(this.textSTPL_Data);
@@ -537,6 +541,16 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // Cmd_Load_DAC
+            // 
+            this.Cmd_Load_DAC.Location = new System.Drawing.Point(723, 140);
+            this.Cmd_Load_DAC.Name = "Cmd_Load_DAC";
+            this.Cmd_Load_DAC.Size = new System.Drawing.Size(112, 45);
+            this.Cmd_Load_DAC.TabIndex = 44;
+            this.Cmd_Load_DAC.Text = "LOAD DAC";
+            this.Cmd_Load_DAC.UseVisualStyleBackColor = true;
+            this.Cmd_Load_DAC.Click += new System.EventHandler(this.Cmd_Load_DAC_Click);
             // 
             // button1
             // 
@@ -1984,15 +1998,30 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // Cmd_Load_DAC
+            // comboDAC_Power
             // 
-            this.Cmd_Load_DAC.Location = new System.Drawing.Point(723, 140);
-            this.Cmd_Load_DAC.Name = "Cmd_Load_DAC";
-            this.Cmd_Load_DAC.Size = new System.Drawing.Size(112, 45);
-            this.Cmd_Load_DAC.TabIndex = 44;
-            this.Cmd_Load_DAC.Text = "LOAD DAC";
-            this.Cmd_Load_DAC.UseVisualStyleBackColor = true;
-            this.Cmd_Load_DAC.Click += new System.EventHandler(this.Cmd_Load_DAC_Click);
+            this.comboDAC_Power.FormattingEnabled = true;
+            this.comboDAC_Power.Items.AddRange(new object[] {
+            "DAC0 OFF",
+            "DAC1 OFF",
+            "DAC0 ON",
+            "DAC1 ON",
+            "ALL ON",
+            "ALL OFF"});
+            this.comboDAC_Power.Location = new System.Drawing.Point(510, 38);
+            this.comboDAC_Power.Name = "comboDAC_Power";
+            this.comboDAC_Power.Size = new System.Drawing.Size(138, 24);
+            this.comboDAC_Power.TabIndex = 45;
+            this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.comboDAC_Power_SelectedIndexChanged);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(508, 17);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(102, 16);
+            this.label29.TabIndex = 46;
+            this.label29.Text = "DAC POWER:";
             // 
             // MainForm
             // 
@@ -2218,6 +2247,8 @@
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button Cmd_QBD;
         private System.Windows.Forms.Button Cmd_Load_DAC;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.ComboBox comboDAC_Power;
     }
 }
 

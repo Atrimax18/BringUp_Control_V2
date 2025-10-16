@@ -3100,6 +3100,49 @@ namespace BringUp_Control
             }
 
         }
+
+        private void comboDAC_Power_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // register 0x0090 bit 0 = DAC0 power down 1 , power up 0; bit 1 = DAC1 power down 1 , power up 0 
+            int dac_power = comboDAC_Power.SelectedIndex;
+            switch (dac_power)
+            {
+                case 0:
+                    // DAC0 OFF Power
+                    ad9175.WriteRegister(0x0090, 0x01);
+                    LogStatus("DAC0 Power OFF");
+                    break;
+                case 1:
+                    // DAC1 OFF Power
+                    ad9175.WriteRegister(0x0090, 0x02);
+                    LogStatus("DAC1 Power OFF");
+                    break;
+                case 2:
+                    // DAC0 ON Power 
+                    ad9175.WriteRegister(0x0090, 0x02);
+                    LogStatus("DAC0 Power ON");
+                    break;
+                case 3:
+                    // DAC1 ON Power
+                    ad9175.WriteRegister(0x0090, 0x01);
+                    LogStatus("DAC1 Power ON");
+                    break;
+                case 4:
+                    // DAC0 DAC 1 OFF Power
+                    ad9175.WriteRegister(0x0090, 0x03);
+                    LogStatus("DAC0 and DAC1 Power OFF");
+                    break;
+                case 5:
+                    // DAC0 DAC 1 ON Power
+                    ad9175.WriteRegister(0x0090, 0x00);
+                    LogStatus("DAC0 and DAC1 Power ON");
+                    break;
+                default:
+                    LogStatus("Invalid DAC Power selection");
+                    break;
+            }
+            
+        }
     }
 }
 
