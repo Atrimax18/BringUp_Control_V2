@@ -3108,31 +3108,21 @@ namespace BringUp_Control
             switch (dac_power)
             {
                 case 0:
-                    // DAC0 OFF Power
+                    // DAC0 OFF Power, DAC1 ON
                     ad9175.WriteRegister(0x0090, 0x01);
-                    LogStatus("DAC0 Power OFF");
+                    LogStatus("DAC0 Power OFF|DAC1 Power ON");
                     break;
                 case 1:
-                    // DAC1 OFF Power
+                    // DAC0 On Power, DAC1 OFF Power
                     ad9175.WriteRegister(0x0090, 0x02);
-                    LogStatus("DAC1 Power OFF");
+                    LogStatus("DAC0 Power ON|DAC1 Power OFF");
                     break;
                 case 2:
-                    // DAC0 ON Power 
-                    ad9175.WriteRegister(0x0090, 0x02);
-                    LogStatus("DAC0 Power ON");
-                    break;
-                case 3:
-                    // DAC1 ON Power
-                    ad9175.WriteRegister(0x0090, 0x01);
-                    LogStatus("DAC1 Power ON");
-                    break;
-                case 4:
                     // DAC0 DAC 1 OFF Power
                     ad9175.WriteRegister(0x0090, 0x03);
                     LogStatus("DAC0 and DAC1 Power OFF");
                     break;
-                case 5:
+                case 3:
                     // DAC0 DAC 1 ON Power
                     ad9175.WriteRegister(0x0090, 0x00);
                     LogStatus("DAC0 and DAC1 Power ON");

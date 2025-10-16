@@ -2002,12 +2002,10 @@
             // 
             this.comboDAC_Power.FormattingEnabled = true;
             this.comboDAC_Power.Items.AddRange(new object[] {
-            "DAC0 OFF",
-            "DAC1 OFF",
-            "DAC0 ON",
-            "DAC1 ON",
-            "ALL ON",
-            "ALL OFF"});
+            "DAC0 OFF, DAC1 ON",
+            "DAC0 ON, DAC1 OFF",
+            "ALL OFF",
+            "ALL ON"});
             this.comboDAC_Power.Location = new System.Drawing.Point(510, 38);
             this.comboDAC_Power.Name = "comboDAC_Power";
             this.comboDAC_Power.Size = new System.Drawing.Size(138, 24);
