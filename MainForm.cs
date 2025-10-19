@@ -82,6 +82,8 @@ namespace BringUp_Control
         bool TXline_flag = false;   // TX line up values upload flag
         private bool _disposed;
 
+        string ftdi_id1 = string.Empty; // FTDI ID for SPI interface
+        string ftdi_id2 = string.Empty; // FTDI ID for GPIO/I2C interface
 
         float dac_fs_value = 0.0f; // DAC full scale value
 
@@ -217,6 +219,8 @@ namespace BringUp_Control
                         daq_reg_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["DAC9175:REG_FILE"]);
                         jesd_file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, configuration["FPGA:JESD204_FILE"]);
                         ftdi_fpganame = configuration["FPGA:FTDI_ID"];
+                        ftdi_id1 = configuration["FTDI:ID1"];
+                        ftdi_id2 = configuration["FTDI:ID2"];
 
                         if (File.Exists(dac_ini_file))
                         {
@@ -318,8 +322,8 @@ namespace BringUp_Control
                     // FTDI reconnected — reinitialize                  
 
 
-                    uint locfirst = FTDriver.FindSpiInterfaceLocId("A");
-                    uint locsecond = FTDriver.FindSpiInterfaceLocId("B");
+                    uint locfirst = FTDriver.FindSpiInterfaceLocId(ftdi_id1);
+                    uint locsecond = FTDriver.FindSpiInterfaceLocId(ftdi_id2);
 
                     //uint locfirst = FTDriver.GetDeviceInterfaceSPI("FT4222 A");   //Device A interface for SPI
                     //uint locsecond = FTDriver.GetDeviceInterfaceSPI("FT4222 B");  //Device B interface for GPIO and I2C

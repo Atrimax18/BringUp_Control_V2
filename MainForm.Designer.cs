@@ -54,6 +54,8 @@
             this.labelRegAddress = new System.Windows.Forms.Label();
             this.labelFilePathAD4368 = new System.Windows.Forms.Label();
             this.tabAD9175 = new System.Windows.Forms.TabPage();
+            this.label29 = new System.Windows.Forms.Label();
+            this.comboDAC_Power = new System.Windows.Forms.ComboBox();
             this.Cmd_Load_DAC = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.textSTPL_Data = new System.Windows.Forms.TextBox();
@@ -187,8 +189,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.comboDAC_Power = new System.Windows.Forms.ComboBox();
-            this.label29 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -541,6 +541,29 @@
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(491, 17);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(102, 16);
+            this.label29.TabIndex = 46;
+            this.label29.Text = "DAC POWER:";
+            // 
+            // comboDAC_Power
+            // 
+            this.comboDAC_Power.FormattingEnabled = true;
+            this.comboDAC_Power.Items.AddRange(new object[] {
+            "DAC0 OFF, DAC1 ON",
+            "DAC0 ON, DAC1 OFF",
+            "ALL OFF",
+            "ALL ON"});
+            this.comboDAC_Power.Location = new System.Drawing.Point(494, 38);
+            this.comboDAC_Power.Name = "comboDAC_Power";
+            this.comboDAC_Power.Size = new System.Drawing.Size(171, 24);
+            this.comboDAC_Power.TabIndex = 45;
+            this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.comboDAC_Power_SelectedIndexChanged);
             // 
             // Cmd_Load_DAC
             // 
@@ -1997,29 +2020,6 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
-            // 
-            // comboDAC_Power
-            // 
-            this.comboDAC_Power.FormattingEnabled = true;
-            this.comboDAC_Power.Items.AddRange(new object[] {
-            "DAC0 OFF, DAC1 ON",
-            "DAC0 ON, DAC1 OFF",
-            "ALL OFF",
-            "ALL ON"});
-            this.comboDAC_Power.Location = new System.Drawing.Point(510, 38);
-            this.comboDAC_Power.Name = "comboDAC_Power";
-            this.comboDAC_Power.Size = new System.Drawing.Size(138, 24);
-            this.comboDAC_Power.TabIndex = 45;
-            this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.comboDAC_Power_SelectedIndexChanged);
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(508, 17);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(102, 16);
-            this.label29.TabIndex = 46;
-            this.label29.Text = "DAC POWER:";
             // 
             // MainForm
             // 
