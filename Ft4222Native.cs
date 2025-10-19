@@ -359,7 +359,7 @@ namespace BringUp_Control
                 string strvalue = new string (str.TakeWhile(char.IsLetterOrDigit).ToArray());
 
 
-                //retrun locId if the serial number matches
+                //return locId if the serial number matches
                 if (strvalue.Equals(serialnum))
                     return locId;
             }
