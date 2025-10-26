@@ -221,7 +221,7 @@
             // 
             this.Cmd_Exit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cmd_Exit.Location = new System.Drawing.Point(1359, 857);
-            this.Cmd_Exit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Exit.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Exit.Name = "Cmd_Exit";
             this.Cmd_Exit.Size = new System.Drawing.Size(172, 81);
             this.Cmd_Exit.TabIndex = 0;
@@ -250,7 +250,7 @@
             this.tabControl1.Controls.Add(this.tabMux);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(20, 80);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1136, 842);
@@ -262,9 +262,9 @@
             this.tabWelcome.Controls.Add(this.pictureBox3);
             this.tabWelcome.Controls.Add(this.label26);
             this.tabWelcome.Location = new System.Drawing.Point(4, 29);
-            this.tabWelcome.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabWelcome.Margin = new System.Windows.Forms.Padding(4);
             this.tabWelcome.Name = "tabWelcome";
-            this.tabWelcome.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabWelcome.Padding = new System.Windows.Forms.Padding(4);
             this.tabWelcome.Size = new System.Drawing.Size(1128, 809);
             this.tabWelcome.TabIndex = 8;
             this.tabWelcome.Text = "Welcome";
@@ -274,7 +274,7 @@
             // 
             this.pictureBox3.Image = global::BringUp_Control.Properties.Resources.TX_FEM;
             this.pictureBox3.Location = new System.Drawing.Point(48, 33);
-            this.pictureBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox3.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(991, 358);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -311,9 +311,9 @@
             this.tabAD4368.Controls.Add(this.labelFilePathAD4368);
             this.tabAD4368.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabAD4368.Location = new System.Drawing.Point(4, 29);
-            this.tabAD4368.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAD4368.Margin = new System.Windows.Forms.Padding(4);
             this.tabAD4368.Name = "tabAD4368";
-            this.tabAD4368.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAD4368.Padding = new System.Windows.Forms.Padding(4);
             this.tabAD4368.Size = new System.Drawing.Size(1128, 809);
             this.tabAD4368.TabIndex = 0;
             this.tabAD4368.Text = "PLL 4368";
@@ -332,7 +332,7 @@
             // Cmd_RFPLL_Init
             // 
             this.Cmd_RFPLL_Init.Location = new System.Drawing.Point(808, 196);
-            this.Cmd_RFPLL_Init.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_RFPLL_Init.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_RFPLL_Init.Name = "Cmd_RFPLL_Init";
             this.Cmd_RFPLL_Init.Size = new System.Drawing.Size(152, 55);
             this.Cmd_RFPLL_Init.TabIndex = 17;
@@ -345,7 +345,7 @@
             this.checkRFLOCK.AutoSize = true;
             this.checkRFLOCK.Enabled = false;
             this.checkRFLOCK.Location = new System.Drawing.Point(808, 572);
-            this.checkRFLOCK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkRFLOCK.Margin = new System.Windows.Forms.Padding(4);
             this.checkRFLOCK.Name = "checkRFLOCK";
             this.checkRFLOCK.Size = new System.Drawing.Size(121, 24);
             this.checkRFLOCK.TabIndex = 16;
@@ -355,7 +355,7 @@
             // Cmd_PowerONOFF
             // 
             this.Cmd_PowerONOFF.Location = new System.Drawing.Point(808, 720);
-            this.Cmd_PowerONOFF.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_PowerONOFF.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_PowerONOFF.Name = "Cmd_PowerONOFF";
             this.Cmd_PowerONOFF.Size = new System.Drawing.Size(152, 71);
             this.Cmd_PowerONOFF.TabIndex = 14;
@@ -369,7 +369,7 @@
             this.radioRF_POWER_Status.AutoSize = true;
             this.radioRF_POWER_Status.Enabled = false;
             this.radioRF_POWER_Status.Location = new System.Drawing.Point(808, 688);
-            this.radioRF_POWER_Status.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioRF_POWER_Status.Margin = new System.Windows.Forms.Padding(4);
             this.radioRF_POWER_Status.Name = "radioRF_POWER_Status";
             this.radioRF_POWER_Status.Size = new System.Drawing.Size(131, 24);
             this.radioRF_POWER_Status.TabIndex = 13;
@@ -381,7 +381,7 @@
             // 
             this.Cmd_WriteAll_AD4368.Enabled = false;
             this.Cmd_WriteAll_AD4368.Location = new System.Drawing.Point(808, 421);
-            this.Cmd_WriteAll_AD4368.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_WriteAll_AD4368.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_WriteAll_AD4368.Name = "Cmd_WriteAll_AD4368";
             this.Cmd_WriteAll_AD4368.Size = new System.Drawing.Size(152, 55);
             this.Cmd_WriteAll_AD4368.TabIndex = 12;
@@ -393,7 +393,7 @@
             // 
             this.Cmd_ReadAll_AD4368.Enabled = false;
             this.Cmd_ReadAll_AD4368.Location = new System.Drawing.Point(808, 358);
-            this.Cmd_ReadAll_AD4368.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_ReadAll_AD4368.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_ReadAll_AD4368.Name = "Cmd_ReadAll_AD4368";
             this.Cmd_ReadAll_AD4368.Size = new System.Drawing.Size(152, 55);
             this.Cmd_ReadAll_AD4368.TabIndex = 11;
@@ -405,7 +405,7 @@
             // 
             this.Cmd_Export_AD4368_File.Enabled = false;
             this.Cmd_Export_AD4368_File.Location = new System.Drawing.Point(808, 258);
-            this.Cmd_Export_AD4368_File.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Export_AD4368_File.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Export_AD4368_File.Name = "Cmd_Export_AD4368_File";
             this.Cmd_Export_AD4368_File.Size = new System.Drawing.Size(152, 55);
             this.Cmd_Export_AD4368_File.TabIndex = 10;
@@ -416,7 +416,7 @@
             // Cmd_WriteReg_AD4368
             // 
             this.Cmd_WriteReg_AD4368.Location = new System.Drawing.Point(405, 36);
-            this.Cmd_WriteReg_AD4368.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_WriteReg_AD4368.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_WriteReg_AD4368.Name = "Cmd_WriteReg_AD4368";
             this.Cmd_WriteReg_AD4368.Size = new System.Drawing.Size(152, 55);
             this.Cmd_WriteReg_AD4368.TabIndex = 7;
@@ -427,7 +427,7 @@
             // textAD4368_Value
             // 
             this.textAD4368_Value.Location = new System.Drawing.Point(273, 59);
-            this.textAD4368_Value.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textAD4368_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textAD4368_Value.Name = "textAD4368_Value";
             this.textAD4368_Value.Size = new System.Drawing.Size(123, 26);
             this.textAD4368_Value.TabIndex = 6;
@@ -437,9 +437,9 @@
             // 
             this.groupBox1.Controls.Add(this.dataGridViewAD4368);
             this.groupBox1.Location = new System.Drawing.Point(12, 196);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox1.Size = new System.Drawing.Size(733, 603);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
@@ -453,7 +453,7 @@
             this.dataGridViewAD4368.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
             this.dataGridViewAD4368.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAD4368.Location = new System.Drawing.Point(8, 26);
-            this.dataGridViewAD4368.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridViewAD4368.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewAD4368.Name = "dataGridViewAD4368";
             this.dataGridViewAD4368.ReadOnly = true;
             this.dataGridViewAD4368.RowHeadersWidth = 51;
@@ -481,7 +481,7 @@
             "1101: low",
             ""});
             this.comboMUXOUT.Location = new System.Drawing.Point(12, 119);
-            this.comboMUXOUT.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboMUXOUT.Margin = new System.Windows.Forms.Padding(4);
             this.comboMUXOUT.Name = "comboMUXOUT";
             this.comboMUXOUT.Size = new System.Drawing.Size(171, 28);
             this.comboMUXOUT.TabIndex = 4;
@@ -501,7 +501,7 @@
             // 
             this.comboRegAddress.FormattingEnabled = true;
             this.comboRegAddress.Location = new System.Drawing.Point(12, 59);
-            this.comboRegAddress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboRegAddress.Margin = new System.Windows.Forms.Padding(4);
             this.comboRegAddress.Name = "comboRegAddress";
             this.comboRegAddress.Size = new System.Drawing.Size(171, 28);
             this.comboRegAddress.TabIndex = 2;
@@ -561,9 +561,9 @@
             this.tabAD9175.Controls.Add(this.groupBox2);
             this.tabAD9175.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabAD9175.Location = new System.Drawing.Point(4, 29);
-            this.tabAD9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAD9175.Margin = new System.Windows.Forms.Padding(4);
             this.tabAD9175.Name = "tabAD9175";
-            this.tabAD9175.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabAD9175.Padding = new System.Windows.Forms.Padding(4);
             this.tabAD9175.Size = new System.Drawing.Size(1128, 809);
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
@@ -588,7 +588,7 @@
             "ALL OFF",
             "ALL ON"});
             this.comboDAC_Power.Location = new System.Drawing.Point(659, 47);
-            this.comboDAC_Power.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboDAC_Power.Margin = new System.Windows.Forms.Padding(4);
             this.comboDAC_Power.Name = "comboDAC_Power";
             this.comboDAC_Power.Size = new System.Drawing.Size(227, 28);
             this.comboDAC_Power.TabIndex = 45;
@@ -597,7 +597,7 @@
             // Cmd_Load_DAC
             // 
             this.Cmd_Load_DAC.Location = new System.Drawing.Point(964, 172);
-            this.Cmd_Load_DAC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Load_DAC.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Load_DAC.Name = "Cmd_Load_DAC";
             this.Cmd_Load_DAC.Size = new System.Drawing.Size(149, 55);
             this.Cmd_Load_DAC.TabIndex = 44;
@@ -608,7 +608,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(964, 334);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(149, 55);
             this.button1.TabIndex = 43;
@@ -619,7 +619,7 @@
             // textSTPL_Data
             // 
             this.textSTPL_Data.Location = new System.Drawing.Point(519, 607);
-            this.textSTPL_Data.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textSTPL_Data.Margin = new System.Windows.Forms.Padding(4);
             this.textSTPL_Data.Name = "textSTPL_Data";
             this.textSTPL_Data.Size = new System.Drawing.Size(76, 26);
             this.textSTPL_Data.TabIndex = 42;
@@ -656,7 +656,7 @@
             "14",
             "15"});
             this.comboBox5.Location = new System.Drawing.Point(813, 607);
-            this.comboBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox5.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(72, 28);
             this.comboBox5.TabIndex = 40;
@@ -668,7 +668,7 @@
             "0",
             "1"});
             this.comboBox4.Location = new System.Drawing.Point(747, 607);
-            this.comboBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox4.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox4.Name = "comboBox4";
             this.comboBox4.Size = new System.Drawing.Size(57, 28);
             this.comboBox4.TabIndex = 39;
@@ -682,7 +682,7 @@
             "2",
             "3"});
             this.comboBox3.Location = new System.Drawing.Point(680, 607);
-            this.comboBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox3.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(57, 28);
             this.comboBox3.TabIndex = 38;
@@ -694,7 +694,7 @@
             "0",
             "1"});
             this.comboBox2.Location = new System.Drawing.Point(604, 607);
-            this.comboBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(67, 28);
             this.comboBox2.TabIndex = 37;
@@ -716,7 +716,7 @@
             "DAC0",
             "DAC1"});
             this.comboMAINDAC.Location = new System.Drawing.Point(964, 454);
-            this.comboMAINDAC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboMAINDAC.Margin = new System.Windows.Forms.Padding(4);
             this.comboMAINDAC.Name = "comboMAINDAC";
             this.comboMAINDAC.Size = new System.Drawing.Size(129, 28);
             this.comboMAINDAC.TabIndex = 34;
@@ -736,7 +736,7 @@
             // 
             this.Cmd_Stop_STPL.Enabled = false;
             this.Cmd_Stop_STPL.Location = new System.Drawing.Point(964, 657);
-            this.Cmd_Stop_STPL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Stop_STPL.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Stop_STPL.Name = "Cmd_Stop_STPL";
             this.Cmd_Stop_STPL.Size = new System.Drawing.Size(149, 55);
             this.Cmd_Stop_STPL.TabIndex = 32;
@@ -747,7 +747,7 @@
             // Cmd_DAC_Reg_Read
             // 
             this.Cmd_DAC_Reg_Read.Location = new System.Drawing.Point(964, 491);
-            this.Cmd_DAC_Reg_Read.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_DAC_Reg_Read.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_DAC_Reg_Read.Name = "Cmd_DAC_Reg_Read";
             this.Cmd_DAC_Reg_Read.Size = new System.Drawing.Size(149, 55);
             this.Cmd_DAC_Reg_Read.TabIndex = 31;
@@ -768,7 +768,7 @@
             // textRegDAC9175
             // 
             this.textRegDAC9175.Location = new System.Drawing.Point(12, 58);
-            this.textRegDAC9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textRegDAC9175.Margin = new System.Windows.Forms.Padding(4);
             this.textRegDAC9175.Name = "textRegDAC9175";
             this.textRegDAC9175.Size = new System.Drawing.Size(124, 26);
             this.textRegDAC9175.TabIndex = 29;
@@ -778,7 +778,7 @@
             // 
             this.Cmd_Link_Status.Enabled = false;
             this.Cmd_Link_Status.Location = new System.Drawing.Point(964, 718);
-            this.Cmd_Link_Status.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Link_Status.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Link_Status.Name = "Cmd_Link_Status";
             this.Cmd_Link_Status.Size = new System.Drawing.Size(149, 55);
             this.Cmd_Link_Status.TabIndex = 28;
@@ -789,7 +789,7 @@
             // Cmd_STPL
             // 
             this.Cmd_STPL.Location = new System.Drawing.Point(964, 583);
-            this.Cmd_STPL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_STPL.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_STPL.Name = "Cmd_STPL";
             this.Cmd_STPL.Size = new System.Drawing.Size(149, 55);
             this.Cmd_STPL.TabIndex = 27;
@@ -804,9 +804,9 @@
             this.groupBox7.Controls.Add(this.numericDAC_FS);
             this.groupBox7.Controls.Add(this.label41);
             this.groupBox7.Location = new System.Drawing.Point(512, 650);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox7.Size = new System.Drawing.Size(437, 123);
             this.groupBox7.TabIndex = 26;
             this.groupBox7.TabStop = false;
@@ -815,7 +815,7 @@
             // Cmd_UpdateFS_Ioutfs
             // 
             this.Cmd_UpdateFS_Ioutfs.Location = new System.Drawing.Point(109, 78);
-            this.Cmd_UpdateFS_Ioutfs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_UpdateFS_Ioutfs.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_UpdateFS_Ioutfs.Name = "Cmd_UpdateFS_Ioutfs";
             this.Cmd_UpdateFS_Ioutfs.Size = new System.Drawing.Size(133, 36);
             this.Cmd_UpdateFS_Ioutfs.TabIndex = 27;
@@ -842,7 +842,7 @@
             0,
             196608});
             this.numericDAC_FS.Location = new System.Drawing.Point(129, 41);
-            this.numericDAC_FS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericDAC_FS.Margin = new System.Windows.Forms.Padding(4);
             this.numericDAC_FS.Maximum = new decimal(new int[] {
             25977,
             0,
@@ -879,9 +879,9 @@
             this.groupBox6.Controls.Add(this.comboPRBS);
             this.groupBox6.Controls.Add(this.Cmd_PRBS);
             this.groupBox6.Location = new System.Drawing.Point(512, 492);
-            this.groupBox6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox6.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox6.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox6.Size = new System.Drawing.Size(437, 75);
             this.groupBox6.TabIndex = 25;
             this.groupBox6.TabStop = false;
@@ -890,7 +890,7 @@
             // Cmd_QBD
             // 
             this.Cmd_QBD.Location = new System.Drawing.Point(284, 16);
-            this.Cmd_QBD.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_QBD.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_QBD.Name = "Cmd_QBD";
             this.Cmd_QBD.Size = new System.Drawing.Size(145, 47);
             this.Cmd_QBD.TabIndex = 19;
@@ -906,7 +906,7 @@
             "PRBS15",
             "PRBS31"});
             this.comboPRBS.Location = new System.Drawing.Point(8, 26);
-            this.comboPRBS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboPRBS.Margin = new System.Windows.Forms.Padding(4);
             this.comboPRBS.Name = "comboPRBS";
             this.comboPRBS.Size = new System.Drawing.Size(116, 28);
             this.comboPRBS.TabIndex = 18;
@@ -914,7 +914,7 @@
             // Cmd_PRBS
             // 
             this.Cmd_PRBS.Location = new System.Drawing.Point(147, 16);
-            this.Cmd_PRBS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_PRBS.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_PRBS.Name = "Cmd_PRBS";
             this.Cmd_PRBS.Size = new System.Drawing.Size(129, 47);
             this.Cmd_PRBS.TabIndex = 17;
@@ -925,7 +925,7 @@
             // Cmd_ReadRegAD9175
             // 
             this.Cmd_ReadRegAD9175.Location = new System.Drawing.Point(341, 89);
-            this.Cmd_ReadRegAD9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_ReadRegAD9175.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_ReadRegAD9175.Name = "Cmd_ReadRegAD9175";
             this.Cmd_ReadRegAD9175.Size = new System.Drawing.Size(151, 55);
             this.Cmd_ReadRegAD9175.TabIndex = 20;
@@ -958,9 +958,9 @@
             this.groupBox5.Controls.Add(this.ComboDAC_index);
             this.groupBox5.Controls.Add(this.label25);
             this.groupBox5.Location = new System.Drawing.Point(8, 492);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox5.Size = new System.Drawing.Size(496, 281);
             this.groupBox5.TabIndex = 19;
             this.groupBox5.TabStop = false;
@@ -987,7 +987,7 @@
             "4",
             "5"});
             this.comboCh_NCO.Location = new System.Drawing.Point(385, 149);
-            this.comboCh_NCO.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboCh_NCO.Margin = new System.Windows.Forms.Padding(4);
             this.comboCh_NCO.Name = "comboCh_NCO";
             this.comboCh_NCO.Size = new System.Drawing.Size(65, 28);
             this.comboCh_NCO.TabIndex = 45;
@@ -997,7 +997,7 @@
             // 
             this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(339, 190);
-            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button2.Margin = new System.Windows.Forms.Padding(4);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(129, 78);
             this.button2.TabIndex = 44;
@@ -1018,7 +1018,7 @@
             // numericTime
             // 
             this.numericTime.Location = new System.Drawing.Point(128, 240);
-            this.numericTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericTime.Margin = new System.Windows.Forms.Padding(4);
             this.numericTime.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -1049,7 +1049,7 @@
             this.checkBox1.Checked = true;
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Location = new System.Drawing.Point(333, 25);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(129, 24);
             this.checkBox1.TabIndex = 30;
@@ -1070,7 +1070,7 @@
             // numericTone_Amplitude
             // 
             this.numericTone_Amplitude.Location = new System.Drawing.Point(128, 202);
-            this.numericTone_Amplitude.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericTone_Amplitude.Margin = new System.Windows.Forms.Padding(4);
             this.numericTone_Amplitude.Name = "numericTone_Amplitude";
             this.numericTone_Amplitude.Size = new System.Drawing.Size(96, 26);
             this.numericTone_Amplitude.TabIndex = 28;
@@ -1093,7 +1093,7 @@
             // Cmd_StartSweep
             // 
             this.Cmd_StartSweep.Location = new System.Drawing.Point(339, 58);
-            this.Cmd_StartSweep.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_StartSweep.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_StartSweep.Name = "Cmd_StartSweep";
             this.Cmd_StartSweep.Size = new System.Drawing.Size(129, 69);
             this.Cmd_StartSweep.TabIndex = 25;
@@ -1134,7 +1134,7 @@
             // textStop
             // 
             this.textStop.Location = new System.Drawing.Point(121, 112);
-            this.textStop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textStop.Margin = new System.Windows.Forms.Padding(4);
             this.textStop.Name = "textStop";
             this.textStop.Size = new System.Drawing.Size(101, 26);
             this.textStop.TabIndex = 21;
@@ -1153,7 +1153,7 @@
             // textStart
             // 
             this.textStart.Location = new System.Drawing.Point(121, 68);
-            this.textStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textStart.Margin = new System.Windows.Forms.Padding(4);
             this.textStart.Name = "textStart";
             this.textStart.Size = new System.Drawing.Size(101, 26);
             this.textStart.TabIndex = 19;
@@ -1162,7 +1162,7 @@
             // textStep
             // 
             this.textStep.Location = new System.Drawing.Point(121, 159);
-            this.textStep.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textStep.Margin = new System.Windows.Forms.Padding(4);
             this.textStep.Name = "textStep";
             this.textStep.Size = new System.Drawing.Size(101, 26);
             this.textStep.TabIndex = 16;
@@ -1195,7 +1195,7 @@
             "DAC0",
             "DAC1"});
             this.ComboDAC_index.Location = new System.Drawing.Point(137, 22);
-            this.ComboDAC_index.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ComboDAC_index.Margin = new System.Windows.Forms.Padding(4);
             this.ComboDAC_index.Name = "ComboDAC_index";
             this.ComboDAC_index.Size = new System.Drawing.Size(100, 28);
             this.ComboDAC_index.TabIndex = 16;
@@ -1213,7 +1213,7 @@
             // Cmd_DAC_Init
             // 
             this.Cmd_DAC_Init.Location = new System.Drawing.Point(964, 271);
-            this.Cmd_DAC_Init.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_DAC_Init.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_DAC_Init.Name = "Cmd_DAC_Init";
             this.Cmd_DAC_Init.Size = new System.Drawing.Size(149, 55);
             this.Cmd_DAC_Init.TabIndex = 13;
@@ -1224,7 +1224,7 @@
             // Cmd_WriteReg9175
             // 
             this.Cmd_WriteReg9175.Location = new System.Drawing.Point(341, 21);
-            this.Cmd_WriteReg9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_WriteReg9175.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_WriteReg9175.Name = "Cmd_WriteReg9175";
             this.Cmd_WriteReg9175.Size = new System.Drawing.Size(151, 55);
             this.Cmd_WriteReg9175.TabIndex = 10;
@@ -1235,7 +1235,7 @@
             // textDAC9175_Value
             // 
             this.textDAC9175_Value.Location = new System.Drawing.Point(12, 112);
-            this.textDAC9175_Value.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textDAC9175_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textDAC9175_Value.Name = "textDAC9175_Value";
             this.textDAC9175_Value.Size = new System.Drawing.Size(133, 26);
             this.textDAC9175_Value.TabIndex = 9;
@@ -1245,7 +1245,7 @@
             // 
             this.comboRegisters9175.FormattingEnabled = true;
             this.comboRegisters9175.Location = new System.Drawing.Point(944, 47);
-            this.comboRegisters9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboRegisters9175.Margin = new System.Windows.Forms.Padding(4);
             this.comboRegisters9175.Name = "comboRegisters9175";
             this.comboRegisters9175.Size = new System.Drawing.Size(171, 28);
             this.comboRegisters9175.TabIndex = 5;
@@ -1275,9 +1275,9 @@
             // 
             this.groupBox2.Controls.Add(this.dataGridViewAD9175);
             this.groupBox2.Location = new System.Drawing.Point(8, 172);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox2.Size = new System.Drawing.Size(949, 313);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
@@ -1290,7 +1290,7 @@
             this.dataGridViewAD9175.AllowUserToResizeRows = false;
             this.dataGridViewAD9175.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAD9175.Location = new System.Drawing.Point(8, 26);
-            this.dataGridViewAD9175.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridViewAD9175.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridViewAD9175.Name = "dataGridViewAD9175";
             this.dataGridViewAD9175.ReadOnly = true;
             this.dataGridViewAD9175.RowHeadersWidth = 51;
@@ -1314,7 +1314,7 @@
             this.tabSi5518.Controls.Add(this.label_UserConfigSi55XX);
             this.tabSi5518.Controls.Add(this.button_GetInfo);
             this.tabSi5518.Location = new System.Drawing.Point(4, 29);
-            this.tabSi5518.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabSi5518.Margin = new System.Windows.Forms.Padding(4);
             this.tabSi5518.Name = "tabSi5518";
             this.tabSi5518.Size = new System.Drawing.Size(1128, 809);
             this.tabSi5518.TabIndex = 4;
@@ -1364,7 +1364,7 @@
             // Select_Dir_For_Burn_SkyPLL
             // 
             this.Select_Dir_For_Burn_SkyPLL.Location = new System.Drawing.Point(765, 258);
-            this.Select_Dir_For_Burn_SkyPLL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Select_Dir_For_Burn_SkyPLL.Margin = new System.Windows.Forms.Padding(4);
             this.Select_Dir_For_Burn_SkyPLL.Name = "Select_Dir_For_Burn_SkyPLL";
             this.Select_Dir_For_Burn_SkyPLL.Size = new System.Drawing.Size(152, 57);
             this.Select_Dir_For_Burn_SkyPLL.TabIndex = 20;
@@ -1375,7 +1375,7 @@
             // Select_Dir_For_Load_SkyPLL
             // 
             this.Select_Dir_For_Load_SkyPLL.Location = new System.Drawing.Point(765, 194);
-            this.Select_Dir_For_Load_SkyPLL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Select_Dir_For_Load_SkyPLL.Margin = new System.Windows.Forms.Padding(4);
             this.Select_Dir_For_Load_SkyPLL.Name = "Select_Dir_For_Load_SkyPLL";
             this.Select_Dir_For_Load_SkyPLL.Size = new System.Drawing.Size(152, 57);
             this.Select_Dir_For_Load_SkyPLL.TabIndex = 19;
@@ -1387,7 +1387,7 @@
             // 
             this.Btn_Load_SkyPLL.Enabled = false;
             this.Btn_Load_SkyPLL.Location = new System.Drawing.Point(925, 194);
-            this.Btn_Load_SkyPLL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Btn_Load_SkyPLL.Margin = new System.Windows.Forms.Padding(4);
             this.Btn_Load_SkyPLL.Name = "Btn_Load_SkyPLL";
             this.Btn_Load_SkyPLL.Size = new System.Drawing.Size(152, 57);
             this.Btn_Load_SkyPLL.TabIndex = 18;
@@ -1399,7 +1399,7 @@
             // 
             this.Btn_Burn_SkyPLL.Enabled = false;
             this.Btn_Burn_SkyPLL.Location = new System.Drawing.Point(925, 258);
-            this.Btn_Burn_SkyPLL.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Btn_Burn_SkyPLL.Margin = new System.Windows.Forms.Padding(4);
             this.Btn_Burn_SkyPLL.Name = "Btn_Burn_SkyPLL";
             this.Btn_Burn_SkyPLL.Size = new System.Drawing.Size(152, 57);
             this.Btn_Burn_SkyPLL.TabIndex = 17;
@@ -1410,7 +1410,7 @@
             // button_CheckRefStat
             // 
             this.button_CheckRefStat.Location = new System.Drawing.Point(581, 521);
-            this.button_CheckRefStat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_CheckRefStat.Margin = new System.Windows.Forms.Padding(4);
             this.button_CheckRefStat.Name = "button_CheckRefStat";
             this.button_CheckRefStat.Size = new System.Drawing.Size(152, 58);
             this.button_CheckRefStat.TabIndex = 16;
@@ -1451,7 +1451,7 @@
             // button_GetInfo
             // 
             this.button_GetInfo.Location = new System.Drawing.Point(581, 382);
-            this.button_GetInfo.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button_GetInfo.Margin = new System.Windows.Forms.Padding(4);
             this.button_GetInfo.Name = "button_GetInfo";
             this.button_GetInfo.Size = new System.Drawing.Size(152, 58);
             this.button_GetInfo.TabIndex = 7;
@@ -1481,7 +1481,7 @@
             this.tabRFLine.Controls.Add(this.label10);
             this.tabRFLine.Controls.Add(this.pictureBox1);
             this.tabRFLine.Location = new System.Drawing.Point(4, 29);
-            this.tabRFLine.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabRFLine.Margin = new System.Windows.Forms.Padding(4);
             this.tabRFLine.Name = "tabRFLine";
             this.tabRFLine.Size = new System.Drawing.Size(1128, 809);
             this.tabRFLine.TabIndex = 5;
@@ -1497,7 +1497,7 @@
             0,
             131072});
             this.numericATT3.Location = new System.Drawing.Point(817, 245);
-            this.numericATT3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericATT3.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT3.Name = "numericATT3";
             this.numericATT3.Size = new System.Drawing.Size(75, 26);
             this.numericATT3.TabIndex = 25;
@@ -1513,7 +1513,7 @@
             0,
             131072});
             this.numericATT2.Location = new System.Drawing.Point(605, 245);
-            this.numericATT2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericATT2.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT2.Name = "numericATT2";
             this.numericATT2.Size = new System.Drawing.Size(75, 26);
             this.numericATT2.TabIndex = 24;
@@ -1529,7 +1529,7 @@
             0,
             131072});
             this.numericATT1.Location = new System.Drawing.Point(311, 245);
-            this.numericATT1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericATT1.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT1.Name = "numericATT1";
             this.numericATT1.Size = new System.Drawing.Size(75, 26);
             this.numericATT1.TabIndex = 23;
@@ -1541,7 +1541,7 @@
             // 
             this.checkAmp2.AutoSize = true;
             this.checkAmp2.Location = new System.Drawing.Point(700, 68);
-            this.checkAmp2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkAmp2.Margin = new System.Windows.Forms.Padding(4);
             this.checkAmp2.Name = "checkAmp2";
             this.checkAmp2.Size = new System.Drawing.Size(164, 24);
             this.checkAmp2.TabIndex = 22;
@@ -1553,7 +1553,7 @@
             // 
             this.checkAmp1.AutoSize = true;
             this.checkAmp1.Location = new System.Drawing.Point(383, 68);
-            this.checkAmp1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkAmp1.Margin = new System.Windows.Forms.Padding(4);
             this.checkAmp1.Name = "checkAmp1";
             this.checkAmp1.Size = new System.Drawing.Size(164, 24);
             this.checkAmp1.TabIndex = 21;
@@ -1564,7 +1564,7 @@
             // Cmd_Read_ADC
             // 
             this.Cmd_Read_ADC.Location = new System.Drawing.Point(17, 507);
-            this.Cmd_Read_ADC.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Read_ADC.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Read_ADC.Name = "Cmd_Read_ADC";
             this.Cmd_Read_ADC.Size = new System.Drawing.Size(217, 63);
             this.Cmd_Read_ADC.TabIndex = 20;
@@ -1586,7 +1586,7 @@
             // Cmd_UpdateTX_Values
             // 
             this.Cmd_UpdateTX_Values.Location = new System.Drawing.Point(919, 507);
-            this.Cmd_UpdateTX_Values.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_UpdateTX_Values.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_UpdateTX_Values.Name = "Cmd_UpdateTX_Values";
             this.Cmd_UpdateTX_Values.Size = new System.Drawing.Size(187, 63);
             this.Cmd_UpdateTX_Values.TabIndex = 16;
@@ -1700,7 +1700,7 @@
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(17, 106);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1088, 289);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -1727,7 +1727,7 @@
             this.tabFPGA.Controls.Add(this.textFPGA_Address);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import);
             this.tabFPGA.Location = new System.Drawing.Point(4, 29);
-            this.tabFPGA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.tabFPGA.Name = "tabFPGA";
             this.tabFPGA.Size = new System.Drawing.Size(1128, 809);
             this.tabFPGA.TabIndex = 7;
@@ -1738,7 +1738,7 @@
             // 
             this.dataGridFPGA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridFPGA.Location = new System.Drawing.Point(8, 160);
-            this.dataGridFPGA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridFPGA.Name = "dataGridFPGA";
             this.dataGridFPGA.RowHeadersWidth = 51;
             this.dataGridFPGA.Size = new System.Drawing.Size(781, 491);
@@ -1760,7 +1760,7 @@
             "Downlink Modem3",
             "Downlink ADC"});
             this.comboBoxDebugger.Location = new System.Drawing.Point(888, 118);
-            this.comboBoxDebugger.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxDebugger.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDebugger.Name = "comboBoxDebugger";
             this.comboBoxDebugger.Size = new System.Drawing.Size(192, 28);
             this.comboBoxDebugger.TabIndex = 17;
@@ -1770,7 +1770,7 @@
             // 
             this.Cmd_Stop_Player.Enabled = false;
             this.Cmd_Stop_Player.Location = new System.Drawing.Point(888, 286);
-            this.Cmd_Stop_Player.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Stop_Player.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Stop_Player.Name = "Cmd_Stop_Player";
             this.Cmd_Stop_Player.Size = new System.Drawing.Size(193, 55);
             this.Cmd_Stop_Player.TabIndex = 16;
@@ -1781,7 +1781,7 @@
             // Cmd_Activate_Player
             // 
             this.Cmd_Activate_Player.Location = new System.Drawing.Point(888, 223);
-            this.Cmd_Activate_Player.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Activate_Player.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Activate_Player.Name = "Cmd_Activate_Player";
             this.Cmd_Activate_Player.Size = new System.Drawing.Size(193, 55);
             this.Cmd_Activate_Player.TabIndex = 15;
@@ -1792,7 +1792,7 @@
             // Cmd_Load_JESD204
             // 
             this.Cmd_Load_JESD204.Location = new System.Drawing.Point(888, 25);
-            this.Cmd_Load_JESD204.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Load_JESD204.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Load_JESD204.Name = "Cmd_Load_JESD204";
             this.Cmd_Load_JESD204.Size = new System.Drawing.Size(193, 55);
             this.Cmd_Load_JESD204.TabIndex = 14;
@@ -1803,7 +1803,7 @@
             // Cmd_FPGA_Tests
             // 
             this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(888, 348);
-            this.Cmd_FPGA_Tests.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_FPGA_Tests.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Tests.Name = "Cmd_FPGA_Tests";
             this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(193, 55);
             this.Cmd_FPGA_Tests.TabIndex = 13;
@@ -1814,7 +1814,7 @@
             // Cmd_WriteFPGA
             // 
             this.Cmd_WriteFPGA.Location = new System.Drawing.Point(888, 638);
-            this.Cmd_WriteFPGA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_WriteFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_WriteFPGA.Name = "Cmd_WriteFPGA";
             this.Cmd_WriteFPGA.Size = new System.Drawing.Size(193, 37);
             this.Cmd_WriteFPGA.TabIndex = 12;
@@ -1835,7 +1835,7 @@
             // Cmd_Read_Registers
             // 
             this.Cmd_Read_Registers.Location = new System.Drawing.Point(888, 593);
-            this.Cmd_Read_Registers.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_Read_Registers.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Read_Registers.Name = "Cmd_Read_Registers";
             this.Cmd_Read_Registers.Size = new System.Drawing.Size(193, 37);
             this.Cmd_Read_Registers.TabIndex = 10;
@@ -1846,7 +1846,7 @@
             // Cmd_FPGA_Read
             // 
             this.Cmd_FPGA_Read.Location = new System.Drawing.Point(433, 71);
-            this.Cmd_FPGA_Read.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_FPGA_Read.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Read.Name = "Cmd_FPGA_Read";
             this.Cmd_FPGA_Read.Size = new System.Drawing.Size(140, 48);
             this.Cmd_FPGA_Read.TabIndex = 8;
@@ -1857,7 +1857,7 @@
             // textFPGA_Value
             // 
             this.textFPGA_Value.Location = new System.Drawing.Point(268, 68);
-            this.textFPGA_Value.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textFPGA_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textFPGA_Value.Name = "textFPGA_Value";
             this.textFPGA_Value.Size = new System.Drawing.Size(155, 26);
             this.textFPGA_Value.TabIndex = 7;
@@ -1887,7 +1887,7 @@
             // Cmd_FPGA_Write
             // 
             this.Cmd_FPGA_Write.Location = new System.Drawing.Point(433, 16);
-            this.Cmd_FPGA_Write.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_FPGA_Write.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Write.Name = "Cmd_FPGA_Write";
             this.Cmd_FPGA_Write.Size = new System.Drawing.Size(140, 48);
             this.Cmd_FPGA_Write.TabIndex = 3;
@@ -1898,7 +1898,7 @@
             // textFPGA_Output
             // 
             this.textFPGA_Output.Location = new System.Drawing.Point(8, 658);
-            this.textFPGA_Output.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textFPGA_Output.Margin = new System.Windows.Forms.Padding(4);
             this.textFPGA_Output.Multiline = true;
             this.textFPGA_Output.Name = "textFPGA_Output";
             this.textFPGA_Output.ReadOnly = true;
@@ -1909,16 +1909,17 @@
             // textFPGA_Address
             // 
             this.textFPGA_Address.Location = new System.Drawing.Point(31, 68);
-            this.textFPGA_Address.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textFPGA_Address.Margin = new System.Windows.Forms.Padding(4);
             this.textFPGA_Address.Name = "textFPGA_Address";
             this.textFPGA_Address.Size = new System.Drawing.Size(228, 26);
             this.textFPGA_Address.TabIndex = 1;
+            this.textFPGA_Address.TextChanged += new System.EventHandler(this.textFPGA_Address_TextChanged);
             this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Address_KeyPress);
             // 
             // Cmd_FPGA_Import
             // 
             this.Cmd_FPGA_Import.Location = new System.Drawing.Point(888, 160);
-            this.Cmd_FPGA_Import.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_FPGA_Import.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
             this.Cmd_FPGA_Import.Size = new System.Drawing.Size(193, 55);
             this.Cmd_FPGA_Import.TabIndex = 0;
@@ -1940,7 +1941,7 @@
             this.tabMux.Controls.Add(this.comboDevice);
             this.tabMux.Controls.Add(this.groupBox3);
             this.tabMux.Location = new System.Drawing.Point(4, 29);
-            this.tabMux.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabMux.Margin = new System.Windows.Forms.Padding(4);
             this.tabMux.Name = "tabMux";
             this.tabMux.Size = new System.Drawing.Size(1128, 809);
             this.tabMux.TabIndex = 6;
@@ -1950,7 +1951,7 @@
             // Cmd_I2C_Read
             // 
             this.Cmd_I2C_Read.Location = new System.Drawing.Point(180, 503);
-            this.Cmd_I2C_Read.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_I2C_Read.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_I2C_Read.Name = "Cmd_I2C_Read";
             this.Cmd_I2C_Read.Size = new System.Drawing.Size(143, 66);
             this.Cmd_I2C_Read.TabIndex = 13;
@@ -1961,7 +1962,7 @@
             // Cmd_I2C_Write
             // 
             this.Cmd_I2C_Write.Location = new System.Drawing.Point(180, 430);
-            this.Cmd_I2C_Write.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_I2C_Write.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_I2C_Write.Name = "Cmd_I2C_Write";
             this.Cmd_I2C_Write.Size = new System.Drawing.Size(143, 66);
             this.Cmd_I2C_Write.TabIndex = 12;
@@ -1992,7 +1993,7 @@
             // textI2C_Val
             // 
             this.textI2C_Val.Location = new System.Drawing.Point(12, 530);
-            this.textI2C_Val.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textI2C_Val.Margin = new System.Windows.Forms.Padding(4);
             this.textI2C_Val.Name = "textI2C_Val";
             this.textI2C_Val.Size = new System.Drawing.Size(141, 26);
             this.textI2C_Val.TabIndex = 9;
@@ -2001,7 +2002,7 @@
             // textI2C_Reg
             // 
             this.textI2C_Reg.Location = new System.Drawing.Point(12, 476);
-            this.textI2C_Reg.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textI2C_Reg.Margin = new System.Windows.Forms.Padding(4);
             this.textI2C_Reg.Name = "textI2C_Reg";
             this.textI2C_Reg.Size = new System.Drawing.Size(141, 26);
             this.textI2C_Reg.TabIndex = 8;
@@ -2010,9 +2011,9 @@
             // groupBox4
             // 
             this.groupBox4.Location = new System.Drawing.Point(267, 4);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox4.Size = new System.Drawing.Size(391, 267);
             this.groupBox4.TabIndex = 4;
             this.groupBox4.TabStop = false;
@@ -2049,7 +2050,7 @@
             "PCAL6416A",
             "FPGA"});
             this.comboDevice.Location = new System.Drawing.Point(12, 358);
-            this.comboDevice.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboDevice.Margin = new System.Windows.Forms.Padding(4);
             this.comboDevice.Name = "comboDevice";
             this.comboDevice.Size = new System.Drawing.Size(209, 28);
             this.comboDevice.TabIndex = 1;
@@ -2060,9 +2061,9 @@
             this.groupBox3.Controls.Add(this.radioMUX);
             this.groupBox3.Controls.Add(this.radioFPGA);
             this.groupBox3.Location = new System.Drawing.Point(4, 4);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
             this.groupBox3.Size = new System.Drawing.Size(236, 130);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
@@ -2073,7 +2074,7 @@
             this.radioMUX.AutoSize = true;
             this.radioMUX.Checked = true;
             this.radioMUX.Location = new System.Drawing.Point(8, 64);
-            this.radioMUX.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioMUX.Margin = new System.Windows.Forms.Padding(4);
             this.radioMUX.Name = "radioMUX";
             this.radioMUX.Size = new System.Drawing.Size(147, 24);
             this.radioMUX.TabIndex = 1;
@@ -2085,7 +2086,7 @@
             // 
             this.radioFPGA.AutoSize = true;
             this.radioFPGA.Location = new System.Drawing.Point(8, 32);
-            this.radioFPGA.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radioFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.radioFPGA.Name = "radioFPGA";
             this.radioFPGA.Size = new System.Drawing.Size(79, 24);
             this.radioFPGA.TabIndex = 1;
@@ -2140,7 +2141,7 @@
             // 
             this.Cmd_FT_Temp_Read.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Cmd_FT_Temp_Read.Location = new System.Drawing.Point(225, 11);
-            this.Cmd_FT_Temp_Read.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_FT_Temp_Read.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FT_Temp_Read.Name = "Cmd_FT_Temp_Read";
             this.Cmd_FT_Temp_Read.Size = new System.Drawing.Size(137, 42);
             this.Cmd_FT_Temp_Read.TabIndex = 17;
@@ -2151,7 +2152,7 @@
             // Cmd_RF_Temp_Read
             // 
             this.Cmd_RF_Temp_Read.Location = new System.Drawing.Point(607, 11);
-            this.Cmd_RF_Temp_Read.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Cmd_RF_Temp_Read.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_RF_Temp_Read.Name = "Cmd_RF_Temp_Read";
             this.Cmd_RF_Temp_Read.Size = new System.Drawing.Size(137, 42);
             this.Cmd_RF_Temp_Read.TabIndex = 18;
@@ -2162,7 +2163,7 @@
             // textLog
             // 
             this.textLog.Location = new System.Drawing.Point(1165, 198);
-            this.textLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textLog.Margin = new System.Windows.Forms.Padding(4);
             this.textLog.Multiline = true;
             this.textLog.Name = "textLog";
             this.textLog.ReadOnly = true;
@@ -2185,7 +2186,7 @@
             // 
             this.pictureBox2.Image = global::BringUp_Control.Properties.Resources.satixfy_logo_hg;
             this.pictureBox2.Location = new System.Drawing.Point(1299, 11);
-            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox2.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(232, 180);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -2210,7 +2211,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Cmd_Exit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";

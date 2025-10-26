@@ -1377,7 +1377,7 @@ namespace BringUp_Control
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
+                if (string.IsNullOrWhiteSpace(textFPGA_Address.Text) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
                     MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -1385,9 +1385,10 @@ namespace BringUp_Control
 
                 try
                 {
-                    if (IsValidHex(textFPGA_Value.Text))
+                    if (IsValidHex(textFPGA_Value.Text) && IsValidHex(textFPGA_Address.Text))
                     {
                         fpga_data = textFPGA_Value.Text;
+                        fpga_address = textFPGA_Address.Text;
                         //Cmd_FPGA_Write.Focus();
 
                         fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
@@ -1436,7 +1437,7 @@ namespace BringUp_Control
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
+                if (string.IsNullOrWhiteSpace(textFPGA_Address.Text) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
                     MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -1444,9 +1445,10 @@ namespace BringUp_Control
 
                 try
                 {
-                    if (IsValidHex(textFPGA_Value.Text))
+                    if (IsValidHex(textFPGA_Value.Text) && IsValidHex(textFPGA_Address.Text))
                     {
                         fpga_data = textFPGA_Value.Text;
+                        fpga_address = textFPGA_Address.Text;
                         //Cmd_FPGA_Write.Focus();
 
                         uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
@@ -2544,6 +2546,9 @@ namespace BringUp_Control
                 if (fpga.DebugMode != null)
                 {
                     fpga.StopPlayer(fpga.DebugMode);
+                    Cmd_Activate_Player.Enabled = true;
+                    Cmd_Stop_Player.Enabled = false;
+                    LogStatus("Previous debugger session stopped.");
                 }
 
                 string test_mode = comboBoxDebugger.SelectedItem.ToString();
@@ -3196,6 +3201,11 @@ namespace BringUp_Control
             {
                 
             }
+        }
+
+        private void textFPGA_Address_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
