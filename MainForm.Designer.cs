@@ -1861,6 +1861,7 @@
             this.textFPGA_Value.Name = "textFPGA_Value";
             this.textFPGA_Value.Size = new System.Drawing.Size(155, 26);
             this.textFPGA_Value.TabIndex = 7;
+            this.textFPGA_Value.TextChanged += new System.EventHandler(this.textFPGA_Value_TextChanged);
             this.textFPGA_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Value_KeyPress);
             // 
             // label21
@@ -1912,7 +1913,6 @@
             this.textFPGA_Address.Name = "textFPGA_Address";
             this.textFPGA_Address.Size = new System.Drawing.Size(228, 26);
             this.textFPGA_Address.TabIndex = 1;
-            this.textFPGA_Address.TextChanged += new System.EventHandler(this.textFPGA_Address_TextChanged);
             this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Address_KeyPress);
             // 
             // Cmd_FPGA_Import

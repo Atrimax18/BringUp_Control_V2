@@ -1377,7 +1377,7 @@ namespace BringUp_Control
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(fpga_data))
+                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
                     MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -1385,8 +1385,21 @@ namespace BringUp_Control
 
                 try
                 {
-                    fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
-                    LogStatus($"The register address {fpga_address} passed value [{NormalizeHexString(fpga_data)}] to FPGA");
+                    if (IsValidHex(textFPGA_Value.Text))
+                    {
+                        fpga_data = textFPGA_Value.Text;
+                        //Cmd_FPGA_Write.Focus();
+
+                        fpga.SpiWrite(HexStringToUInt(fpga_address), HexStringToUInt(fpga_data));
+                        LogStatus($"The register address {fpga_address} passed value [{NormalizeHexString(fpga_data)}] to FPGA");
+                    }
+                    else
+                    {
+                        textFPGA_Value.Clear();                        
+                        fpga_data = string.Empty;
+                        MessageBox.Show("The register value is not correct!", "Warning");
+                        textFPGA_Value.Focus();
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -1423,7 +1436,7 @@ namespace BringUp_Control
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(fpga_data))
+                if (string.IsNullOrWhiteSpace(fpga_address) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
                     MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -1431,9 +1444,22 @@ namespace BringUp_Control
 
                 try
                 {
-                    uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
-                    LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
-                    textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
+                    if (IsValidHex(textFPGA_Value.Text))
+                    {
+                        fpga_data = textFPGA_Value.Text;
+                        //Cmd_FPGA_Write.Focus();
+
+                        uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
+                        LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
+                        textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
+                    }
+                    else
+                    {
+                        textFPGA_Value.Clear();
+                        fpga_data = string.Empty;
+                        MessageBox.Show("The register value is not correct!", "Warning");
+                        textFPGA_Value.Focus();
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -1517,7 +1543,7 @@ namespace BringUp_Control
         private void TextFPGA_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabFPGA)
-            {
+            {/*
                 if (e.KeyChar == 13 && !string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
 
@@ -1534,7 +1560,7 @@ namespace BringUp_Control
                         MessageBox.Show("The register value is not correct!", "Warning");
 
                     }
-                }
+                }*/
             }
         }
 
@@ -2515,12 +2541,20 @@ namespace BringUp_Control
         {
             if (selectedTab == tabFPGA)
             {
-                string test_mode = comboBoxDebugger.SelectedItem.ToString();
+                if (fpga.DebugMode != null)
+                {
+                    fpga.StopPlayer(fpga.DebugMode);
+                }
 
+                string test_mode = comboBoxDebugger.SelectedItem.ToString();
+                
                 fpga.StreamNum = ExtractTrailingNumber(test_mode);
                 fpga.DebugMode = ExtractLinkModePrefix(test_mode);
+                
             }
         }
+
+        
 
         private void Cmd_Activate_Player_Click(object sender, EventArgs e)
         {
@@ -2552,16 +2586,7 @@ namespace BringUp_Control
                     {
                         MessageBox.Show($"Error: {ex.Message}", "Playback Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }));
-                }
-                finally
-                {
-                    // Re-enable the button on the UI thread
-                    BeginInvoke(new Action(() =>
-                    {
-                        Cmd_Activate_Player.Enabled = true;
-                        Cmd_Stop_Player.Enabled = false;
-                    }));
-                }
+                }                
             }, token);
         }
 
@@ -2572,8 +2597,14 @@ namespace BringUp_Control
                 _playbackCancelToken.Cancel();
             }
 
-            fpga.StopPlayer(fpga.DebugMode);
+            bool stopstatus  = fpga.StopPlayer(fpga.DebugMode);
+            if (stopstatus) 
+                LogStatus("Playback stopped successfully.");
+            else
+                LogStatus("Debugger still busy.....");
+
             Cmd_Stop_Player.Enabled = false;
+            Cmd_Activate_Player.Enabled = true;
         }
 
         private void Cmd_Link_Status_Click(object sender, EventArgs e)
@@ -3138,9 +3169,12 @@ namespace BringUp_Control
             
         }
 
-        private void textFPGA_Address_TextChanged(object sender, EventArgs e)
+        private void textFPGA_Value_TextChanged(object sender, EventArgs e)
         {
-
+            if (selectedTab == tabFPGA)
+            {
+                
+            }
         }
     }
 }

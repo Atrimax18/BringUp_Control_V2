@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -600,23 +601,30 @@ namespace BringUp_Control
             string preffix = dbg.Prefix;
 
             uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
+            SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
+            SpiWrite(0x000011BC, 0x0F);
 
+            
             if (status_reg != 0)
             {
                 MainForm.Instance.LogStatus("Debugger is busy.....");
                 return;
             }
-
-            SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
-            SpiWrite(0x000011BC, 0x0F);
+            else if( status_reg == 0 && play == true)
+                MainForm.Instance.LogStatus("Player Started.....");
+            else if ( status_reg == 0 && play == false)
+                MainForm.Instance.LogStatus("Player Stopped.....");
         }
 
-        public void StopPlayer(string debuggerKey)
+        
+
+        public bool StopPlayer(string debuggerKey)
         {
+            bool retflag = false;
             if (!Debuggers.TryGetValue(debuggerKey, out DebuggerInstance dbg))
             {
                 MessageBox.Show("Invalid debugger key: " + debuggerKey);
-                return;
+                return retflag;
             }
             
 
@@ -625,21 +633,23 @@ namespace BringUp_Control
             if (!stop)
             {
                 SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0);
-                SpiWrite(0x000011BC, 0x00);
+                
             }
-                       
 
-            uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel
+            SpiWrite(0x000011BC, 0x00);
+            Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed
+            uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel           
+
 
             if (status_reg != 0)
             {
-                MainForm.Instance.LogStatus("Debugger is busy.....");
-                return;
+                retflag = false;
             }
             else
             {
-                MainForm.Instance.LogStatus("Player stopped.");
-            }            
+                retflag = true;
+            }  
+            return retflag;
         }
 
         
