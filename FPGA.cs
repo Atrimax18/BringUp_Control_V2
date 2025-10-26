@@ -608,6 +608,7 @@ namespace BringUp_Control
             }
 
             SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
+            SpiWrite(0x000011BC, 0x0F);
         }
 
         public void StopPlayer(string debuggerKey)
@@ -624,6 +625,7 @@ namespace BringUp_Control
             if (!stop)
             {
                 SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0);
+                SpiWrite(0x000011BC, 0x00);
             }
                        
 

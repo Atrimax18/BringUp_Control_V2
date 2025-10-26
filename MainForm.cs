@@ -3137,6 +3137,11 @@ namespace BringUp_Control
             }
             
         }
+
+        private void textFPGA_Address_TextChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 
