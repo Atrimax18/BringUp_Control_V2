@@ -2644,6 +2644,27 @@ namespace BringUp_Control
                         LogStatus($"Main DAC set to DAC1");
                     }
 
+                    //-------------------------------------------------------
+                    if (comboMAINDAC.SelectedIndex == 0)
+                    {
+                        // Set QBD bit for DAC0
+                        byte regVal = ad9175.ReadRegister(0x0300);
+                        regVal = (byte)(regVal & ~0x04);  //clears bit 2
+                        ad9175.WriteRegister(0x0300, regVal);
+                    }
+                    else
+                    {
+                        // Set QBD bit for DAC0
+                        byte regVal = ad9175.ReadRegister(0x0300);
+                        regVal = (byte)(regVal | 0x04);  //set bit 2 to 1
+                        ad9175.WriteRegister(0x0300, regVal);
+                    }
+
+                    //-------------------------------------------------------
+                    ad9175.ReadAllRegisters();
+
+                    LogStatus($"DAC {comboMAINDAC.SelectedIndex} registers read successfully.");
+
                 }
                 else
                 {

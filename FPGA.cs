@@ -602,17 +602,22 @@ namespace BringUp_Control
 
             uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
             SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
-            SpiWrite(0x000011BC, 0x0F);
+            Thread.Sleep(100); // Wait for a short duration to ensure the command is processed
+            if (play)
+                SpiWrite(0x000011BC, 0x0F);
+            else
+                SpiWrite(0x000011BC, 0x00);
 
-            
+            Thread.Sleep(100);
+
             if (status_reg != 0)
             {
                 MainForm.Instance.LogStatus("Debugger is busy.....");
                 return;
             }
-            else if( status_reg == 0 && play == true)
+            else if (status_reg == 0 && play == true)
                 MainForm.Instance.LogStatus("Player Started.....");
-            else if ( status_reg == 0 && play == false)
+            else if (status_reg == 0 && play == false)
                 MainForm.Instance.LogStatus("Player Stopped.....");
         }
 
