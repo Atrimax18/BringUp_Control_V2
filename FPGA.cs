@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
+//version BringUp_Control 1.0.0.1 latest
 namespace BringUp_Control
 {
     internal class FPGA : IDisposable
