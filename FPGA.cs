@@ -599,19 +599,24 @@ namespace BringUp_Control
                 return;
             }
             string preffix = dbg.Prefix;
+            uint d_value = 0;
 
-            uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
-            SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
-            Thread.Sleep(100); // Wait for a short duration to ensure the command is processed
-            
-            /*
             if (play)
                 SpiWrite(0x000011BC, 0x0F);
             else
                 SpiWrite(0x000011BC, 0x00);
-            */
 
             Thread.Sleep(100);
+
+            if (play)
+                d_value = 1;
+            else
+                d_value = 0;
+
+            uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
+            //SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
+            SpiWriteByName(preffix + "rgf_activate_player", d_value);
+            Thread.Sleep(100); // Wait for a short duration to ensure the command is processed              
 
             if (status_reg != 0)
             {
@@ -633,8 +638,7 @@ namespace BringUp_Control
             {
                 MessageBox.Show("Invalid debugger key: " + debuggerKey);
                 return retflag;
-            }
-            
+            }            
 
             bool stop = false;
 
@@ -645,9 +649,9 @@ namespace BringUp_Control
             }
 
             //SpiWrite(0x000011BC, 0x00);
-            Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed
+            //Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed
             uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel           
-
+            Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed
 
             if (status_reg != 0)
             {
