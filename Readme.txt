@@ -1,11 +1,11 @@
 ------------------------- BringUp Control V2 SW ver 1.0.0.1 -----------------------------------
 1. Fixed input values:
-DAC & FPGA tabs: textboxes values no need to press Enter , just hit Write or read button it will
-read textbox values and check it's validity.
+DAC & FPGA tabs: textboxes values no need to press Enter, just hit Write or Read button it will
+read textbox values, check it's validity and pass value via SPI.
 
-2. QBD Set button - non relevant its functionality passed to comboBox MAINDAC_PAGE
+2. QBD Set button - non relevant, its functionality passed to comboBox MAINDAC_PAGE,
 operator can see register values each time when combobox values chnaged between DAC0 and DAC1
-- button will be deleted next version.
+button will be deleted next version.
 
 
 

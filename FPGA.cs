@@ -603,10 +603,13 @@ namespace BringUp_Control
             uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
             SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
             Thread.Sleep(100); // Wait for a short duration to ensure the command is processed
+            
+            /*
             if (play)
                 SpiWrite(0x000011BC, 0x0F);
             else
                 SpiWrite(0x000011BC, 0x00);
+            */
 
             Thread.Sleep(100);
 
@@ -641,7 +644,7 @@ namespace BringUp_Control
                 
             }
 
-            SpiWrite(0x000011BC, 0x00);
+            //SpiWrite(0x000011BC, 0x00);
             Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed
             uint status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel           
 
