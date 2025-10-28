@@ -1446,22 +1446,21 @@ namespace BringUp_Control
 
                 try
                 {
-                    if (IsValidHex(textFPGA_Value.Text) && IsValidHex(textFPGA_Address.Text))
+                    if (IsValidHex(textFPGA_Address.Text))
                     {
-                        fpga_data = textFPGA_Value.Text;
+                        
                         fpga_address = textFPGA_Address.Text;
-                        //Cmd_FPGA_Write.Focus();
-
+                        
                         uint retval = fpga.SpiRead(HexStringToUInt(fpga_address));
                         LogStatus($"The register address {fpga_address} gets value [0x{retval:X8}] from FPGA");
                         textFPGA_Value.Text = $"0x{retval:X8}"; // Display the read value in the text box
                     }
                     else
                     {
-                        textFPGA_Value.Clear();
-                        fpga_data = string.Empty;
+                        //textFPGA_Value.Clear();
+                        //fpga_data = string.Empty;
                         MessageBox.Show("The register value is not correct!", "Warning");
-                        textFPGA_Value.Focus();
+                        textFPGA_Address.Focus();
                     }                    
                 }
                 catch (Exception ex)
