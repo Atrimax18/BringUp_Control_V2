@@ -59,7 +59,7 @@ namespace BringUp_Control
         public System.Timers.Timer _usbDebounceTimer;
 
 
-        string linevaluetx3 = string.Empty;
+        
 
         Ft4222Native FTDriver = new Ft4222Native();
         FtdiInterfaceManager InterfaceManager; // FTDI SPI interface manager
@@ -1281,6 +1281,7 @@ namespace BringUp_Control
                     {
                         byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
                         textDAC9175_Value.Text = $"0x{valbyte:X2}";
+                        textRegDAC9175.Text = selectedRegisterAddress9175;
                     }
 
                     textDAC9175_Value.Focus();
@@ -1570,11 +1571,11 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD9175)
             {
-                if (!string.IsNullOrWhiteSpace(textDAC9175_Value.Text))
+                if (!string.IsNullOrWhiteSpace(textDAC9175_Value.Text) && !string.IsNullOrWhiteSpace(textRegDAC9175.Text))
                 {
-                    string regaddress = daq_address;//    comboRegisters9175.SelectedItem?.ToString()?.Trim(); // Get selected value as string
+                    string regaddress = textRegDAC9175.Text;//    comboRegisters9175.SelectedItem?.ToString()?.Trim(); // Get selected value as string
 
-                    string dataRaw = daq_value;//   textDAC9175_Value.Text.Trim();
+                    string dataRaw = textDAC9175_Value.Text;// daq_value;//   textDAC9175_Value.Text.Trim();
 
                     if (!TryParseHexU16_sec(regaddress, out ushort regValue))
                     {
@@ -1592,10 +1593,10 @@ namespace BringUp_Control
                         textDAC9175_Value.Clear();
                         return;
                     }
-
-                    ad9175.WriteRegister(regValue, dataByte);
-
-
+                    else
+                    {
+                        ad9175.WriteRegister(regValue, dataByte);
+                    }
                 }
                 else
                 {
@@ -2351,14 +2352,14 @@ namespace BringUp_Control
                     // Validate Hex value entered in this field
                     if (IsHexString4bytes_DAC(textRegDAC9175.Text))
                     {
-                        daq_address = textRegDAC9175.Text;
+                        
                         textDAC9175_Value.Focus();
                     }
                     else
                     {
                         textRegDAC9175.Clear();
                         textRegDAC9175.Focus();
-                        daq_address = string.Empty;
+                        
                         MessageBox.Show("The register address is not correct!", "Warning");
                     }
                 }
@@ -2375,14 +2376,14 @@ namespace BringUp_Control
                     // Validate Hex value entered in this field
                     if (IsHexString(textDAC9175_Value.Text))
                     {
-                        daq_value = textDAC9175_Value.Text;
+                        //daq_value = textDAC9175_Value.Text;
                         Cmd_WriteReg9175.Focus();
                     }
                     else
                     {
                         textDAC9175_Value.Clear();
                         textDAC9175_Value.Focus();
-                        daq_value = string.Empty;
+                        //daq_value = string.Empty;
                         MessageBox.Show("The register value is not correct!", "Warning");
                     }
                 }
@@ -2394,16 +2395,19 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD9175)
             {
-                if (string.IsNullOrWhiteSpace(daq_address))
+                if (string.IsNullOrWhiteSpace(textRegDAC9175.Text)) 
                 {
                     MessageBox.Show("Please enter a valid register address and value.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
-
-                //string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
-                int selectedHex = Convert.ToInt32(daq_address.Substring(2), 16); // Convert hex string to int
-                byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
-                textDAC9175_Value.Text = $"0x{valbyte:X2}";
+                else
+                {
+                    
+                    int selectedHex = Convert.ToInt32(textRegDAC9175.Text.Substring(2), 16); // Convert hex string to int
+                    byte valbyte = ad9175.ReadRegister((ushort)selectedHex);
+                    textDAC9175_Value.Text = $"0x{valbyte:X2}";
+                }//string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
+                    
             }
         }
 
@@ -2488,10 +2492,7 @@ namespace BringUp_Control
 
         }
 
-        private void Cmd_WriteDAC9175_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void Cmd_WriteFPGA_Click(object sender, EventArgs e)
         {
