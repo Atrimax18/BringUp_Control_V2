@@ -2546,9 +2546,9 @@ namespace BringUp_Control
                 if (fpga.DebugMode != null)
                 {
                     //fpga.StopPlayer(fpga.DebugMode);
-                    Cmd_Activate_Player.Enabled = true;
-                    Cmd_Stop_Player.Enabled = false;
-                    LogStatus("Previous debugger session stopped.");
+                    //Cmd_Activate_Player.Enabled = true;
+                    //Cmd_Stop_Player.Enabled = false;
+                    //LogStatus("Previous debugger session stopped.");
                 }
 
                 string test_mode = comboBoxDebugger.SelectedItem.ToString();
@@ -3200,12 +3200,12 @@ namespace BringUp_Control
                 if (fpga.DebugMode != null)
                 {
                     //fpga.StopPlayer(fpga.DebugMode);
-                    Cmd_Activate_Player.Enabled = true;
-                    Cmd_Stop_Player.Enabled = false;
-                    LogStatus("Previous debugger session stopped.");
+                    //Cmd_Activate_Player.Enabled = true;
+                    //Cmd_Stop_Player.Enabled = false;
+                    //LogStatus("Previous debugger session stopped.");
                 }
 
-                string test_mode2 = comboBoxDebugger.SelectedItem.ToString();
+                string test_mode2 = comboBoxDebugger2.SelectedItem.ToString();
 
                 fpga.StreamNum = ExtractTrailingNumber(test_mode2);
                 fpga.DebugMode = ExtractLinkModePrefix(test_mode2);
