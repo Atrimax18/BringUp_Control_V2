@@ -189,6 +189,10 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.comboBoxDebugger2 = new System.Windows.Forms.ComboBox();
+            this.Cmd_FPGA_Import2 = new System.Windows.Forms.Button();
+            this.label47 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -261,11 +265,11 @@
             // 
             this.tabWelcome.Controls.Add(this.pictureBox3);
             this.tabWelcome.Controls.Add(this.label26);
-            this.tabWelcome.Location = new System.Drawing.Point(4, 29);
+            this.tabWelcome.Location = new System.Drawing.Point(4, 25);
             this.tabWelcome.Margin = new System.Windows.Forms.Padding(4);
             this.tabWelcome.Name = "tabWelcome";
             this.tabWelcome.Padding = new System.Windows.Forms.Padding(4);
-            this.tabWelcome.Size = new System.Drawing.Size(1128, 809);
+            this.tabWelcome.Size = new System.Drawing.Size(1128, 813);
             this.tabWelcome.TabIndex = 8;
             this.tabWelcome.Text = "Welcome";
             this.tabWelcome.UseVisualStyleBackColor = true;
@@ -287,7 +291,7 @@
             this.label26.Location = new System.Drawing.Point(4, 777);
             this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(288, 20);
+            this.label26.Size = new System.Drawing.Size(228, 16);
             this.label26.TabIndex = 1;
             this.label26.Text = "BringUp Control (c), Satixfy 2025";
             // 
@@ -310,11 +314,11 @@
             this.tabAD4368.Controls.Add(this.labelRegAddress);
             this.tabAD4368.Controls.Add(this.labelFilePathAD4368);
             this.tabAD4368.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabAD4368.Location = new System.Drawing.Point(4, 29);
+            this.tabAD4368.Location = new System.Drawing.Point(4, 25);
             this.tabAD4368.Margin = new System.Windows.Forms.Padding(4);
             this.tabAD4368.Name = "tabAD4368";
             this.tabAD4368.Padding = new System.Windows.Forms.Padding(4);
-            this.tabAD4368.Size = new System.Drawing.Size(1128, 809);
+            this.tabAD4368.Size = new System.Drawing.Size(1128, 813);
             this.tabAD4368.TabIndex = 0;
             this.tabAD4368.Text = "PLL 4368";
             this.tabAD4368.UseVisualStyleBackColor = true;
@@ -325,7 +329,7 @@
             this.label32.Location = new System.Drawing.Point(269, 36);
             this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(120, 20);
+            this.label32.Size = new System.Drawing.Size(96, 16);
             this.label32.TabIndex = 18;
             this.label32.Text = "REG VALUE:";
             // 
@@ -347,7 +351,7 @@
             this.checkRFLOCK.Location = new System.Drawing.Point(808, 572);
             this.checkRFLOCK.Margin = new System.Windows.Forms.Padding(4);
             this.checkRFLOCK.Name = "checkRFLOCK";
-            this.checkRFLOCK.Size = new System.Drawing.Size(121, 24);
+            this.checkRFLOCK.Size = new System.Drawing.Size(94, 20);
             this.checkRFLOCK.TabIndex = 16;
             this.checkRFLOCK.Text = "PLL LOCK";
             this.checkRFLOCK.UseVisualStyleBackColor = true;
@@ -371,7 +375,7 @@
             this.radioRF_POWER_Status.Location = new System.Drawing.Point(808, 688);
             this.radioRF_POWER_Status.Margin = new System.Windows.Forms.Padding(4);
             this.radioRF_POWER_Status.Name = "radioRF_POWER_Status";
-            this.radioRF_POWER_Status.Size = new System.Drawing.Size(131, 24);
+            this.radioRF_POWER_Status.Size = new System.Drawing.Size(107, 20);
             this.radioRF_POWER_Status.TabIndex = 13;
             this.radioRF_POWER_Status.TabStop = true;
             this.radioRF_POWER_Status.Text = "POWER ON";
@@ -429,7 +433,7 @@
             this.textAD4368_Value.Location = new System.Drawing.Point(273, 59);
             this.textAD4368_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textAD4368_Value.Name = "textAD4368_Value";
-            this.textAD4368_Value.Size = new System.Drawing.Size(123, 26);
+            this.textAD4368_Value.Size = new System.Drawing.Size(123, 22);
             this.textAD4368_Value.TabIndex = 6;
             this.textAD4368_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextAD4368_Value_KeyPress);
             // 
@@ -483,7 +487,7 @@
             this.comboMUXOUT.Location = new System.Drawing.Point(12, 119);
             this.comboMUXOUT.Margin = new System.Windows.Forms.Padding(4);
             this.comboMUXOUT.Name = "comboMUXOUT";
-            this.comboMUXOUT.Size = new System.Drawing.Size(171, 28);
+            this.comboMUXOUT.Size = new System.Drawing.Size(171, 24);
             this.comboMUXOUT.TabIndex = 4;
             this.comboMUXOUT.SelectedIndexChanged += new System.EventHandler(this.ComboMUXOUT_SelectedIndexChanged);
             // 
@@ -493,7 +497,7 @@
             this.labelMUXOUT.Location = new System.Drawing.Point(8, 96);
             this.labelMUXOUT.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelMUXOUT.Name = "labelMUXOUT";
-            this.labelMUXOUT.Size = new System.Drawing.Size(93, 20);
+            this.labelMUXOUT.Size = new System.Drawing.Size(75, 16);
             this.labelMUXOUT.TabIndex = 3;
             this.labelMUXOUT.Text = "MUXOUT:";
             // 
@@ -503,7 +507,7 @@
             this.comboRegAddress.Location = new System.Drawing.Point(12, 59);
             this.comboRegAddress.Margin = new System.Windows.Forms.Padding(4);
             this.comboRegAddress.Name = "comboRegAddress";
-            this.comboRegAddress.Size = new System.Drawing.Size(171, 28);
+            this.comboRegAddress.Size = new System.Drawing.Size(171, 24);
             this.comboRegAddress.TabIndex = 2;
             this.comboRegAddress.SelectedIndexChanged += new System.EventHandler(this.ComboRegAddress_SelectedIndexChanged);
             // 
@@ -513,7 +517,7 @@
             this.labelRegAddress.Location = new System.Drawing.Point(8, 36);
             this.labelRegAddress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelRegAddress.Name = "labelRegAddress";
-            this.labelRegAddress.Size = new System.Drawing.Size(202, 20);
+            this.labelRegAddress.Size = new System.Drawing.Size(165, 16);
             this.labelRegAddress.TabIndex = 1;
             this.labelRegAddress.Text = "REGISTER ADDRESS:";
             // 
@@ -523,7 +527,7 @@
             this.labelFilePathAD4368.Location = new System.Drawing.Point(8, 4);
             this.labelFilePathAD4368.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelFilePathAD4368.Name = "labelFilePathAD4368";
-            this.labelFilePathAD4368.Size = new System.Drawing.Size(90, 20);
+            this.labelFilePathAD4368.Size = new System.Drawing.Size(72, 16);
             this.labelFilePathAD4368.TabIndex = 0;
             this.labelFilePathAD4368.Text = "File Path:";
             // 
@@ -560,11 +564,11 @@
             this.tabAD9175.Controls.Add(this.labelFilePath9175);
             this.tabAD9175.Controls.Add(this.groupBox2);
             this.tabAD9175.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabAD9175.Location = new System.Drawing.Point(4, 29);
+            this.tabAD9175.Location = new System.Drawing.Point(4, 25);
             this.tabAD9175.Margin = new System.Windows.Forms.Padding(4);
             this.tabAD9175.Name = "tabAD9175";
             this.tabAD9175.Padding = new System.Windows.Forms.Padding(4);
-            this.tabAD9175.Size = new System.Drawing.Size(1128, 809);
+            this.tabAD9175.Size = new System.Drawing.Size(1128, 813);
             this.tabAD9175.TabIndex = 1;
             this.tabAD9175.Text = "DAC 9175";
             this.tabAD9175.UseVisualStyleBackColor = true;
@@ -575,7 +579,7 @@
             this.label29.Location = new System.Drawing.Point(655, 21);
             this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(128, 20);
+            this.label29.Size = new System.Drawing.Size(102, 16);
             this.label29.TabIndex = 46;
             this.label29.Text = "DAC POWER:";
             // 
@@ -590,7 +594,7 @@
             this.comboDAC_Power.Location = new System.Drawing.Point(659, 47);
             this.comboDAC_Power.Margin = new System.Windows.Forms.Padding(4);
             this.comboDAC_Power.Name = "comboDAC_Power";
-            this.comboDAC_Power.Size = new System.Drawing.Size(227, 28);
+            this.comboDAC_Power.Size = new System.Drawing.Size(227, 24);
             this.comboDAC_Power.TabIndex = 45;
             this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.comboDAC_Power_SelectedIndexChanged);
             // 
@@ -621,7 +625,7 @@
             this.textSTPL_Data.Location = new System.Drawing.Point(519, 607);
             this.textSTPL_Data.Margin = new System.Windows.Forms.Padding(4);
             this.textSTPL_Data.Name = "textSTPL_Data";
-            this.textSTPL_Data.Size = new System.Drawing.Size(76, 26);
+            this.textSTPL_Data.Size = new System.Drawing.Size(76, 22);
             this.textSTPL_Data.TabIndex = 42;
             this.textSTPL_Data.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textSTPL_Data_KeyPress);
             // 
@@ -631,7 +635,7 @@
             this.label27.Location = new System.Drawing.Point(520, 583);
             this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(379, 20);
+            this.label27.Size = new System.Drawing.Size(282, 16);
             this.label27.TabIndex = 41;
             this.label27.Text = "data        link         ch        iq         sample ";
             // 
@@ -658,7 +662,7 @@
             this.comboBox5.Location = new System.Drawing.Point(813, 607);
             this.comboBox5.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(72, 28);
+            this.comboBox5.Size = new System.Drawing.Size(72, 24);
             this.comboBox5.TabIndex = 40;
             // 
             // comboBox4
@@ -670,7 +674,7 @@
             this.comboBox4.Location = new System.Drawing.Point(747, 607);
             this.comboBox4.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(57, 28);
+            this.comboBox4.Size = new System.Drawing.Size(57, 24);
             this.comboBox4.TabIndex = 39;
             // 
             // comboBox3
@@ -684,7 +688,7 @@
             this.comboBox3.Location = new System.Drawing.Point(680, 607);
             this.comboBox3.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(57, 28);
+            this.comboBox3.Size = new System.Drawing.Size(57, 24);
             this.comboBox3.TabIndex = 38;
             // 
             // comboBox2
@@ -696,7 +700,7 @@
             this.comboBox2.Location = new System.Drawing.Point(604, 607);
             this.comboBox2.Margin = new System.Windows.Forms.Padding(4);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(67, 28);
+            this.comboBox2.Size = new System.Drawing.Size(67, 24);
             this.comboBox2.TabIndex = 37;
             // 
             // label46
@@ -705,7 +709,7 @@
             this.label46.Location = new System.Drawing.Point(940, 21);
             this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(124, 20);
+            this.label46.Size = new System.Drawing.Size(98, 16);
             this.label46.TabIndex = 35;
             this.label46.Text = "Register List:";
             // 
@@ -718,7 +722,7 @@
             this.comboMAINDAC.Location = new System.Drawing.Point(964, 454);
             this.comboMAINDAC.Margin = new System.Windows.Forms.Padding(4);
             this.comboMAINDAC.Name = "comboMAINDAC";
-            this.comboMAINDAC.Size = new System.Drawing.Size(129, 28);
+            this.comboMAINDAC.Size = new System.Drawing.Size(129, 24);
             this.comboMAINDAC.TabIndex = 34;
             this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
             // 
@@ -728,7 +732,7 @@
             this.label45.Location = new System.Drawing.Point(960, 431);
             this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(153, 20);
+            this.label45.Size = new System.Drawing.Size(124, 16);
             this.label45.TabIndex = 33;
             this.label45.Text = "MAINDAC_PAGE";
             // 
@@ -761,7 +765,7 @@
             this.label44.Location = new System.Drawing.Point(8, 89);
             this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(226, 20);
+            this.label44.Size = new System.Drawing.Size(184, 16);
             this.label44.TabIndex = 30;
             this.label44.Text = "REGISTER VALUE[0xFF]:";
             // 
@@ -770,7 +774,7 @@
             this.textRegDAC9175.Location = new System.Drawing.Point(12, 58);
             this.textRegDAC9175.Margin = new System.Windows.Forms.Padding(4);
             this.textRegDAC9175.Name = "textRegDAC9175";
-            this.textRegDAC9175.Size = new System.Drawing.Size(124, 26);
+            this.textRegDAC9175.Size = new System.Drawing.Size(124, 22);
             this.textRegDAC9175.TabIndex = 29;
             this.textRegDAC9175.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textRegDAC9175_KeyPress);
             // 
@@ -829,7 +833,7 @@
             this.label42.Location = new System.Drawing.Point(239, 43);
             this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(108, 20);
+            this.label42.Size = new System.Drawing.Size(85, 16);
             this.label42.TabIndex = 2;
             this.label42.Text = "< 25.977mA";
             // 
@@ -854,7 +858,7 @@
             0,
             196608});
             this.numericDAC_FS.Name = "numericDAC_FS";
-            this.numericDAC_FS.Size = new System.Drawing.Size(101, 26);
+            this.numericDAC_FS.Size = new System.Drawing.Size(101, 22);
             this.numericDAC_FS.TabIndex = 1;
             this.numericDAC_FS.Value = new decimal(new int[] {
             19531,
@@ -869,7 +873,7 @@
             this.label41.Location = new System.Drawing.Point(8, 43);
             this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(108, 20);
+            this.label41.Size = new System.Drawing.Size(85, 16);
             this.label41.TabIndex = 0;
             this.label41.Text = "15.625mA <";
             // 
@@ -908,7 +912,7 @@
             this.comboPRBS.Location = new System.Drawing.Point(8, 26);
             this.comboPRBS.Margin = new System.Windows.Forms.Padding(4);
             this.comboPRBS.Name = "comboPRBS";
-            this.comboPRBS.Size = new System.Drawing.Size(116, 28);
+            this.comboPRBS.Size = new System.Drawing.Size(116, 24);
             this.comboPRBS.TabIndex = 18;
             // 
             // Cmd_PRBS
@@ -972,7 +976,7 @@
             this.label28.Location = new System.Drawing.Point(335, 153);
             this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(42, 20);
+            this.label28.Size = new System.Drawing.Size(32, 16);
             this.label28.TabIndex = 46;
             this.label28.Text = "CH:";
             // 
@@ -989,7 +993,7 @@
             this.comboCh_NCO.Location = new System.Drawing.Point(385, 149);
             this.comboCh_NCO.Margin = new System.Windows.Forms.Padding(4);
             this.comboCh_NCO.Name = "comboCh_NCO";
-            this.comboCh_NCO.Size = new System.Drawing.Size(65, 28);
+            this.comboCh_NCO.Size = new System.Drawing.Size(65, 24);
             this.comboCh_NCO.TabIndex = 45;
             this.comboCh_NCO.SelectedIndexChanged += new System.EventHandler(this.comboCh_NCO_SelectedIndexChanged);
             // 
@@ -1011,7 +1015,7 @@
             this.label43.Location = new System.Drawing.Point(232, 242);
             this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(69, 20);
+            this.label43.Size = new System.Drawing.Size(56, 16);
             this.label43.TabIndex = 33;
             this.label43.Text = "milisec";
             // 
@@ -1025,7 +1029,7 @@
             0,
             0});
             this.numericTime.Name = "numericTime";
-            this.numericTime.Size = new System.Drawing.Size(96, 26);
+            this.numericTime.Size = new System.Drawing.Size(96, 22);
             this.numericTime.TabIndex = 32;
             this.numericTime.Value = new decimal(new int[] {
             10,
@@ -1039,7 +1043,7 @@
             this.label31.Location = new System.Drawing.Point(11, 247);
             this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(100, 20);
+            this.label31.Size = new System.Drawing.Size(82, 16);
             this.label31.TabIndex = 31;
             this.label31.Text = "Step Time:";
             // 
@@ -1051,7 +1055,7 @@
             this.checkBox1.Location = new System.Drawing.Point(333, 25);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(4);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(129, 24);
+            this.checkBox1.Size = new System.Drawing.Size(106, 20);
             this.checkBox1.TabIndex = 30;
             this.checkBox1.Text = "Single NCO";
             this.checkBox1.UseVisualStyleBackColor = true;
@@ -1063,7 +1067,7 @@
             this.label40.Location = new System.Drawing.Point(233, 204);
             this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(25, 20);
+            this.label40.Size = new System.Drawing.Size(20, 16);
             this.label40.TabIndex = 29;
             this.label40.Text = "%";
             // 
@@ -1072,7 +1076,7 @@
             this.numericTone_Amplitude.Location = new System.Drawing.Point(128, 202);
             this.numericTone_Amplitude.Margin = new System.Windows.Forms.Padding(4);
             this.numericTone_Amplitude.Name = "numericTone_Amplitude";
-            this.numericTone_Amplitude.Size = new System.Drawing.Size(96, 26);
+            this.numericTone_Amplitude.Size = new System.Drawing.Size(96, 22);
             this.numericTone_Amplitude.TabIndex = 28;
             this.numericTone_Amplitude.Value = new decimal(new int[] {
             100,
@@ -1086,7 +1090,7 @@
             this.label39.Location = new System.Drawing.Point(11, 209);
             this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(99, 20);
+            this.label39.Size = new System.Drawing.Size(82, 16);
             this.label39.TabIndex = 27;
             this.label39.Text = "Tone Amp:";
             // 
@@ -1107,7 +1111,7 @@
             this.label38.Location = new System.Drawing.Point(233, 162);
             this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(48, 20);
+            this.label38.Size = new System.Drawing.Size(37, 16);
             this.label38.TabIndex = 24;
             this.label38.Text = "MHz";
             // 
@@ -1117,7 +1121,7 @@
             this.label37.Location = new System.Drawing.Point(11, 162);
             this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(91, 20);
+            this.label37.Size = new System.Drawing.Size(75, 16);
             this.label37.TabIndex = 23;
             this.label37.Text = "StepFreq:";
             // 
@@ -1127,7 +1131,7 @@
             this.label36.Location = new System.Drawing.Point(233, 116);
             this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(48, 20);
+            this.label36.Size = new System.Drawing.Size(37, 16);
             this.label36.TabIndex = 22;
             this.label36.Text = "MHz";
             // 
@@ -1136,7 +1140,7 @@
             this.textStop.Location = new System.Drawing.Point(121, 112);
             this.textStop.Margin = new System.Windows.Forms.Padding(4);
             this.textStop.Name = "textStop";
-            this.textStop.Size = new System.Drawing.Size(101, 26);
+            this.textStop.Size = new System.Drawing.Size(101, 22);
             this.textStop.TabIndex = 21;
             this.textStop.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStop_KeyPress);
             // 
@@ -1146,7 +1150,7 @@
             this.label35.Location = new System.Drawing.Point(232, 71);
             this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(48, 20);
+            this.label35.Size = new System.Drawing.Size(37, 16);
             this.label35.TabIndex = 20;
             this.label35.Text = "MHz";
             // 
@@ -1155,7 +1159,7 @@
             this.textStart.Location = new System.Drawing.Point(121, 68);
             this.textStart.Margin = new System.Windows.Forms.Padding(4);
             this.textStart.Name = "textStart";
-            this.textStart.Size = new System.Drawing.Size(101, 26);
+            this.textStart.Size = new System.Drawing.Size(101, 22);
             this.textStart.TabIndex = 19;
             this.textStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStart_KeyPress);
             // 
@@ -1164,7 +1168,7 @@
             this.textStep.Location = new System.Drawing.Point(121, 159);
             this.textStep.Margin = new System.Windows.Forms.Padding(4);
             this.textStep.Name = "textStep";
-            this.textStep.Size = new System.Drawing.Size(101, 26);
+            this.textStep.Size = new System.Drawing.Size(101, 22);
             this.textStep.TabIndex = 16;
             this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStep_KeyPress);
             // 
@@ -1174,7 +1178,7 @@
             this.label34.Location = new System.Drawing.Point(8, 71);
             this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(100, 20);
+            this.label34.Size = new System.Drawing.Size(79, 16);
             this.label34.TabIndex = 18;
             this.label34.Text = "Start Freq:";
             // 
@@ -1184,7 +1188,7 @@
             this.label33.Location = new System.Drawing.Point(8, 26);
             this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(116, 20);
+            this.label33.Size = new System.Drawing.Size(91, 16);
             this.label33.TabIndex = 17;
             this.label33.Text = "DAC INDEX:";
             // 
@@ -1197,7 +1201,7 @@
             this.ComboDAC_index.Location = new System.Drawing.Point(137, 22);
             this.ComboDAC_index.Margin = new System.Windows.Forms.Padding(4);
             this.ComboDAC_index.Name = "ComboDAC_index";
-            this.ComboDAC_index.Size = new System.Drawing.Size(100, 28);
+            this.ComboDAC_index.Size = new System.Drawing.Size(100, 24);
             this.ComboDAC_index.TabIndex = 16;
             // 
             // label25
@@ -1206,7 +1210,7 @@
             this.label25.Location = new System.Drawing.Point(11, 116);
             this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(97, 20);
+            this.label25.Size = new System.Drawing.Size(79, 16);
             this.label25.TabIndex = 14;
             this.label25.Text = "Stop Freq:";
             // 
@@ -1237,7 +1241,7 @@
             this.textDAC9175_Value.Location = new System.Drawing.Point(12, 112);
             this.textDAC9175_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textDAC9175_Value.Name = "textDAC9175_Value";
-            this.textDAC9175_Value.Size = new System.Drawing.Size(133, 26);
+            this.textDAC9175_Value.Size = new System.Drawing.Size(133, 22);
             this.textDAC9175_Value.TabIndex = 9;
             this.textDAC9175_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textDAC9175_Value_KeyPress);
             // 
@@ -1247,7 +1251,7 @@
             this.comboRegisters9175.Location = new System.Drawing.Point(944, 47);
             this.comboRegisters9175.Margin = new System.Windows.Forms.Padding(4);
             this.comboRegisters9175.Name = "comboRegisters9175";
-            this.comboRegisters9175.Size = new System.Drawing.Size(171, 28);
+            this.comboRegisters9175.Size = new System.Drawing.Size(171, 24);
             this.comboRegisters9175.TabIndex = 5;
             this.comboRegisters9175.SelectedIndexChanged += new System.EventHandler(this.ComboRegisters9175_SelectedIndexChanged);
             // 
@@ -1257,7 +1261,7 @@
             this.labelDAC9175_Register.Location = new System.Drawing.Point(8, 33);
             this.labelDAC9175_Register.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelDAC9175_Register.Name = "labelDAC9175_Register";
-            this.labelDAC9175_Register.Size = new System.Drawing.Size(277, 20);
+            this.labelDAC9175_Register.Size = new System.Drawing.Size(226, 16);
             this.labelDAC9175_Register.TabIndex = 4;
             this.labelDAC9175_Register.Text = "REGISTER ADDRESS[0xFFFF]:";
             // 
@@ -1267,7 +1271,7 @@
             this.labelFilePath9175.Location = new System.Drawing.Point(8, 4);
             this.labelFilePath9175.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelFilePath9175.Name = "labelFilePath9175";
-            this.labelFilePath9175.Size = new System.Drawing.Size(135, 20);
+            this.labelFilePath9175.Size = new System.Drawing.Size(107, 16);
             this.labelFilePath9175.TabIndex = 3;
             this.labelFilePath9175.Text = "DAC File Path:";
             // 
@@ -1313,10 +1317,10 @@
             this.tabSi5518.Controls.Add(this.label_NvmFwSi55XX);
             this.tabSi5518.Controls.Add(this.label_UserConfigSi55XX);
             this.tabSi5518.Controls.Add(this.button_GetInfo);
-            this.tabSi5518.Location = new System.Drawing.Point(4, 29);
+            this.tabSi5518.Location = new System.Drawing.Point(4, 25);
             this.tabSi5518.Margin = new System.Windows.Forms.Padding(4);
             this.tabSi5518.Name = "tabSi5518";
-            this.tabSi5518.Size = new System.Drawing.Size(1128, 809);
+            this.tabSi5518.Size = new System.Drawing.Size(1128, 813);
             this.tabSi5518.TabIndex = 4;
             this.tabSi5518.Text = "Si55XX";
             this.tabSi5518.UseVisualStyleBackColor = true;
@@ -1327,7 +1331,7 @@
             this.label_RefStat.Location = new System.Drawing.Point(773, 539);
             this.label_RefStat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_RefStat.Name = "label_RefStat";
-            this.label_RefStat.Size = new System.Drawing.Size(115, 20);
+            this.label_RefStat.Size = new System.Drawing.Size(92, 16);
             this.label_RefStat.TabIndex = 24;
             this.label_RefStat.Text = "RefStat: N/A";
             // 
@@ -1337,7 +1341,7 @@
             this.label_SioTest.Location = new System.Drawing.Point(773, 357);
             this.label_SioTest.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_SioTest.Name = "label_SioTest";
-            this.label_SioTest.Size = new System.Drawing.Size(116, 20);
+            this.label_SioTest.Size = new System.Drawing.Size(95, 16);
             this.label_SioTest.TabIndex = 23;
             this.label_SioTest.Text = "SioTest: N/A";
             // 
@@ -1347,7 +1351,7 @@
             this.label_DevInfo.Location = new System.Drawing.Point(773, 439);
             this.label_DevInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_DevInfo.Name = "label_DevInfo";
-            this.label_DevInfo.Size = new System.Drawing.Size(116, 20);
+            this.label_DevInfo.Size = new System.Drawing.Size(94, 16);
             this.label_DevInfo.TabIndex = 22;
             this.label_DevInfo.Text = "DevInfo: N/A";
             // 
@@ -1357,7 +1361,7 @@
             this.label_Temp.Location = new System.Drawing.Point(773, 400);
             this.label_Temp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_Temp.Name = "label_Temp";
-            this.label_Temp.Size = new System.Drawing.Size(92, 20);
+            this.label_Temp.Size = new System.Drawing.Size(75, 16);
             this.label_Temp.TabIndex = 21;
             this.label_Temp.Text = "Temp: 0.0";
             // 
@@ -1424,7 +1428,7 @@
             this.label_ProdFwSi55XX.Location = new System.Drawing.Point(16, 97);
             this.label_ProdFwSi55XX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_ProdFwSi55XX.Name = "label_ProdFwSi55XX";
-            this.label_ProdFwSi55XX.Size = new System.Drawing.Size(102, 20);
+            this.label_ProdFwSi55XX.Size = new System.Drawing.Size(81, 16);
             this.label_ProdFwSi55XX.TabIndex = 13;
             this.label_ProdFwSi55XX.Text = "PROD FW:";
             // 
@@ -1434,7 +1438,7 @@
             this.label_NvmFwSi55XX.Location = new System.Drawing.Point(16, 58);
             this.label_NvmFwSi55XX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_NvmFwSi55XX.Name = "label_NvmFwSi55XX";
-            this.label_NvmFwSi55XX.Size = new System.Drawing.Size(89, 20);
+            this.label_NvmFwSi55XX.Size = new System.Drawing.Size(71, 16);
             this.label_NvmFwSi55XX.TabIndex = 12;
             this.label_NvmFwSi55XX.Text = "NVM FW:";
             // 
@@ -1444,7 +1448,7 @@
             this.label_UserConfigSi55XX.Location = new System.Drawing.Point(16, 20);
             this.label_UserConfigSi55XX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label_UserConfigSi55XX.Name = "label_UserConfigSi55XX";
-            this.label_UserConfigSi55XX.Size = new System.Drawing.Size(115, 20);
+            this.label_UserConfigSi55XX.Size = new System.Drawing.Size(92, 16);
             this.label_UserConfigSi55XX.TabIndex = 11;
             this.label_UserConfigSi55XX.Text = "User Config:";
             // 
@@ -1480,10 +1484,10 @@
             this.tabRFLine.Controls.Add(this.label11);
             this.tabRFLine.Controls.Add(this.label10);
             this.tabRFLine.Controls.Add(this.pictureBox1);
-            this.tabRFLine.Location = new System.Drawing.Point(4, 29);
+            this.tabRFLine.Location = new System.Drawing.Point(4, 25);
             this.tabRFLine.Margin = new System.Windows.Forms.Padding(4);
             this.tabRFLine.Name = "tabRFLine";
-            this.tabRFLine.Size = new System.Drawing.Size(1128, 809);
+            this.tabRFLine.Size = new System.Drawing.Size(1128, 813);
             this.tabRFLine.TabIndex = 5;
             this.tabRFLine.Text = "TX RF LINEUP";
             this.tabRFLine.UseVisualStyleBackColor = true;
@@ -1499,7 +1503,7 @@
             this.numericATT3.Location = new System.Drawing.Point(817, 245);
             this.numericATT3.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT3.Name = "numericATT3";
-            this.numericATT3.Size = new System.Drawing.Size(75, 26);
+            this.numericATT3.Size = new System.Drawing.Size(75, 22);
             this.numericATT3.TabIndex = 25;
             this.numericATT3.ValueChanged += new System.EventHandler(this.NumericATT3_ValueChanged);
             this.numericATT3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericATT3_KeyPress);
@@ -1515,7 +1519,7 @@
             this.numericATT2.Location = new System.Drawing.Point(605, 245);
             this.numericATT2.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT2.Name = "numericATT2";
-            this.numericATT2.Size = new System.Drawing.Size(75, 26);
+            this.numericATT2.Size = new System.Drawing.Size(75, 22);
             this.numericATT2.TabIndex = 24;
             this.numericATT2.ValueChanged += new System.EventHandler(this.NumericATT2_ValueChanged);
             this.numericATT2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumericATT2_KeyPress);
@@ -1531,7 +1535,7 @@
             this.numericATT1.Location = new System.Drawing.Point(311, 245);
             this.numericATT1.Margin = new System.Windows.Forms.Padding(4);
             this.numericATT1.Name = "numericATT1";
-            this.numericATT1.Size = new System.Drawing.Size(75, 26);
+            this.numericATT1.Size = new System.Drawing.Size(75, 22);
             this.numericATT1.TabIndex = 23;
             this.numericATT1.TabStop = false;
             this.numericATT1.ValueChanged += new System.EventHandler(this.NumericATT1_ValueChanged);
@@ -1543,7 +1547,7 @@
             this.checkAmp2.Location = new System.Drawing.Point(700, 68);
             this.checkAmp2.Margin = new System.Windows.Forms.Padding(4);
             this.checkAmp2.Name = "checkAmp2";
-            this.checkAmp2.Size = new System.Drawing.Size(164, 24);
+            this.checkAmp2.Size = new System.Drawing.Size(134, 20);
             this.checkAmp2.TabIndex = 22;
             this.checkAmp2.Text = "BYPASS MODE";
             this.checkAmp2.UseVisualStyleBackColor = true;
@@ -1555,7 +1559,7 @@
             this.checkAmp1.Location = new System.Drawing.Point(383, 68);
             this.checkAmp1.Margin = new System.Windows.Forms.Padding(4);
             this.checkAmp1.Name = "checkAmp1";
-            this.checkAmp1.Size = new System.Drawing.Size(164, 24);
+            this.checkAmp1.Size = new System.Drawing.Size(134, 20);
             this.checkAmp1.TabIndex = 21;
             this.checkAmp1.Text = "BYPASS MODE";
             this.checkAmp1.UseVisualStyleBackColor = true;
@@ -1579,7 +1583,7 @@
             this.label7.Location = new System.Drawing.Point(211, 460);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(52, 20);
+            this.label7.Size = new System.Drawing.Size(41, 16);
             this.label7.TabIndex = 14;
             this.label7.Text = "0.0 V";
             // 
@@ -1601,7 +1605,7 @@
             this.label6.Location = new System.Drawing.Point(13, 460);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(177, 20);
+            this.label6.Size = new System.Drawing.Size(142, 16);
             this.label6.TabIndex = 13;
             this.label6.Text = "RF ADC7091 Value:";
             // 
@@ -1611,7 +1615,7 @@
             this.label19.Location = new System.Drawing.Point(900, 245);
             this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(32, 20);
+            this.label19.Size = new System.Drawing.Size(26, 16);
             this.label19.TabIndex = 15;
             this.label19.Text = "dB";
             // 
@@ -1621,7 +1625,7 @@
             this.label18.Location = new System.Drawing.Point(684, 245);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(32, 20);
+            this.label18.Size = new System.Drawing.Size(26, 16);
             this.label18.TabIndex = 14;
             this.label18.Text = "dB";
             // 
@@ -1631,7 +1635,7 @@
             this.label17.Location = new System.Drawing.Point(389, 245);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(32, 20);
+            this.label17.Size = new System.Drawing.Size(26, 16);
             this.label17.TabIndex = 13;
             this.label17.Text = "dB";
             // 
@@ -1641,7 +1645,7 @@
             this.label16.Location = new System.Drawing.Point(813, 219);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(112, 20);
+            this.label16.Size = new System.Drawing.Size(88, 16);
             this.label16.TabIndex = 11;
             this.label16.Text = "3. HMC1119";
             // 
@@ -1651,7 +1655,7 @@
             this.label15.Location = new System.Drawing.Point(696, 34);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(112, 20);
+            this.label15.Size = new System.Drawing.Size(88, 16);
             this.label15.TabIndex = 9;
             this.label15.Text = "2. HMC8414";
             // 
@@ -1661,7 +1665,7 @@
             this.label14.Location = new System.Drawing.Point(601, 219);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(112, 20);
+            this.label14.Size = new System.Drawing.Size(88, 16);
             this.label14.TabIndex = 7;
             this.label14.Text = "2. HMC1119";
             // 
@@ -1671,7 +1675,7 @@
             this.label12.Location = new System.Drawing.Point(379, 34);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(112, 20);
+            this.label12.Size = new System.Drawing.Size(88, 16);
             this.label12.TabIndex = 6;
             this.label12.Text = "1. HMC8414";
             // 
@@ -1681,7 +1685,7 @@
             this.label11.Location = new System.Drawing.Point(307, 218);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(112, 20);
+            this.label11.Size = new System.Drawing.Size(88, 16);
             this.label11.TabIndex = 4;
             this.label11.Text = "1. HMC1119";
             // 
@@ -1692,7 +1696,7 @@
             this.label10.Location = new System.Drawing.Point(1021, 121);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(79, 22);
+            this.label10.Size = new System.Drawing.Size(65, 18);
             this.label10.TabIndex = 2;
             this.label10.Text = "RF OUT";
             // 
@@ -1709,6 +1713,10 @@
             // 
             // tabFPGA
             // 
+            this.tabFPGA.Controls.Add(this.label47);
+            this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import2);
+            this.tabFPGA.Controls.Add(this.comboBoxDebugger2);
+            this.tabFPGA.Controls.Add(this.label30);
             this.tabFPGA.Controls.Add(this.dataGridFPGA);
             this.tabFPGA.Controls.Add(this.comboBoxDebugger);
             this.tabFPGA.Controls.Add(this.Cmd_Stop_Player);
@@ -1726,10 +1734,10 @@
             this.tabFPGA.Controls.Add(this.textFPGA_Output);
             this.tabFPGA.Controls.Add(this.textFPGA_Address);
             this.tabFPGA.Controls.Add(this.Cmd_FPGA_Import);
-            this.tabFPGA.Location = new System.Drawing.Point(4, 29);
+            this.tabFPGA.Location = new System.Drawing.Point(4, 25);
             this.tabFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.tabFPGA.Name = "tabFPGA";
-            this.tabFPGA.Size = new System.Drawing.Size(1128, 809);
+            this.tabFPGA.Size = new System.Drawing.Size(1128, 813);
             this.tabFPGA.TabIndex = 7;
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
@@ -1759,17 +1767,17 @@
             "Downlink Modem2",
             "Downlink Modem3",
             "Downlink ADC"});
-            this.comboBoxDebugger.Location = new System.Drawing.Point(888, 118);
+            this.comboBoxDebugger.Location = new System.Drawing.Point(888, 138);
             this.comboBoxDebugger.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxDebugger.Name = "comboBoxDebugger";
-            this.comboBoxDebugger.Size = new System.Drawing.Size(192, 28);
+            this.comboBoxDebugger.Size = new System.Drawing.Size(193, 24);
             this.comboBoxDebugger.TabIndex = 17;
             this.comboBoxDebugger.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger_SelectedIndexChanged);
             // 
             // Cmd_Stop_Player
             // 
             this.Cmd_Stop_Player.Enabled = false;
-            this.Cmd_Stop_Player.Location = new System.Drawing.Point(888, 286);
+            this.Cmd_Stop_Player.Location = new System.Drawing.Point(888, 442);
             this.Cmd_Stop_Player.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Stop_Player.Name = "Cmd_Stop_Player";
             this.Cmd_Stop_Player.Size = new System.Drawing.Size(193, 55);
@@ -1780,12 +1788,12 @@
             // 
             // Cmd_Activate_Player
             // 
-            this.Cmd_Activate_Player.Location = new System.Drawing.Point(888, 223);
+            this.Cmd_Activate_Player.Location = new System.Drawing.Point(888, 379);
             this.Cmd_Activate_Player.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Activate_Player.Name = "Cmd_Activate_Player";
             this.Cmd_Activate_Player.Size = new System.Drawing.Size(193, 55);
             this.Cmd_Activate_Player.TabIndex = 15;
-            this.Cmd_Activate_Player.Text = "Activate Player";
+            this.Cmd_Activate_Player.Text = "Play";
             this.Cmd_Activate_Player.UseVisualStyleBackColor = true;
             this.Cmd_Activate_Player.Click += new System.EventHandler(this.Cmd_Activate_Player_Click);
             // 
@@ -1802,7 +1810,7 @@
             // 
             // Cmd_FPGA_Tests
             // 
-            this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(888, 348);
+            this.Cmd_FPGA_Tests.Location = new System.Drawing.Point(888, 505);
             this.Cmd_FPGA_Tests.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Tests.Name = "Cmd_FPGA_Tests";
             this.Cmd_FPGA_Tests.Size = new System.Drawing.Size(193, 55);
@@ -1828,7 +1836,7 @@
             this.label22.Location = new System.Drawing.Point(4, 128);
             this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(119, 20);
+            this.label22.Size = new System.Drawing.Size(96, 16);
             this.label22.TabIndex = 11;
             this.label22.Text = "FPGA DATA:";
             // 
@@ -1859,9 +1867,8 @@
             this.textFPGA_Value.Location = new System.Drawing.Point(268, 68);
             this.textFPGA_Value.Margin = new System.Windows.Forms.Padding(4);
             this.textFPGA_Value.Name = "textFPGA_Value";
-            this.textFPGA_Value.Size = new System.Drawing.Size(155, 26);
+            this.textFPGA_Value.Size = new System.Drawing.Size(155, 22);
             this.textFPGA_Value.TabIndex = 7;
-            this.textFPGA_Value.TextChanged += new System.EventHandler(this.textFPGA_Value_TextChanged);
             this.textFPGA_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Value_KeyPress);
             // 
             // label21
@@ -1870,7 +1877,7 @@
             this.label21.Location = new System.Drawing.Point(264, 44);
             this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(75, 20);
+            this.label21.Size = new System.Drawing.Size(60, 16);
             this.label21.TabIndex = 6;
             this.label21.Text = "VALUE:";
             // 
@@ -1880,7 +1887,7 @@
             this.label9.Location = new System.Drawing.Point(27, 44);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(159, 20);
+            this.label9.Size = new System.Drawing.Size(128, 16);
             this.label9.TabIndex = 5;
             this.label9.Text = "FPGA ADDRESS:";
             // 
@@ -1911,19 +1918,18 @@
             this.textFPGA_Address.Location = new System.Drawing.Point(31, 68);
             this.textFPGA_Address.Margin = new System.Windows.Forms.Padding(4);
             this.textFPGA_Address.Name = "textFPGA_Address";
-            this.textFPGA_Address.Size = new System.Drawing.Size(228, 26);
+            this.textFPGA_Address.Size = new System.Drawing.Size(228, 22);
             this.textFPGA_Address.TabIndex = 1;
-            this.textFPGA_Address.TextChanged += new System.EventHandler(this.textFPGA_Address_TextChanged);
             this.textFPGA_Address.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextFPGA_Address_KeyPress);
             // 
             // Cmd_FPGA_Import
             // 
-            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(888, 160);
+            this.Cmd_FPGA_Import.Location = new System.Drawing.Point(888, 170);
             this.Cmd_FPGA_Import.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_FPGA_Import.Name = "Cmd_FPGA_Import";
             this.Cmd_FPGA_Import.Size = new System.Drawing.Size(193, 55);
             this.Cmd_FPGA_Import.TabIndex = 0;
-            this.Cmd_FPGA_Import.Text = "LOAD Vectors";
+            this.Cmd_FPGA_Import.Text = "LOAD Vector DAC0";
             this.Cmd_FPGA_Import.UseVisualStyleBackColor = true;
             this.Cmd_FPGA_Import.Click += new System.EventHandler(this.Cmd_FPGA_Import_Click);
             // 
@@ -1940,10 +1946,10 @@
             this.tabMux.Controls.Add(this.label8);
             this.tabMux.Controls.Add(this.comboDevice);
             this.tabMux.Controls.Add(this.groupBox3);
-            this.tabMux.Location = new System.Drawing.Point(4, 29);
+            this.tabMux.Location = new System.Drawing.Point(4, 25);
             this.tabMux.Margin = new System.Windows.Forms.Padding(4);
             this.tabMux.Name = "tabMux";
-            this.tabMux.Size = new System.Drawing.Size(1128, 809);
+            this.tabMux.Size = new System.Drawing.Size(1128, 813);
             this.tabMux.TabIndex = 6;
             this.tabMux.Text = "TX MUXES";
             this.tabMux.UseVisualStyleBackColor = true;
@@ -1976,7 +1982,7 @@
             this.label24.Location = new System.Drawing.Point(11, 507);
             this.label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(98, 20);
+            this.label24.Size = new System.Drawing.Size(78, 16);
             this.label24.TabIndex = 11;
             this.label24.Text = "I2C DATA:";
             // 
@@ -1986,7 +1992,7 @@
             this.label23.Location = new System.Drawing.Point(11, 453);
             this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(141, 20);
+            this.label23.Size = new System.Drawing.Size(114, 16);
             this.label23.TabIndex = 10;
             this.label23.Text = "I2C REGISTER:";
             // 
@@ -1995,7 +2001,7 @@
             this.textI2C_Val.Location = new System.Drawing.Point(12, 530);
             this.textI2C_Val.Margin = new System.Windows.Forms.Padding(4);
             this.textI2C_Val.Name = "textI2C_Val";
-            this.textI2C_Val.Size = new System.Drawing.Size(141, 26);
+            this.textI2C_Val.Size = new System.Drawing.Size(141, 22);
             this.textI2C_Val.TabIndex = 9;
             this.textI2C_Val.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextI2C_Val_KeyPress);
             // 
@@ -2004,7 +2010,7 @@
             this.textI2C_Reg.Location = new System.Drawing.Point(12, 476);
             this.textI2C_Reg.Margin = new System.Windows.Forms.Padding(4);
             this.textI2C_Reg.Name = "textI2C_Reg";
-            this.textI2C_Reg.Size = new System.Drawing.Size(141, 26);
+            this.textI2C_Reg.Size = new System.Drawing.Size(141, 22);
             this.textI2C_Reg.TabIndex = 8;
             this.textI2C_Reg.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextI2C_Reg_KeyPress);
             // 
@@ -2025,7 +2031,7 @@
             this.label13.Location = new System.Drawing.Point(839, 15);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(252, 20);
+            this.label13.Size = new System.Drawing.Size(203, 16);
             this.label13.TabIndex = 3;
             this.label13.Text = "DEBUG/MANUAL CONTROL";
             // 
@@ -2035,7 +2041,7 @@
             this.label8.Location = new System.Drawing.Point(8, 335);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(129, 20);
+            this.label8.Size = new System.Drawing.Size(102, 16);
             this.label8.TabIndex = 2;
             this.label8.Text = "DEVICE MUX:";
             // 
@@ -2052,7 +2058,7 @@
             this.comboDevice.Location = new System.Drawing.Point(12, 358);
             this.comboDevice.Margin = new System.Windows.Forms.Padding(4);
             this.comboDevice.Name = "comboDevice";
-            this.comboDevice.Size = new System.Drawing.Size(209, 28);
+            this.comboDevice.Size = new System.Drawing.Size(209, 24);
             this.comboDevice.TabIndex = 1;
             this.comboDevice.SelectedIndexChanged += new System.EventHandler(this.ComboDevice_SelectedIndexChanged);
             // 
@@ -2076,7 +2082,7 @@
             this.radioMUX.Location = new System.Drawing.Point(8, 64);
             this.radioMUX.Margin = new System.Windows.Forms.Padding(4);
             this.radioMUX.Name = "radioMUX";
-            this.radioMUX.Size = new System.Drawing.Size(147, 24);
+            this.radioMUX.Size = new System.Drawing.Size(118, 20);
             this.radioMUX.TabIndex = 1;
             this.radioMUX.TabStop = true;
             this.radioMUX.Text = "MUX (default)";
@@ -2088,7 +2094,7 @@
             this.radioFPGA.Location = new System.Drawing.Point(8, 32);
             this.radioFPGA.Margin = new System.Windows.Forms.Padding(4);
             this.radioFPGA.Name = "radioFPGA";
-            this.radioFPGA.Size = new System.Drawing.Size(79, 24);
+            this.radioFPGA.Size = new System.Drawing.Size(65, 20);
             this.radioFPGA.TabIndex = 1;
             this.radioFPGA.Text = "FPGA";
             this.radioFPGA.UseVisualStyleBackColor = true;
@@ -2100,7 +2106,7 @@
             this.label2.Location = new System.Drawing.Point(21, 23);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(108, 20);
+            this.label2.Size = new System.Drawing.Size(89, 16);
             this.label2.TabIndex = 9;
             this.label2.Text = "FTDI Temp:";
             // 
@@ -2111,7 +2117,7 @@
             this.label3.Location = new System.Drawing.Point(148, 23);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 20);
+            this.label3.Size = new System.Drawing.Size(52, 16);
             this.label3.TabIndex = 10;
             this.label3.Text = "N/A °C";
             // 
@@ -2122,7 +2128,7 @@
             this.label4.Location = new System.Drawing.Point(416, 22);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(97, 20);
+            this.label4.Size = new System.Drawing.Size(79, 16);
             this.label4.TabIndex = 11;
             this.label4.Text = "RF Temp: ";
             // 
@@ -2133,7 +2139,7 @@
             this.label5.Location = new System.Drawing.Point(529, 22);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 20);
+            this.label5.Size = new System.Drawing.Size(52, 16);
             this.label5.TabIndex = 12;
             this.label5.Text = "N/A °C";
             // 
@@ -2178,7 +2184,7 @@
             this.label20.Location = new System.Drawing.Point(1164, 171);
             this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(88, 20);
+            this.label20.Size = new System.Drawing.Size(72, 16);
             this.label20.TabIndex = 20;
             this.label20.Text = "Log data:";
             // 
@@ -2192,6 +2198,46 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(885, 118);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(50, 16);
+            this.label30.TabIndex = 19;
+            this.label30.Text = "DAC0:";
+            // 
+            // comboBoxDebugger2
+            // 
+            this.comboBoxDebugger2.FormattingEnabled = true;
+            this.comboBoxDebugger2.Items.AddRange(new object[] {
+            "Uplink DAC0",
+            "Uplink DAC1"});
+            this.comboBoxDebugger2.Location = new System.Drawing.Point(888, 258);
+            this.comboBoxDebugger2.Name = "comboBoxDebugger2";
+            this.comboBoxDebugger2.Size = new System.Drawing.Size(193, 24);
+            this.comboBoxDebugger2.TabIndex = 20;
+            this.comboBoxDebugger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger2_SelectedIndexChanged);
+            // 
+            // Cmd_FPGA_Import2
+            // 
+            this.Cmd_FPGA_Import2.Location = new System.Drawing.Point(888, 292);
+            this.Cmd_FPGA_Import2.Name = "Cmd_FPGA_Import2";
+            this.Cmd_FPGA_Import2.Size = new System.Drawing.Size(193, 50);
+            this.Cmd_FPGA_Import2.TabIndex = 21;
+            this.Cmd_FPGA_Import2.Text = "LOAD Vector DAC1";
+            this.Cmd_FPGA_Import2.UseVisualStyleBackColor = true;
+            this.Cmd_FPGA_Import2.Click += new System.EventHandler(this.Cmd_FPGA_Import2_Click);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(885, 238);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(50, 16);
+            this.label47.TabIndex = 22;
+            this.label47.Text = "DAC1:";
             // 
             // MainForm
             // 
@@ -2420,6 +2466,10 @@
         private System.Windows.Forms.Button Cmd_Load_DAC;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.ComboBox comboDAC_Power;
+        private System.Windows.Forms.Button Cmd_FPGA_Import2;
+        private System.Windows.Forms.ComboBox comboBoxDebugger2;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label47;
     }
 }
 

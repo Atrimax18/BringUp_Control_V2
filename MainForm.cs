@@ -1641,7 +1641,7 @@ namespace BringUp_Control
                 }
 
                 string fpgavector_file = fpga.LoadVectorDataCsv(); //load vector file
-                LogStatus($"FPGA Vectors file loaded");
+                LogStatus($"FPGA vector DAC0 file loaded");
 
                 if (!string.IsNullOrEmpty(fpgavector_file))
                 {
@@ -1649,12 +1649,12 @@ namespace BringUp_Control
                     {
                         // load data from vector file
                         fpga.LoadVectorFile(fpgavector_file);
-                        LogStatusFPGA($"FPGA vector file loaded: {fpgavector_file}");
+                        LogStatusFPGA($"FPGA vector DAC0 file loaded: {fpgavector_file}");
                     }
                     catch (Exception ex)
                     {
-                        LogStatusFPGA($"Error loading FPGA vector file: {ex.Message}");
-                        MessageBox.Show($"Error loading FPGA vector file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        LogStatusFPGA($"Error loading FPGA vector DAC0 file: {ex.Message}");
+                        MessageBox.Show($"Error loading FPGA vector DAC0 file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -2964,11 +2964,7 @@ namespace BringUp_Control
                     textSTPL_Data.Focus();
                     stpl_data = string.Empty;
                     MessageBox.Show("The STPL data is not correct!", "Warning");
-                }
-
-
-
-                
+                }                
             }
         }
         
@@ -3195,17 +3191,60 @@ namespace BringUp_Control
             
         }
 
-        private void textFPGA_Value_TextChanged(object sender, EventArgs e)
+        
+
+        private void comboBoxDebugger2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
-                
+                if (fpga.DebugMode != null)
+                {
+                    //fpga.StopPlayer(fpga.DebugMode);
+                    Cmd_Activate_Player.Enabled = true;
+                    Cmd_Stop_Player.Enabled = false;
+                    LogStatus("Previous debugger session stopped.");
+                }
+
+                string test_mode2 = comboBoxDebugger.SelectedItem.ToString();
+
+                fpga.StreamNum = ExtractTrailingNumber(test_mode2);
+                fpga.DebugMode = ExtractLinkModePrefix(test_mode2);
+
             }
         }
 
-        private void textFPGA_Address_TextChanged(object sender, EventArgs e)
+        private void Cmd_FPGA_Import2_Click(object sender, EventArgs e)
         {
+            if (selectedTab == tabFPGA)
+            {
+                if (fpga == null)
+                {
+                    MessageBox.Show("FPGA interface not initialized. Please reconnect the FTDI device.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
+                string fpgavector_file1 = fpga.LoadVectorDataCsv(); //load vector file
+                LogStatus($"FPGA vector DAC1 file loaded");
+
+                if (!string.IsNullOrEmpty(fpgavector_file1))
+                {
+                    try
+                    {
+                        // load data from vector file
+                        fpga.LoadVectorFile(fpgavector_file1);
+                        LogStatusFPGA($"FPGA vector  DAC1 file loaded: {fpgavector_file1}");
+                    }
+                    catch (Exception ex)
+                    {
+                        LogStatusFPGA($"Error loading FPGA vector DAC1 file: {ex.Message}");
+                        MessageBox.Show($"Error loading FPGA vector DAC1 file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    LogStatusFPGA("No FPGA vector DAC1 file selected.");
+                }
+            }
         }
     }
 }
