@@ -2545,7 +2545,7 @@ namespace BringUp_Control
             {
                 if (fpga.DebugMode != null)
                 {
-                    fpga.StopPlayer(fpga.DebugMode);
+                    //fpga.StopPlayer(fpga.DebugMode);
                     Cmd_Activate_Player.Enabled = true;
                     Cmd_Stop_Player.Enabled = false;
                     LogStatus("Previous debugger session stopped.");
