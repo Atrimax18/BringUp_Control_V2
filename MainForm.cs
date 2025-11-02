@@ -1438,9 +1438,10 @@ namespace BringUp_Control
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(textFPGA_Address.Text) || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
+                if (string.IsNullOrWhiteSpace(textFPGA_Address.Text))// || string.IsNullOrWhiteSpace(textFPGA_Value.Text))
                 {
-                    MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //MessageBox.Show("Please enter both address and data values.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Please enter correct address value.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
