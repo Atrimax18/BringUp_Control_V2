@@ -1233,7 +1233,7 @@ namespace BringUp_Control
             if (!bit1 && !bit2)
             {
                 ad4368.WriteRegister(RF_PLL_EN_REG, 0x00); // EN_DNCLK(7)=0, EN_DRCLK(6)=0, 
-                ad4368.WriteRegister(RF_PLL_EN_ADC_REG, 0x60); // EN_ADC_CLK = 0
+                ad4368.WriteRegister(RF_PLL_EN_ADC_REG, 0x60); // EN_ADC_CLK(3) = 0
 
                 LogStatus("RF PLL EN Regs turned OFF");
             }
