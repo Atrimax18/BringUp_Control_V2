@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static BringUp_Control.AD9175_DAC;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.LinkLabel;
@@ -36,6 +37,8 @@ namespace BringUp_Control
         private const int DBT_DEVNODES_CHANGED = 0x0007;
 
         private const int RF_PLL_POWER_REG = 0x002B;
+        private const int RF_PLL_EN_REG = 0x002D;
+        private const int RF_PLL_EN_ADC_REG = 0x0031;
         private const int RF_PLL_LKDET_REG = 0x0058;
 
 
@@ -1206,6 +1209,40 @@ namespace BringUp_Control
 
                 ad4368.WriteRegister(regValue, databyte);
             }
+            //----------------------------------------------------------------------------------
+            byte xt;
+            Thread.Sleep(10);
+            xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
+
+            bool bit1 = (xt & (1 << 1)) != 0;  //FSM_BUSY
+            if (bit1) 
+                LogStatus("FSM_BUSY - VCO not completed");
+            else
+                LogStatus("FSM not BUSY - VCO completed");
+
+            Thread.Sleep(10);
+            xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
+
+            bool bit2 = (xt & (1 << 2)) != 0;  //ADC_BUSY
+            if (bit2)
+                LogStatus("ADC_BUSY - ADC not completed");
+            else
+                LogStatus("ADC not BUSY - ADC completed");
+
+
+            if (!bit1 && !bit2)
+            {
+                ad4368.WriteRegister(RF_PLL_EN_REG, 0x00); // EN_DNCLK(7)=0, EN_DRCLK(6)=0, 
+                ad4368.WriteRegister(RF_PLL_EN_ADC_REG, 0x60); // EN_ADC_CLK = 0
+
+                LogStatus("RF PLL EN Regs turned OFF");
+            }
+            else
+            {
+                LogStatus("RF PLL EN Regs NOT turned OFF, BUSY status detected");
+            }
+            //-----------------------------------------------------------------------------------
+
             CheckPowerRegister(RF_PLL_POWER_REG);
             Thread.Sleep(100); // Wait for the power register to update
             RFLockSampling(RF_PLL_LKDET_REG, 0);
@@ -1967,8 +2004,11 @@ namespace BringUp_Control
                     labelFilePathAD4368.Text = $"File Path: {rf_pll_ini_file}";
                     try
                     {
+                        
 
                         ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF
+
+                        
                         LogStatus("AD4368 RF PLL reinitialized on SPI CS1");
                         WriteToRFPLL();
                         LogStatus("AD4368 RF PLL initialized successfully.");
