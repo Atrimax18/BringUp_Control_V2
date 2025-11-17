@@ -1218,7 +1218,7 @@ namespace BringUp_Control
             if (bit1) 
                 LogStatus("FSM_BUSY - VCO not completed");
             else
-                LogStatus("FSM not BUSY - VCO completed");
+                LogStatus("FSM_BUSY - VCO completed");
 
             Thread.Sleep(10);
             xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
@@ -1227,7 +1227,7 @@ namespace BringUp_Control
             if (bit2)
                 LogStatus("ADC_BUSY - ADC not completed");
             else
-                LogStatus("ADC not BUSY - ADC completed");
+                LogStatus("ADC_BUSY - ADC completed");
 
 
             if (!bit1 && !bit2)
