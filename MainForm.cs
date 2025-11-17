@@ -41,6 +41,8 @@ namespace BringUp_Control
         private const int RF_PLL_EN_ADC_REG = 0x0031;
         private const int RF_PLL_LKDET_REG = 0x0058;
 
+        private const double REF_In_MHz = 100.0;
+
 
         // Define register addresses
         private const int REG_SHORT_TPL_TEST_0 = 0x032C; // SHORT_TPL_CHAN_SEL - bits [3:2] - channel, SHORT_TPL_SP_SEL - bits [7:4] - select sample, SHORT_TPL_TEST_EN -bit 0, SHORT_TPL_TEST_RESET - bit 1[0/1]
@@ -2003,12 +2005,9 @@ namespace BringUp_Control
 
                     labelFilePathAD4368.Text = $"File Path: {rf_pll_ini_file}";
                     try
-                    {
-                        
+                    {                   
 
-                        ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF
-
-                        
+                        ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF                        
                         LogStatus("AD4368 RF PLL reinitialized on SPI CS1");
                         WriteToRFPLL();
                         LogStatus("AD4368 RF PLL initialized successfully.");
@@ -3286,6 +3285,245 @@ namespace BringUp_Control
                     LogStatusFPGA("No FPGA vector DAC1 file selected.");
                 }
             }
+        }
+
+        private void Cmd_Freq_Convert_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabAD4368)
+            {
+                if (ad4368 != null)
+                {
+                    if (DT4368.Rows.Count > 0)
+                    {
+                        DT4368.Clear();
+                        
+                    }
+
+                    string out_values = AD4368_Convert((double)numericUp_FreqConvert.Value);
+
+                    // With this line, using the public ParsingFile method to set the file path and parse the file:
+                    ad4368.ParsingFile(rf_pll_ini_file);
+
+                    ApplyRegisterValues(out_values);
+
+                    Cmd_Export_AD4368_File.Enabled = true;
+
+                }
+            }
+
+        }
+
+        private void ApplyRegisterValues(string valstring)
+        {
+            if (valstring == null) throw new ArgumentNullException(nameof(valstring));
+
+
+            //$"{R_div},{N_Int},{fDIV_RCLK},0x{RESYNC_WAIT:X},0x{SYNTH_LOCK_TIMEOUT:X},0x{VCO_ALC_TIMEOUT:X},0x{VCO_BAND_DIV:X},0x{ADC_CLK_DIV:X},0x{LD_COUNT:X}"
+            string[] p = valstring.Split(',');
+
+            if (p.Length < 8) throw new ArgumentException("Register array too small");
+
+            int Rdiv = int.Parse(p[0], CultureInfo.InvariantCulture);  // R_div = 0x20 - [5:0]
+            int N_Int = int.Parse(p[1], CultureInfo.InvariantCulture);  // N_Int = 0x10 - [7:0]
+            //int Nint_msb = int.Parse(p[1], CultureInfo.InvariantCulture);  // N_Int = 0x11 - [11:8]
+
+
+            int fDivRclk = int.Parse(p[2], CultureInfo.InvariantCulture);  //??? check it
+
+            int resyncWait = ParseHex(p[3]); // RESYNC_WAIT (up to 24 bits)       3
+            int synthLockTimeout = ParseHex(p[4]); // SYNTH_LOCK_TIMEOUT (15 bits) 4
+            int vcoAlcTimeout = ParseHex(p[5]); // VCO_ALC_TIMEOUT  (15 bits) 5
+            int vcoBandDiv = ParseHex(p[6]); // VCO_BAND_DIV (8 bits) 6
+            int adcClkDiv = ParseHex(p[7]); // ADC_CLK_DIV (8 bits)  7
+            int ldCount = ParseHex(p[8]); // LD_COUNT (index into table) 8
+
+            // --- Safety masks (just in case) ---
+            resyncWait &= 0xFFFFFF;
+            synthLockTimeout &= 0x7FFF;
+            vcoAlcTimeout &= 0x7FFF;
+            vcoBandDiv &= 0xFF;
+            adcClkDiv &= 0xFF;
+            ldCount &= 0x1F;   // 5 bits
+
+            // === Apply to register image ===
+            // Reg 0x10[7:0] = N_Int[7:0]
+
+            foreach (DataRow row in DT4368.Rows)
+            {
+                if (row["Register"].ToString() == "0x0010")
+                {
+                    row["Value"] = $"0x{(byte)(N_Int & 0xFF):X2}";
+                    
+                }
+                else if (row["Register"].ToString() == "0x0011")
+                {
+                    TryParseHexByte(row["Value"].ToString(), out byte ti);
+                    row["Value"] = $"0x{(byte)((ti & 0xF0) | ((N_Int >> 8) & 0x0F)):X2}"; 
+                }
+                else if (row["Register"].ToString() == "0x0020")
+                {
+                    TryParseHexByte(row["Value"].ToString(), out byte ti);
+                    row["Value"] = $"0x{(byte)((ti & 0xC0) | (Rdiv & 0x3F)):X2}"; 
+                }
+                else if (row["Register"].ToString() == "0x0025")
+                {
+                    row["Value"] = $"0x{(byte)(resyncWait & 0xFF):X2}"; 
+                }
+                else if (row["Register"].ToString() == "0x0026")
+                {
+                    row["Value"] = $"0x{(byte)((resyncWait >> 8) & 0xFF):X2}";
+                }
+                else if (row["Register"].ToString() == "0x0027")
+                {
+                    row["Value"] = $"0x{(byte)((resyncWait >> 16) & 0xFF):X2}"; 
+                }
+                else if (row["Register"].ToString() == "0x002C")
+                {
+                    TryParseHexByte(row["Value"].ToString(), out byte ti);
+                    row["Value"] = $"0x{(byte)((ti & 0xE0) | (ldCount & 0x1F)):X2}";
+                }
+                else if (row["Register"].ToString() == "0x0037")
+                {
+                    row["Value"] = $"0x{(byte)vcoBandDiv:X2}";
+                }
+                else if (row["Register"].ToString() == "0x0038")
+                {
+                    row["Value"] = $"0x{(byte)(synthLockTimeout & 0xFF):X2}";
+                }
+                else if (row["Register"].ToString() == "0x0039")
+                {
+                    TryParseHexByte(row["Value"].ToString(), out byte ti);
+                    row["Value"] = $"0x{(byte)((ti & 0x80) | ((synthLockTimeout >> 8) & 0x7F)):X2}";
+                }
+                else if (row["Register"].ToString() == "0x003A")
+                {
+                    row["Value"] = $"0x{(byte)(vcoAlcTimeout & 0xFF):X2}"; 
+                }
+                else if (row["Register"].ToString() == "0x003B")
+                {
+                    TryParseHexByte(row["Value"].ToString(), out byte ti);
+                    row["Value"] = $"0x{(byte)((ti & 0x80) | ((vcoAlcTimeout >> 8) & 0x7F)):X2}";
+                }
+                else if (row["Register"].ToString() == "0x003E")
+                {
+                    row["Value"] = $"0x{(byte)adcClkDiv:X2}";
+                }
+            }
+            
+            ad4368.WriteRegister(RF_PLL_POWER_REG, 0x83); // AD4368 RF PLL POWER OFF                        
+            LogStatus("AD4368 RF PLL reinitialized on SPI CS1");
+            WriteToRFPLL();
+            LogStatus("AD4368 RF PLL initialized successfully.");
+
+        }
+
+
+
+        private string AD4368_Convert(double Fout_MHz)
+        {            
+
+            if (Fout_MHz <(6400.0 / 8.0) || Fout_MHz > 12800.0)
+            {
+                LogStatus("Fout Range not Valid");
+                return "";
+            }
+
+            bool foundR = false;
+            int R_div = 1;
+            double PFD = 0;
+
+            // Search R-divider (1..10)
+            for (int r = 1; r <= 10; r++)
+            {
+                double p = REF_In_MHz / r;
+                if (Math.Abs(Fout_MHz % p) < 1e-9)
+                {
+                    foundR = true;
+                    R_div = r;
+                    PFD = p;
+                    break;
+                }
+            }
+
+            if (!foundR)
+            {
+                LogStatus($"No R_div divider found to satisfy PLL output frequency of {Fout_MHz}");
+                return "";
+            }
+
+            int NInt_x_Odiv = (int)(Fout_MHz / PFD);
+
+            // O-divider selection
+            int O_div;
+            if (Fout_MHz >= 6400 && Fout_MHz <= 12800)
+                O_div = 1;
+            else if (Fout_MHz >= 3200)
+                O_div = 2;
+            else if (Fout_MHz >= 1600)
+                O_div = 4;
+            else
+                O_div = 8;
+
+            // Calculate N-Integer
+            int N_Int;
+            if (NInt_x_Odiv % O_div == 0)
+                N_Int = (NInt_x_Odiv / O_div) & 0xFFF;
+            else
+            {
+                LogStatus("Could not find Nint value");
+                return "";
+            }
+
+            LogStatus($"R_div = {R_div}, N_Int = {N_Int}, O_div = {O_div}");
+
+            double fDIV_RCLK = PFD / 2.0;
+
+            int RESYNC_WAIT = (int)Math.Ceiling(PFD * 10000);   // Wait 0.01 sec in PFD cycles
+            int SYNTH_LOCK_TIMEOUT = ((int)Math.Ceiling(200 * fDIV_RCLK)) & 0x7FFF;
+            int VCO_ALC_TIMEOUT = ((int)Math.Ceiling(50 * fDIV_RCLK)) & 0x7FFF;
+
+            int VCO_BAND_DIV = (int)Math.Ceiling(fDIV_RCLK);
+
+            int ADC_CLK_DIV = (int)Math.Ceiling((fDIV_RCLK / 0.4 - 2) / 4);
+
+            int[] LD_COUNT_to_PFD =
+            {
+            27, 35, 51, 67, 99, 131, 195, 259, 387, 515, 771, 1027, 1539,
+            2051, 3075, 4099, 6147, 8195, 12291, 16387, 24579, 32771, 49155,
+            65539, 98307, 131075, 196611, 262147, 393219, 524291, 786435, 1048579
+            };
+
+            // Find LD_COUNT index with closest match
+            int LD_COUNT = 0;
+            double bestDiff = double.MaxValue;
+
+            for (int i = 0; i < LD_COUNT_to_PFD.Length; i++)
+            {
+                double diff = Math.Abs(LD_COUNT_to_PFD[i] - 5.15 * PFD);
+                if (diff < bestDiff)
+                {
+                    bestDiff = diff;
+                    LD_COUNT = i;
+                }
+            }
+
+            LogStatus($"fDIV_RCLK={fDIV_RCLK}");
+            LogStatus($"RESYNC_WAIT=0x{RESYNC_WAIT:X}");
+            LogStatus($"SYNTH_LOCK_TIMEOUT=0x{SYNTH_LOCK_TIMEOUT:X}");
+            LogStatus($"VCO_ALC_TIMEOUT=0x{VCO_ALC_TIMEOUT:X}");
+            LogStatus($"VCO_BAND_DIV=0x{VCO_BAND_DIV:X}");
+            LogStatus($"ADC_CLK_DIV=0x{ADC_CLK_DIV:X}");
+            LogStatus($"LD_COUNT=0x{LD_COUNT:X}");
+
+            return $"{R_div},{N_Int},{fDIV_RCLK},0x{RESYNC_WAIT:X},0x{SYNTH_LOCK_TIMEOUT:X},0x{VCO_ALC_TIMEOUT:X},0x{VCO_BAND_DIV:X},0x{ADC_CLK_DIV:X},0x{LD_COUNT:X}";
+        }
+
+        int ParseHex(string s)
+        {
+            s = s.Trim();
+            if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                s = s.Substring(2);
+            return int.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
     }
 }

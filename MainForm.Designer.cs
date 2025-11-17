@@ -149,6 +149,10 @@
             this.label10 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabFPGA = new System.Windows.Forms.TabPage();
+            this.label47 = new System.Windows.Forms.Label();
+            this.Cmd_FPGA_Import2 = new System.Windows.Forms.Button();
+            this.comboBoxDebugger2 = new System.Windows.Forms.ComboBox();
+            this.label30 = new System.Windows.Forms.Label();
             this.dataGridFPGA = new System.Windows.Forms.DataGridView();
             this.comboBoxDebugger = new System.Windows.Forms.ComboBox();
             this.Cmd_Stop_Player = new System.Windows.Forms.Button();
@@ -189,10 +193,9 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label30 = new System.Windows.Forms.Label();
-            this.comboBoxDebugger2 = new System.Windows.Forms.ComboBox();
-            this.Cmd_FPGA_Import2 = new System.Windows.Forms.Button();
-            this.label47 = new System.Windows.Forms.Label();
+            this.Cmd_Freq_Convert = new System.Windows.Forms.Button();
+            this.numericUp_FreqConvert = new System.Windows.Forms.NumericUpDown();
+            this.label48 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -219,6 +222,7 @@
             this.tabMux.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUp_FreqConvert)).BeginInit();
             this.SuspendLayout();
             // 
             // Cmd_Exit
@@ -297,6 +301,9 @@
             // 
             // tabAD4368
             // 
+            this.tabAD4368.Controls.Add(this.label48);
+            this.tabAD4368.Controls.Add(this.numericUp_FreqConvert);
+            this.tabAD4368.Controls.Add(this.Cmd_Freq_Convert);
             this.tabAD4368.Controls.Add(this.label32);
             this.tabAD4368.Controls.Add(this.Cmd_RFPLL_Init);
             this.tabAD4368.Controls.Add(this.checkRFLOCK);
@@ -348,7 +355,7 @@
             // 
             this.checkRFLOCK.AutoSize = true;
             this.checkRFLOCK.Enabled = false;
-            this.checkRFLOCK.Location = new System.Drawing.Point(808, 572);
+            this.checkRFLOCK.Location = new System.Drawing.Point(808, 610);
             this.checkRFLOCK.Margin = new System.Windows.Forms.Padding(4);
             this.checkRFLOCK.Name = "checkRFLOCK";
             this.checkRFLOCK.Size = new System.Drawing.Size(94, 20);
@@ -407,7 +414,6 @@
             // 
             // Cmd_Export_AD4368_File
             // 
-            this.Cmd_Export_AD4368_File.Enabled = false;
             this.Cmd_Export_AD4368_File.Location = new System.Drawing.Point(808, 258);
             this.Cmd_Export_AD4368_File.Margin = new System.Windows.Forms.Padding(4);
             this.Cmd_Export_AD4368_File.Name = "Cmd_Export_AD4368_File";
@@ -1742,6 +1748,46 @@
             this.tabFPGA.Text = "FPGA";
             this.tabFPGA.UseVisualStyleBackColor = true;
             // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(885, 238);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(50, 16);
+            this.label47.TabIndex = 22;
+            this.label47.Text = "DAC1:";
+            // 
+            // Cmd_FPGA_Import2
+            // 
+            this.Cmd_FPGA_Import2.Location = new System.Drawing.Point(888, 292);
+            this.Cmd_FPGA_Import2.Name = "Cmd_FPGA_Import2";
+            this.Cmd_FPGA_Import2.Size = new System.Drawing.Size(193, 50);
+            this.Cmd_FPGA_Import2.TabIndex = 21;
+            this.Cmd_FPGA_Import2.Text = "LOAD Vector DAC1";
+            this.Cmd_FPGA_Import2.UseVisualStyleBackColor = true;
+            this.Cmd_FPGA_Import2.Click += new System.EventHandler(this.Cmd_FPGA_Import2_Click);
+            // 
+            // comboBoxDebugger2
+            // 
+            this.comboBoxDebugger2.FormattingEnabled = true;
+            this.comboBoxDebugger2.Items.AddRange(new object[] {
+            "Uplink DAC0",
+            "Uplink DAC1"});
+            this.comboBoxDebugger2.Location = new System.Drawing.Point(888, 258);
+            this.comboBoxDebugger2.Name = "comboBoxDebugger2";
+            this.comboBoxDebugger2.Size = new System.Drawing.Size(193, 24);
+            this.comboBoxDebugger2.TabIndex = 20;
+            this.comboBoxDebugger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger2_SelectedIndexChanged);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(885, 118);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(50, 16);
+            this.label30.TabIndex = 19;
+            this.label30.Text = "DAC0:";
+            // 
             // dataGridFPGA
             // 
             this.dataGridFPGA.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -2199,45 +2245,51 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // label30
+            // Cmd_Freq_Convert
             // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(885, 118);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(50, 16);
-            this.label30.TabIndex = 19;
-            this.label30.Text = "DAC0:";
+            this.Cmd_Freq_Convert.Location = new System.Drawing.Point(808, 532);
+            this.Cmd_Freq_Convert.Name = "Cmd_Freq_Convert";
+            this.Cmd_Freq_Convert.Size = new System.Drawing.Size(152, 59);
+            this.Cmd_Freq_Convert.TabIndex = 19;
+            this.Cmd_Freq_Convert.Text = "FREQ RF PLL INIT";
+            this.Cmd_Freq_Convert.UseVisualStyleBackColor = true;
+            this.Cmd_Freq_Convert.Click += new System.EventHandler(this.Cmd_Freq_Convert_Click);
             // 
-            // comboBoxDebugger2
+            // numericUp_FreqConvert
             // 
-            this.comboBoxDebugger2.FormattingEnabled = true;
-            this.comboBoxDebugger2.Items.AddRange(new object[] {
-            "Uplink DAC0",
-            "Uplink DAC1"});
-            this.comboBoxDebugger2.Location = new System.Drawing.Point(888, 258);
-            this.comboBoxDebugger2.Name = "comboBoxDebugger2";
-            this.comboBoxDebugger2.Size = new System.Drawing.Size(193, 24);
-            this.comboBoxDebugger2.TabIndex = 20;
-            this.comboBoxDebugger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger2_SelectedIndexChanged);
+            this.numericUp_FreqConvert.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUp_FreqConvert.Location = new System.Drawing.Point(808, 495);
+            this.numericUp_FreqConvert.Maximum = new decimal(new int[] {
+            12801,
+            0,
+            0,
+            0});
+            this.numericUp_FreqConvert.Minimum = new decimal(new int[] {
+            6399,
+            0,
+            0,
+            0});
+            this.numericUp_FreqConvert.Name = "numericUp_FreqConvert";
+            this.numericUp_FreqConvert.Size = new System.Drawing.Size(75, 22);
+            this.numericUp_FreqConvert.TabIndex = 20;
+            this.numericUp_FreqConvert.Value = new decimal(new int[] {
+            9750,
+            0,
+            0,
+            0});
             // 
-            // Cmd_FPGA_Import2
+            // label48
             // 
-            this.Cmd_FPGA_Import2.Location = new System.Drawing.Point(888, 292);
-            this.Cmd_FPGA_Import2.Name = "Cmd_FPGA_Import2";
-            this.Cmd_FPGA_Import2.Size = new System.Drawing.Size(193, 50);
-            this.Cmd_FPGA_Import2.TabIndex = 21;
-            this.Cmd_FPGA_Import2.Text = "LOAD Vector DAC1";
-            this.Cmd_FPGA_Import2.UseVisualStyleBackColor = true;
-            this.Cmd_FPGA_Import2.Click += new System.EventHandler(this.Cmd_FPGA_Import2_Click);
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(885, 238);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(50, 16);
-            this.label47.TabIndex = 22;
-            this.label47.Text = "DAC1:";
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(889, 497);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(37, 16);
+            this.label48.TabIndex = 21;
+            this.label48.Text = "MHz";
             // 
             // MainForm
             // 
@@ -2299,6 +2351,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUp_FreqConvert)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2470,6 +2523,9 @@
         private System.Windows.Forms.ComboBox comboBoxDebugger2;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.NumericUpDown numericUp_FreqConvert;
+        private System.Windows.Forms.Button Cmd_Freq_Convert;
+        private System.Windows.Forms.Label label48;
     }
 }
 
