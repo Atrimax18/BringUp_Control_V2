@@ -3292,8 +3292,7 @@ namespace BringUp_Control
             if (tabControl1.SelectedTab == tabAD4368)
             {
                 if (ad4368 != null)
-                {
-                    
+                {                    
 
                     string out_values = AD4368_Convert((double)numericUp_FreqConvert.Value);
 
@@ -3319,7 +3318,7 @@ namespace BringUp_Control
 
             if (p.Length < 8) throw new ArgumentException("Register array too small");
 
-            int Rdiv = int.Parse(p[0], CultureInfo.InvariantCulture);  // R_div = 0x20 - [5:0]
+            ushort Rdiv = ushort.Parse(p[0], CultureInfo.InvariantCulture);  // R_div = 0x20 - [5:0]
             int N_Int = int.Parse(p[1], CultureInfo.InvariantCulture);  // N_Int = 0x10 - [7:0]
             //int Nint_msb = int.Parse(p[1], CultureInfo.InvariantCulture);  // N_Int = 0x11 - [11:8]
 
@@ -3340,7 +3339,7 @@ namespace BringUp_Control
             vcoBandDiv &= 0xFF;
             adcClkDiv &= 0xFF;
             ldCount &= 0x1F;   // 5 bits
-            
+            byte Rmask = 0b11000000;      // 6 bits
 
             // === Apply to register image ===
             // Reg 0x10[7:0] = N_Int[7:0]
@@ -3360,7 +3359,8 @@ namespace BringUp_Control
                 else if (row["Register"].ToString() == "0x0020")
                 {
                     TryParseHexByte(row["Value"].ToString(), out byte ti);
-                    row["Value"] = $"0x{(byte)((ti & 0xC0) | (Rdiv & 0x3F)):X2}";                     
+                    //row["Value"] = $"0x{(byte)((ti & 0xC0) | (Rdiv & 0x3F)):X2}"; 
+                    row["Value"] = $"0x{(byte)((ti & Rmask) | (Rdiv & 0x3F)):X2}";
                 }
                 else if (row["Register"].ToString() == "0x0025")
                 {
