@@ -25,11 +25,6 @@ namespace BringUp_Control
         List<string> regaddresslist = new List<string>();
         DataTable dtAD4368 = new DataTable();
 
-        
-
-        
-
-
 
         public void Init(SpiDriver ft, i2cDriver i2c, PCAL6416A ioExp, FtdiInterfaceManager interfaceManager)
         {
@@ -45,7 +40,7 @@ namespace BringUp_Control
             // Set the IO Expander TMUX1104 address pins to 0x01 to allow the FTDI CS to reach the AD4368
 
 
-            
+
 
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL0, true);
             _ioExp.SetPinStateFromIndex(PCAL6416A.PinIndex.CTRL_SPI_CSN_SEL1, false);
@@ -84,7 +79,7 @@ namespace BringUp_Control
             };
 
             _ft.Write(buffer);
-            
+
         }
 
         public byte ReadRegister(ushort reg)
@@ -104,7 +99,7 @@ namespace BringUp_Control
             return rx[2];
         }
 
-        
+
 
         public void Dispose()
         {
@@ -117,10 +112,10 @@ namespace BringUp_Control
             dtAD4368.Columns.Add("Index", typeof(int));
             dtAD4368.Columns.Add("Register", typeof(string));
             dtAD4368.Columns.Add("Value", typeof(string));
-            dtAD4368.Columns.Add("Value byte", typeof(byte));            
+            dtAD4368.Columns.Add("Value byte", typeof(byte));
 
             return dtAD4368;
-        }        
+        }
 
         public List<string> LoadComboRegisters()
         {
@@ -131,8 +126,8 @@ namespace BringUp_Control
                 regaddresslist.Add($"0x{i:X4}"); // Format as hexadecimal with 4 digits
             }
 
-            return regaddresslist;            
-        }        
+            return regaddresslist;
+        }
 
         public void SaveDataTableToCsv(DataTable table)
         {
@@ -194,9 +189,9 @@ namespace BringUp_Control
                             dtAD4368.Clear();
 
                         filepath = ftfile.FileName;
-                        
-                        ParsingFile(filepath);                        
-                    }                    
+
+                        ParsingFile(filepath);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -242,6 +237,7 @@ namespace BringUp_Control
                 }
             }
         }
+
         
     }
 }

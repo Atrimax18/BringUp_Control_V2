@@ -3293,16 +3293,12 @@ namespace BringUp_Control
             {
                 if (ad4368 != null)
                 {
-                    if (DT4368.Rows.Count > 0)
-                    {
-                        DT4368.Clear();
-                        
-                    }
+                    
 
                     string out_values = AD4368_Convert((double)numericUp_FreqConvert.Value);
 
                     // With this line, using the public ParsingFile method to set the file path and parse the file:
-                    ad4368.ParsingFile(rf_pll_ini_file);
+                    //ad4368.ParsingFile(rf_pll_ini_file);
 
                     ApplyRegisterValues(out_values);
 
@@ -3344,6 +3340,7 @@ namespace BringUp_Control
             vcoBandDiv &= 0xFF;
             adcClkDiv &= 0xFF;
             ldCount &= 0x1F;   // 5 bits
+            
 
             // === Apply to register image ===
             // Reg 0x10[7:0] = N_Int[7:0]
@@ -3363,7 +3360,7 @@ namespace BringUp_Control
                 else if (row["Register"].ToString() == "0x0020")
                 {
                     TryParseHexByte(row["Value"].ToString(), out byte ti);
-                    row["Value"] = $"0x{(byte)((ti & 0xC0) | (Rdiv & 0x3F)):X2}"; 
+                    row["Value"] = $"0x{(byte)((ti & 0xC0) | (Rdiv & 0x3F)):X2}";                     
                 }
                 else if (row["Register"].ToString() == "0x0025")
                 {
