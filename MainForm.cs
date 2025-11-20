@@ -650,6 +650,14 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD4368)
             {
+                if(ftDev == null)
+                {
+                    //LogStatus("Message SPI init neeeded");
+                    ftDev = InterfaceManager.GetSpi();
+                    i2cBus = InterfaceManager.GetI2c();
+                    ad4368.Init(ftDev, i2cBus, IO_Exp, InterfaceManager);
+                }
+
                 string selectedRegisterAddress = comboRegAddress.SelectedItem.ToString();
                 int selectedHex = Convert.ToInt32(selectedRegisterAddress.Substring(2), 16); // Convert hex string to int
 
@@ -676,7 +684,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD4368)
             {
-                if ((ftDev == null))
+                if (ftDev == null)
                 {
                     LogStatus("Message SPI init neeeded");
                 }
@@ -3549,6 +3557,10 @@ namespace BringUp_Control
                 byte cp_value = ad4368.ReadRegister(RF_PLL_CP_I_REG);
                 byte newCpI = (byte)((cp_value & 0xF0) | (newValue & 0x0F));
                 ad4368.WriteRegister(RF_PLL_CP_I_REG, newCpI);
+
+                //change in datatable the value in specific row
+                DT4368.Rows[RF_PLL_CP_I_REG]["Value"] = $"0x{newCpI:X2}";
+                
                 LogStatus($"AD4368 Charge Pump I set to {comboCP_I.SelectedItem.ToString()}");
 
             }
