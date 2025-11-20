@@ -40,6 +40,7 @@ namespace BringUp_Control
         private const int RF_PLL_EN_REG = 0x002D;
         private const int RF_PLL_EN_ADC_REG = 0x0031;
         private const int RF_PLL_LKDET_REG = 0x0058;
+        private const int RF_PLL_CP_I_REG = 0x001F;
 
         private const double REF_In_MHz = 100.0;
 
@@ -50,6 +51,7 @@ namespace BringUp_Control
         private const int REG_SHORT_TPL_TEST_2 = 0x032E; // SHORT_TPL_REF_SP_MSB
         private const int REG_SHORT_TPL_TEST_3 = 0x032F; // SHORT_TPL_LINK_SEL bit 7 DAC0/DAC1, SHORT_TPL_IQ_PATH_SEL - bit 6 IQ stream
 
+        
 
         private CancellationTokenSource _playbackCancelToken;
 
@@ -1244,10 +1246,26 @@ namespace BringUp_Control
                 LogStatus("RF PLL EN Regs NOT turned OFF, BUSY status detected");
             }
             //-----------------------------------------------------------------------------------
+            byte cpi_index = Check_CP_I();
+            comboCP_I.SelectedIndex = (int)cpi_index;
 
             CheckPowerRegister(RF_PLL_POWER_REG);
             Thread.Sleep(100); // Wait for the power register to update
             RFLockSampling(RF_PLL_LKDET_REG, 0);
+        }
+
+        private byte Check_CP_I()
+        {
+            byte cp_i = 0x00;
+            if (selectedTab == tabAD4368)
+            {
+                cp_i = ad4368.ReadRegister(RF_PLL_CP_I_REG);
+                byte lowerNibble = (byte)(cp_i & 0x0F);   // last 4 bits only
+
+                LogStatus($"CP Current REG: 0x1F value: 0x{lowerNibble:X2}");
+                cp_i = lowerNibble;
+            }
+            return cp_i;
         }
 
 
@@ -3521,6 +3539,19 @@ namespace BringUp_Control
             if (s.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 s = s.Substring(2);
             return int.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+        }
+
+        private void comboCP_I_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedTab == tabAD4368)
+            {
+                byte newValue = (byte)comboCP_I.SelectedIndex;
+                byte cp_value = ad4368.ReadRegister(RF_PLL_CP_I_REG);
+                byte newCpI = (byte)((cp_value & 0xF0) | (newValue & 0x0F));
+                ad4368.WriteRegister(RF_PLL_CP_I_REG, newCpI);
+                LogStatus($"AD4368 Charge Pump I set to {comboCP_I.SelectedItem.ToString()}");
+
+            }
         }
     }
 }

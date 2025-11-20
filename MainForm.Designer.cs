@@ -36,6 +36,8 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label26 = new System.Windows.Forms.Label();
             this.tabAD4368 = new System.Windows.Forms.TabPage();
+            this.label49 = new System.Windows.Forms.Label();
+            this.comboCP_I = new System.Windows.Forms.ComboBox();
             this.label48 = new System.Windows.Forms.Label();
             this.numericUp_FreqConvert = new System.Windows.Forms.NumericUpDown();
             this.Cmd_Freq_Convert = new System.Windows.Forms.Button();
@@ -196,8 +198,6 @@
             this.textLog = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label49 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabWelcome.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -298,7 +298,7 @@
             // tabAD4368
             // 
             this.tabAD4368.Controls.Add(this.label49);
-            this.tabAD4368.Controls.Add(this.comboBox1);
+            this.tabAD4368.Controls.Add(this.comboCP_I);
             this.tabAD4368.Controls.Add(this.label48);
             this.tabAD4368.Controls.Add(this.numericUp_FreqConvert);
             this.tabAD4368.Controls.Add(this.Cmd_Freq_Convert);
@@ -326,6 +326,41 @@
             this.tabAD4368.TabIndex = 0;
             this.tabAD4368.Text = "PLL 4368";
             this.tabAD4368.UseVisualStyleBackColor = true;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(202, 78);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(106, 16);
+            this.label49.TabIndex = 23;
+            this.label49.Text = "CP_I Register:";
+            // 
+            // comboCP_I
+            // 
+            this.comboCP_I.FormattingEnabled = true;
+            this.comboCP_I.Items.AddRange(new object[] {
+            "0.79 mA",
+            "0.99 mA",
+            "1.19 mA",
+            "1.38 mA",
+            "1.59 mA",
+            "1.98 mA",
+            "2.39 mA",
+            "2.79 mA",
+            "3.18 mA",
+            "3.97 mA",
+            "4.77 mA",
+            "5.57 mA",
+            "6.33 mA",
+            "7.91 mA",
+            "9.51 mA",
+            "11.1 mA"});
+            this.comboCP_I.Location = new System.Drawing.Point(205, 97);
+            this.comboCP_I.Name = "comboCP_I";
+            this.comboCP_I.Size = new System.Drawing.Size(114, 24);
+            this.comboCP_I.TabIndex = 22;
+            this.comboCP_I.SelectedIndexChanged += new System.EventHandler(this.comboCP_I_SelectedIndexChanged);
             // 
             // label48
             // 
@@ -2135,23 +2170,6 @@
             this.pictureBox2.TabIndex = 0;
             this.pictureBox2.TabStop = false;
             // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(205, 97);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(114, 24);
-            this.comboBox1.TabIndex = 22;
-            // 
-            // label49
-            // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(202, 78);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(106, 16);
-            this.label49.TabIndex = 23;
-            this.label49.Text = "CP_I Register:";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2387,7 +2405,7 @@
         private System.Windows.Forms.Button Cmd_Freq_Convert;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label49;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboCP_I;
     }
 }
 
