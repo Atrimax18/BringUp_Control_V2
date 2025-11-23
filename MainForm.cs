@@ -1231,7 +1231,7 @@ namespace BringUp_Control
                 LogStatus("FSM_BUSY - VCO not completed");
             else
                 LogStatus("FSM_BUSY - VCO completed");
-
+            
             Thread.Sleep(10);
             xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
 
@@ -1241,7 +1241,7 @@ namespace BringUp_Control
             else
                 LogStatus("ADC_BUSY - ADC completed");
 
-
+            /*
             if (!bit1 && !bit2)
             {
                 ad4368.WriteRegister(RF_PLL_EN_REG, 0x00); // EN_DNCLK(7)=0, EN_DRCLK(6)=0, 
@@ -1256,7 +1256,8 @@ namespace BringUp_Control
             //-----------------------------------------------------------------------------------
             byte cpi_index = Check_CP_I();
             comboCP_I.SelectedIndex = (int)cpi_index;
-
+            */
+            
             CheckPowerRegister(RF_PLL_POWER_REG);
             Thread.Sleep(100); // Wait for the power register to update
             RFLockSampling(RF_PLL_LKDET_REG, 0);
@@ -3553,7 +3554,7 @@ namespace BringUp_Control
         {
             if (selectedTab == tabAD4368)
             {
-                byte newValue = (byte)comboCP_I.SelectedIndex;
+                /*byte newValue = (byte)comboCP_I.SelectedIndex;
                 byte cp_value = ad4368.ReadRegister(RF_PLL_CP_I_REG);
                 byte newCpI = (byte)((cp_value & 0xF0) | (newValue & 0x0F));
                 ad4368.WriteRegister(RF_PLL_CP_I_REG, newCpI);
@@ -3569,7 +3570,7 @@ namespace BringUp_Control
 
                 dataGridViewAD4368.Refresh();
 
-                LogStatus($"AD4368 Charge Pump I set to {comboCP_I.SelectedItem.ToString()}");
+                LogStatus($"AD4368 Charge Pump I set to {comboCP_I.SelectedItem.ToString()}");*/
 
             }
         }
