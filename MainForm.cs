@@ -3558,9 +3558,17 @@ namespace BringUp_Control
                 byte newCpI = (byte)((cp_value & 0xF0) | (newValue & 0x0F));
                 ad4368.WriteRegister(RF_PLL_CP_I_REG, newCpI);
 
-                //change in datatable the value in specific row
-                DT4368.Rows[RF_PLL_CP_I_REG]["Value"] = $"0x{newCpI:X2}";
+                string vt= "0x" + RF_PLL_CP_I_REG.ToString("X4");
+
+                DataRow[] row = DT4368.Select($"Register = '{vt}'");
                 
+                if (row.Length > 0)
+                    row[0]["Value"] = $"0x{newCpI:X2}"; ;
+
+                
+
+                dataGridViewAD4368.Refresh();
+
                 LogStatus($"AD4368 Charge Pump I set to {comboCP_I.SelectedItem.ToString()}");
 
             }
