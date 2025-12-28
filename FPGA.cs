@@ -505,9 +505,10 @@ namespace BringUp_Control
             uint d_value = 0;
 
             if (play)
-                SpiWrite(0x000011BC, 0x0F);
+                //SpiWrite(0x000011BC, 0x0F);
+                SpiWrite(BASE_ADDRESS+RegisterMapTOP_Container["enable_data_path"], 0x0F);
             else
-                SpiWrite(0x000011BC, 0x00);
+                SpiWrite(BASE_ADDRESS+RegisterMapTOP_Container["enable_data_path"], 0x00);
 
             Thread.Sleep(100);
 
@@ -530,9 +531,7 @@ namespace BringUp_Control
                 MainForm.Instance.LogStatus("Player Started.....");
             else if (status_reg == 0 && play == false)
                 MainForm.Instance.LogStatus("Player Stopped.....");
-        }
-
-        
+        }        
 
         public bool StopPlayer(string debuggerKey)
         {
