@@ -90,10 +90,13 @@ namespace BringUp_Control
                 throw new ArgumentOutOfRangeException(nameof(port), "Port must be 0 or 1.");
             }
 
+            byte reg = port == 0 ? CONFIG_PORT_0 : CONFIG_PORT_1;
+            
+
             //_ft = _interfaceManager.GetI2c(); // Get current I2C interface
 
             // Write the port configuration to the register
-            WriteByte(port, stateMask);
+            WriteByte(reg, stateMask);
 
             //***
             
