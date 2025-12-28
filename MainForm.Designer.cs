@@ -360,7 +360,7 @@
             this.comboCP_I.Name = "comboCP_I";
             this.comboCP_I.Size = new System.Drawing.Size(114, 24);
             this.comboCP_I.TabIndex = 22;
-            this.comboCP_I.SelectedIndexChanged += new System.EventHandler(this.comboCP_I_SelectedIndexChanged);
+            this.comboCP_I.SelectedIndexChanged += new System.EventHandler(this.ComboCP_I_SelectedIndexChanged);
             // 
             // label48
             // 
@@ -662,7 +662,7 @@
             this.comboDAC_Power.Name = "comboDAC_Power";
             this.comboDAC_Power.Size = new System.Drawing.Size(171, 24);
             this.comboDAC_Power.TabIndex = 45;
-            this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.comboDAC_Power_SelectedIndexChanged);
+            this.comboDAC_Power.SelectedIndexChanged += new System.EventHandler(this.ComboDAC_Power_SelectedIndexChanged);
             // 
             // Cmd_Load_DAC
             // 
@@ -682,7 +682,7 @@
             this.button1.TabIndex = 43;
             this.button1.Text = "REG DUMP";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // textSTPL_Data
             // 
@@ -690,7 +690,7 @@
             this.textSTPL_Data.Name = "textSTPL_Data";
             this.textSTPL_Data.Size = new System.Drawing.Size(58, 22);
             this.textSTPL_Data.TabIndex = 42;
-            this.textSTPL_Data.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textSTPL_Data_KeyPress);
+            this.textSTPL_Data.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextSTPL_Data_KeyPress);
             // 
             // label27
             // 
@@ -780,7 +780,7 @@
             this.comboMAINDAC.Name = "comboMAINDAC";
             this.comboMAINDAC.Size = new System.Drawing.Size(98, 24);
             this.comboMAINDAC.TabIndex = 34;
-            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.comboMAINDAC_SelectedIndexChanged);
+            this.comboMAINDAC.SelectedIndexChanged += new System.EventHandler(this.ComboMAINDAC_SelectedIndexChanged);
             // 
             // label45
             // 
@@ -827,7 +827,7 @@
             this.textRegDAC9175.Name = "textRegDAC9175";
             this.textRegDAC9175.Size = new System.Drawing.Size(94, 22);
             this.textRegDAC9175.TabIndex = 29;
-            this.textRegDAC9175.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textRegDAC9175_KeyPress);
+            this.textRegDAC9175.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextRegDAC9175_KeyPress);
             // 
             // Cmd_Link_Status
             // 
@@ -909,7 +909,7 @@
             0,
             0,
             196608});
-            this.numericDAC_FS.ValueChanged += new System.EventHandler(this.numericDAC_FS_ValueChanged);
+            this.numericDAC_FS.ValueChanged += new System.EventHandler(this.NumericDAC_FS_ValueChanged);
             // 
             // label41
             // 
@@ -1028,7 +1028,7 @@
             this.comboCh_NCO.Name = "comboCh_NCO";
             this.comboCh_NCO.Size = new System.Drawing.Size(50, 24);
             this.comboCh_NCO.TabIndex = 45;
-            this.comboCh_NCO.SelectedIndexChanged += new System.EventHandler(this.comboCh_NCO_SelectedIndexChanged);
+            this.comboCh_NCO.SelectedIndexChanged += new System.EventHandler(this.ComboCh_NCO_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -1039,7 +1039,7 @@
             this.button2.TabIndex = 44;
             this.button2.Text = "CH NCO START";
             this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.Click += new System.EventHandler(this.Button2_Click);
             // 
             // label43
             // 
@@ -1087,7 +1087,7 @@
             this.checkBox1.TabIndex = 30;
             this.checkBox1.Text = "Single NCO";
             this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // label40
             // 
@@ -1162,7 +1162,7 @@
             this.textStop.Name = "textStop";
             this.textStop.Size = new System.Drawing.Size(77, 22);
             this.textStop.TabIndex = 21;
-            this.textStop.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStop_KeyPress);
+            this.textStop.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextStop_KeyPress);
             // 
             // label35
             // 
@@ -1179,7 +1179,7 @@
             this.textStart.Name = "textStart";
             this.textStart.Size = new System.Drawing.Size(77, 22);
             this.textStart.TabIndex = 19;
-            this.textStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStart_KeyPress);
+            this.textStart.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextStart_KeyPress);
             // 
             // textStep
             // 
@@ -1187,7 +1187,7 @@
             this.textStep.Name = "textStep";
             this.textStep.Size = new System.Drawing.Size(77, 22);
             this.textStep.TabIndex = 16;
-            this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textStep_KeyPress);
+            this.textStep.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextStep_KeyPress);
             // 
             // label34
             // 
@@ -1253,7 +1253,7 @@
             this.textDAC9175_Value.Name = "textDAC9175_Value";
             this.textDAC9175_Value.Size = new System.Drawing.Size(101, 22);
             this.textDAC9175_Value.TabIndex = 9;
-            this.textDAC9175_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textDAC9175_Value_KeyPress);
+            this.textDAC9175_Value.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextDAC9175_Value_KeyPress);
             // 
             // comboRegisters9175
             // 
@@ -1414,7 +1414,7 @@
             this.button_CheckRefStat.TabIndex = 16;
             this.button_CheckRefStat.Text = "Check Ref Status";
             this.button_CheckRefStat.UseVisualStyleBackColor = true;
-            this.button_CheckRefStat.Click += new System.EventHandler(this.button_CheckRefStat_Click);
+            this.button_CheckRefStat.Click += new System.EventHandler(this.Button_CheckRefStat_Click);
             // 
             // label_ProdFwSi55XX
             // 
@@ -1451,7 +1451,7 @@
             this.button_GetInfo.TabIndex = 7;
             this.button_GetInfo.Text = "Get Info";
             this.button_GetInfo.UseVisualStyleBackColor = true;
-            this.button_GetInfo.Click += new System.EventHandler(this.button_GetInfo_Click);
+            this.button_GetInfo.Click += new System.EventHandler(this.Button_GetInfo_Click);
             // 
             // tabRFLine
             // 
@@ -1743,7 +1743,7 @@
             this.comboBoxDebugger2.Name = "comboBoxDebugger2";
             this.comboBoxDebugger2.Size = new System.Drawing.Size(146, 24);
             this.comboBoxDebugger2.TabIndex = 20;
-            this.comboBoxDebugger2.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger2_SelectedIndexChanged);
+            this.comboBoxDebugger2.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDebugger2_SelectedIndexChanged);
             // 
             // label30
             // 
@@ -1783,7 +1783,7 @@
             this.comboBoxDebugger.Name = "comboBoxDebugger";
             this.comboBoxDebugger.Size = new System.Drawing.Size(146, 24);
             this.comboBoxDebugger.TabIndex = 17;
-            this.comboBoxDebugger.SelectedIndexChanged += new System.EventHandler(this.comboBoxDebugger_SelectedIndexChanged);
+            this.comboBoxDebugger.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDebugger_SelectedIndexChanged);
             // 
             // Cmd_Stop_Player
             // 

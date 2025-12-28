@@ -62,7 +62,7 @@ namespace BringUp_Control
         string filepath = string.Empty;  // csv file path
         //int usbcounter = 0;
 
-        private bool _usbInitInProgress = false;
+        //private bool _usbInitInProgress = false;
         public System.Timers.Timer _usbDebounceTimer;
 
 
@@ -153,6 +153,7 @@ namespace BringUp_Control
         string daq_reg_file = string.Empty;
 
         string rf_pll_ini_file = string.Empty; // RF PLL 4368 INI file path
+        string coinhtmlfile = string.Empty; // COIN HTML file path
 
         string jesd_file = string.Empty; // JESD file path
 
@@ -181,6 +182,19 @@ namespace BringUp_Control
             dataGridViewAD9175.AllowUserToAddRows = false;
 
             string inifilecheck = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "init_config.ini");
+
+            coinhtmlfile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "coin_digital_container_sw.html");
+
+            if (!File.Exists(coinhtmlfile))
+            {
+                LogStatus("FPGA register file not detected");
+            }
+            else
+            {
+                LogStatus("FPGA register file loaded successfully.");
+                
+            }
+
 
             if (!File.Exists(inifilecheck))
             {
@@ -1073,7 +1087,7 @@ namespace BringUp_Control
                 gpio_control.Write(GPIO3, true);
                 //fpga.Init(ftDev, InterfaceManager);
                 fpga.Init(ftFPGA, InterfaceManagerFPGA); // Initialize FPGA with the current FTDI device
-
+                fpga.Coindigitaldatafile = coinhtmlfile;
                 if (DTFPGA.Rows.Count > 0)
                 {
 
@@ -2086,7 +2100,7 @@ namespace BringUp_Control
             }
         }
 
-        private void numericDAC_FS_ValueChanged(object sender, EventArgs e)
+        private void NumericDAC_FS_ValueChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabAD9175)
             {
@@ -2395,7 +2409,7 @@ namespace BringUp_Control
         }
 
         //daq combobox for dac0/1
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox1.Checked)
             {
@@ -2408,7 +2422,7 @@ namespace BringUp_Control
             }
         }
 
-        private void textRegDAC9175_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextRegDAC9175_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabAD9175)
             {
@@ -2432,7 +2446,7 @@ namespace BringUp_Control
             }
         }
 
-        private void textDAC9175_Value_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextDAC9175_Value_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabAD9175)
             {
@@ -2477,7 +2491,7 @@ namespace BringUp_Control
             }
         }
 
-        private void textStart_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextStart_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabAD9175)
             {
@@ -2509,7 +2523,7 @@ namespace BringUp_Control
             }
         }
 
-        private void textStop_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextStop_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (selectedTab == tabAD9175)
             {
@@ -2533,7 +2547,7 @@ namespace BringUp_Control
 
         }
 
-        private void textStep_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextStep_KeyPress(object sender, KeyPressEventArgs e)
         {
 
             if (selectedTab == tabAD9175)
@@ -2567,7 +2581,7 @@ namespace BringUp_Control
 
         private void Cmd_FPGA_Tests_Click(object sender, EventArgs e)
         {
-            uint deft = fpga.SpiReadByName("container_version");
+            fpga.SpiReadByName("container_version");
         }
 
 
@@ -2577,6 +2591,8 @@ namespace BringUp_Control
             if (tabControl1.SelectedTab == tabFPGA )
             {
                 fpga.WriteReadFPGA();
+
+                fpga.Coindigitaldatafile = coinhtmlfile;
             }
 
             
@@ -2606,7 +2622,7 @@ namespace BringUp_Control
             }
             return -1; // or throw exception if preferred
         }
-        private void comboBoxDebugger_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxDebugger_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
@@ -2695,7 +2711,7 @@ namespace BringUp_Control
             Cmd_STPL.Enabled = true;
         }
 
-        private void comboMAINDAC_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboMAINDAC_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == tabAD9175)
             {
@@ -2883,7 +2899,7 @@ namespace BringUp_Control
             }
         }
 
-        private void button_GetInfo_Click(object sender, EventArgs e)
+        private void Button_GetInfo_Click(object sender, EventArgs e)
         {
             double temp_skyworks;
             string info_skyworks;
@@ -2914,7 +2930,7 @@ namespace BringUp_Control
             label_DevInfo.Text = $"DevInfo: {info_skyworks}";
         }
 
-        private void button_CheckRefStat_Click(object sender, EventArgs e)
+        private void Button_CheckRefStat_Click(object sender, EventArgs e)
         {
             bool ref_stat;
 
@@ -2994,7 +3010,7 @@ namespace BringUp_Control
             return HexRegex.IsMatch(input);
         }
 
-        private void textSTPL_Data_KeyPress(object sender, KeyPressEventArgs e)
+        private void TextSTPL_Data_KeyPress(object sender, KeyPressEventArgs e)
         {
             
 
@@ -3036,7 +3052,7 @@ namespace BringUp_Control
         }
         
         //test button for DAC tests
-        private void button1_Click(object sender, EventArgs e)
+        private void Button1_Click(object sender, EventArgs e)
         {
 
             List<string> register_list = new List<string>();
@@ -3053,7 +3069,7 @@ namespace BringUp_Control
         }
 
         // TEST Channel NCO button
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             if(selectedTab == tabAD9175)
             {
@@ -3098,7 +3114,7 @@ namespace BringUp_Control
             
         }
 
-        private void comboCh_NCO_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboCh_NCO_SelectedIndexChanged(object sender, EventArgs e)
         {
             button2.Enabled = false;
             int ch_num = comboCh_NCO.SelectedIndex;
@@ -3225,7 +3241,7 @@ namespace BringUp_Control
 
         }
 
-        private void comboDAC_Power_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboDAC_Power_SelectedIndexChanged(object sender, EventArgs e)
         {
             // register 0x0090 bit 0 = DAC0 power down 1 , power up 0; bit 1 = DAC1 power down 1 , power up 0 
             int dac_power = comboDAC_Power.SelectedIndex;
@@ -3260,7 +3276,7 @@ namespace BringUp_Control
 
         
 
-        private void comboBoxDebugger2_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxDebugger2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabFPGA)
             {
@@ -3550,7 +3566,7 @@ namespace BringUp_Control
             return int.Parse(s, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
         }
 
-        private void comboCP_I_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboCP_I_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (selectedTab == tabAD4368)
             {

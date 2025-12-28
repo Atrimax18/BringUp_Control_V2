@@ -554,7 +554,7 @@ namespace BringUp_Control
                             $"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
 
                         MainForm.Instance.LogStatus($"Error: Read value 0x{result:X2} at address 0x{cmd.Address:X4} triggers stop.");
-                        return return_value = -1;
+                        //return return_value = -1;
                     }
                     else
                     {
@@ -858,7 +858,7 @@ namespace BringUp_Control
         // DAC_Full scale measurement and output value calculation
         public int DAC_FullScale(int dac_index, float IOUTFS_mA)
         {
-            int FSC_Ctrl = 0;
+            int FSC_Ctrl = -1;
             if (IOUTFS_mA > 15.625 && IOUTFS_mA < 25.977)
             {
                 uint DAC_FS_Value = (uint)(1 << (6 + dac_index));
@@ -870,7 +870,7 @@ namespace BringUp_Control
             }
             else
             {                
-                FSC_Ctrl = -1; // Invalid value
+                
                 MainForm.Instance?.LogStatus("IOUTFS_mA must be between 15.625 and 25.977 mA");
             }
             

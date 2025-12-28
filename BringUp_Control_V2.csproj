@@ -149,6 +149,7 @@
     <Compile Include="AD9175_DAC.cs" />
     <Compile Include="AD9213_ADC.cs" />
     <Compile Include="FPGA.cs" />
+    <Compile Include="FPGARegisterLoader.cs" />
     <Compile Include="Ft4222Native.cs" />
     <Compile Include="FtdiInterfaceManager.cs" />
     <Compile Include="GpioDriver.cs" />
