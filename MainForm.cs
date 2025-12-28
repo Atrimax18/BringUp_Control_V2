@@ -1049,6 +1049,8 @@ namespace BringUp_Control
             }
         }
 
+
+        //TAB controller
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedTab = tabControl1.SelectedTab;

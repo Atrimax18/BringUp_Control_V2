@@ -251,7 +251,7 @@ namespace BringUp_Control
         //new test function to read register from FPGA
         public uint SpiReadByName(string regName)
         {
-            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
+            if (!RegisterMapTOP_Container.TryGetValue(regName, out uint offset))   //RegisterMapCoin_Digital
                 throw new ArgumentException($"Register '{regName}' not found.");
 
             uint address = BASE_ADDRESS + offset;
@@ -261,7 +261,7 @@ namespace BringUp_Control
         //new test function to write register to FPGA
         public void SpiWriteByName(string regName, uint value)
         {
-            if (!RegisterMapCoin_Digital.TryGetValue(regName, out uint offset))
+            if (!RegisterMapTOP_Container.TryGetValue(regName, out uint offset))   //RegisterMapCoin_Digital
                 throw new ArgumentException($"Register '{regName}' not found.");
 
             uint address = BASE_ADDRESS + offset;
