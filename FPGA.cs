@@ -441,7 +441,18 @@ namespace BringUp_Control
             if (status_reg != 0)
             {
                 MainForm.Instance.LogStatus("Debugger is busy.....");
-                return;
+                SpiWriteByName("enable_data_path", 0x00);
+                SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0x00);
+                status_reg = SpiReadByName(dbg.Prefix + "rgf_mode_status"); // Reset active channel
+                //return;
+                if (status_reg != 0) {
+                    MainForm.Instance.LogStatus("Unable to stop the player, debugger is still busy.....");
+                    return;
+                }
+                else
+                {
+                    MainForm.Instance.LogStatus("Player Stopped.....");
+                }
             }
             // vector lenght
             int count = samples.Length;
@@ -502,35 +513,32 @@ namespace BringUp_Control
                 return;
             }
             string preffix = dbg.Prefix;
-            uint d_value = 0;
-
-            if (play)
-                //SpiWrite(0x000011BC, 0x0F);
-                SpiWrite(BASE_ADDRESS+RegisterMapTOP_Container["enable_data_path"], 0x0F);
-            else
-                SpiWrite(BASE_ADDRESS+RegisterMapTOP_Container["enable_data_path"], 0x00);
-
-            Thread.Sleep(100);
-
-            if (play)
-                d_value = 1;
-            else
-                d_value = 0;
-
+            
             uint status_reg = SpiReadByName(preffix + "rgf_mode_status"); // Reset active channel
+
+            if (play)
+            {
+                //SpiWrite(0x000011BC, 0x0F);
+                SpiWrite(BASE_ADDRESS + RegisterMapTOP_Container["enable_data_path"], 0x0F);
+                SpiWriteByName(preffix + "rgf_activate_player", 0x0F);
+            }
+            else
+            {
+                SpiWrite(BASE_ADDRESS + RegisterMapTOP_Container["enable_data_path"], 0x00);
+                SpiWriteByName(preffix + "rgf_activate_player", 0x00);
+            }
+                       
             //SpiWriteByName(preffix + "rgf_activate_player", play ? 1u : 0u);
-            SpiWriteByName(preffix + "rgf_activate_player", d_value);
+            //SpiWriteByName(preffix + "rgf_activate_player", d_value);
             Thread.Sleep(100); // Wait for a short duration to ensure the command is processed              
 
-            if (status_reg != 0)
-            {
-                MainForm.Instance.LogStatus("Debugger is busy.....");
-                return;
-            }
-            else if (status_reg == 0 && play == true)
+            
+            if (status_reg == 0 && play == true)
                 MainForm.Instance.LogStatus("Player Started.....");
             else if (status_reg == 0 && play == false)
                 MainForm.Instance.LogStatus("Player Stopped.....");
+            else
+                MainForm.Instance.LogStatus("Debbuger is busy.....");
         }        
 
         public bool StopPlayer(string debuggerKey)
@@ -542,13 +550,10 @@ namespace BringUp_Control
                 return retflag;
             }            
 
-            bool stop = false;
+            
+            SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0);
 
-            if (!stop)
-            {
-                SpiWriteByName(dbg.Prefix + "rgf_activate_player", 0);
-                
-            }
+            SpiWriteByName("enable_data_path", 0x00);
 
             //SpiWrite(0x000011BC, 0x00);
             //Thread.Sleep(100); // Wait for a short duration to ensure the stop command is processed

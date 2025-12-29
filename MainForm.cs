@@ -2664,10 +2664,10 @@ namespace BringUp_Control
                     // Polling for cancel request inside long-running method
                     while (!token.IsCancellationRequested)
                     {
-                        Thread.Sleep(100); // or do something useful
+                        //Thread.Sleep(100); // or do something useful
                     }
 
-                    fpga.ActivatePlayer(fpga.DebugMode, false); // Stop playback safely
+                    //fpga.ActivatePlayer(fpga.DebugMode, false); // Stop playback safely
                 }
                 catch (Exception ex)
                 {
