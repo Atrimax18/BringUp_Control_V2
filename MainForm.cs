@@ -824,12 +824,12 @@ namespace BringUp_Control
         }
 
 
-        private void CheckPowerRegister(byte address)
+        private void CheckPowerRegister(ushort address)
         {
             if (selectedTab == tabAD4368)
             {
 
-                byte powerreturn = ad4368.ReadRegister((ushort)address);
+                byte powerreturn = ad4368.ReadRegister(address);
 
                 if (powerreturn == 0x00)
                 {
@@ -855,7 +855,6 @@ namespace BringUp_Control
                     }
                 }
             }
-
 
         }
 
@@ -952,7 +951,7 @@ namespace BringUp_Control
             }
         }
 
-        private int RFLockSampling(byte address, int monitoredBitIndex)
+        private int RFLockSampling(ushort address, int monitoredBitIndex)
         {
             int bitValue = -1;
             byte lockdata = 0x00;
@@ -1237,17 +1236,19 @@ namespace BringUp_Control
 
                 ad4368.WriteRegister(regValue, databyte);
             }
+
+            
             //----------------------------------------------------------------------------------
-            byte xt;
-            Thread.Sleep(10);
-            xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
+            
+            Thread.Sleep(100);
+            byte xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
 
             bool bit1 = (xt & (1 << 1)) != 0;  //FSM_BUSY
             if (bit1) 
-                LogStatus("FSM_BUSY - VCO not completed");
+                 LogStatus("FSM_BUSY - VCO not completed");
             else
-                LogStatus("FSM_BUSY - VCO completed");
-            
+                 LogStatus("FSM_BUSY - VCO completed");
+
             Thread.Sleep(10);
             xt = ad4368.ReadRegister(RF_PLL_LKDET_REG);
 
@@ -1260,7 +1261,7 @@ namespace BringUp_Control
             /*
             if (!bit1 && !bit2)
             {
-                ad4368.WriteRegister(RF_PLL_EN_REG, 0x00); // EN_DNCLK(7)=0, EN_DRCLK(6)=0, 
+                ad4368.WriteRegister(RF_PLL_EN_REG, 0xF1); // EN_DNCLK(7)=0, EN_DRCLK(6)=0, 
                 ad4368.WriteRegister(RF_PLL_EN_ADC_REG, 0x60); // EN_ADC_CLK(3) = 0
 
                 LogStatus("RF PLL EN Regs turned OFF");
@@ -1268,15 +1269,14 @@ namespace BringUp_Control
             else
             {
                 LogStatus("RF PLL EN Regs NOT turned OFF, BUSY status detected");
-            }
+            }*/
             //-----------------------------------------------------------------------------------
-            byte cpi_index = Check_CP_I();
-            comboCP_I.SelectedIndex = (int)cpi_index;
-            */
+            
             
             CheckPowerRegister(RF_PLL_POWER_REG);
             Thread.Sleep(100); // Wait for the power register to update
             RFLockSampling(RF_PLL_LKDET_REG, 0);
+
         }
 
         private byte Check_CP_I()
@@ -1731,7 +1731,7 @@ namespace BringUp_Control
                     try
                     {
                         // load data from vector file
-                        fpga.LoadVectorFile(fpgavector_file);
+                        fpga.LoadVectorFile(fpgavector_file ,0);
                         LogStatusFPGA($"FPGA vector DAC0 file loaded: {fpgavector_file}");
                     }
                     catch (Exception ex)
@@ -2260,7 +2260,8 @@ namespace BringUp_Control
             )
         {
             // Step 3: Set expected reference sample (shift left by 4 bits)
-            ushort shiftedSample = (ushort)expectedSample;// (ushort)(expectedSample << 4);
+            //ushort shiftedSample = (ushort)expectedSample;// (ushort)(expectedSample << 4);
+            ushort shiftedSample = (ushort)(expectedSample << 4);
             byte refMSB = (byte)((shiftedSample >> 8) & 0xFF);
             byte refLSB = (byte)(shiftedSample & 0xFF);
             ad9175.WriteRegister(REG_SHORT_TPL_TEST_2, refMSB);
@@ -2652,6 +2653,15 @@ namespace BringUp_Control
             Cmd_Activate_Player.Enabled = false;
             Cmd_Stop_Player.Enabled = true; // Enable the stop button
 
+
+            //GUI ELEMENTS DISABLE
+            comboBoxDebugger.Enabled = false;
+            comboBoxDebugger2.Enabled = false;
+            Cmd_FPGA_Import.Enabled = false;
+            Cmd_FPGA_Import2.Enabled = false;
+
+
+
             _playbackCancelToken = new CancellationTokenSource();
             var token = _playbackCancelToken.Token;
 
@@ -2695,6 +2705,12 @@ namespace BringUp_Control
 
             Cmd_Stop_Player.Enabled = false;
             Cmd_Activate_Player.Enabled = true;
+
+            //GUI ELEMENTS ENABLE            
+            comboBoxDebugger.Enabled = true;
+            comboBoxDebugger2.Enabled = true;
+            Cmd_FPGA_Import.Enabled = true;
+            Cmd_FPGA_Import2.Enabled = true;
         }
 
         private void Cmd_Link_Status_Click(object sender, EventArgs e)
@@ -3316,7 +3332,7 @@ namespace BringUp_Control
                     try
                     {
                         // load data from vector file
-                        fpga.LoadVectorFile(fpgavector_file1);
+                        fpga.LoadVectorFile(fpgavector_file1, 1);
                         LogStatusFPGA($"FPGA vector  DAC1 file loaded: {fpgavector_file1}");
                     }
                     catch (Exception ex)
@@ -3336,8 +3352,8 @@ namespace BringUp_Control
         {
             if (tabControl1.SelectedTab == tabAD4368)
             {
-                if (ad4368 != null)
-                {                    
+               /* if (ad4368 != null)
+                {                
 
                     string out_values = AD4368_Convert((double)numericUp_FreqConvert.Value);
 
@@ -3347,8 +3363,7 @@ namespace BringUp_Control
                     ApplyRegisterValues(out_values);
 
                     Cmd_Export_AD4368_File.Enabled = true;
-
-                }
+                }*/
             }
 
         }

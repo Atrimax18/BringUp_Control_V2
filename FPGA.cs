@@ -617,13 +617,13 @@ namespace BringUp_Control
         }
 
 
-        public void LoadVectorFile(string vectorfile)
+        public void LoadVectorFile(string vectorfile, int strNUM)
         {
             if (!string.IsNullOrEmpty(vectorfile))
             {
                 VectorArray = LoadVector(vectorfile);
-
-                WriteToPlayerMemory(debug_mode, stream, VectorArray);
+                WriteToPlayerMemory(debug_mode, strNUM, VectorArray);
+                //WriteToPlayerMemory(debug_mode, stream, VectorArray);
             }
             else
             {
